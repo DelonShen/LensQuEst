@@ -19,18 +19,19 @@ from pn_2d import *
 
 #####
 N_runs = 400
-mask_file = 'mask_simple400x400.png'
+mask_file = 'mask_simple1200x1200.png'
 template_name = mask_file.split('/')[-1].split('.')[0]
 template_fname = '%s.pkl'%(template_name)
 process = False
+# number of pixels for the flat map
+nX = 1200
+nY = 1200
+
 print(template_fname)
 #####
 
 print("Map properties")
 
-# number of pixels for the flat map
-nX = 400 # 1200
-nY = 400 #1200
 
 mean_field = None
 
