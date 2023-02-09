@@ -19,13 +19,13 @@ from pn_2d import *
 
 #####
 N_runs = 400
-mask_file = 'mask_simple1200x1200.png'
+mask_file = 'mask_simple400x400.png'
 template_name = mask_file.split('/')[-1].split('.')[0]
-template_fname = '%s.pkl'%(template_name)
-process = False
+template_fname = '%s_point_sources.pkl'%(template_name)
+process = True
 # number of pixels for the flat map
-nX = 1200
-nY = 1200
+nX = 400
+nY = 400
 
 print(template_fname)
 #####
@@ -80,13 +80,13 @@ def rgb2gray(rgb):
 from scipy.ndimage import gaussian_filter 
 from scipy.fft import fft2
 
-mask = 1-rgb2gray(plt.imread(mask_file))
-apodized_mask = mask
-
-if(process):
-    apodized_mask = gaussian_filter(mask, 5)
-
-print('\n')
+mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
+apodized_mask = gaussian_filter(mask, 3)
+point_sources = rgb2gray(plt.imread('point_sources.png'))
+point_sources = gaussian_filter(point_sources, 1) 
+apodized_mask += point_sources
+mask = 1-mask
+apodized_mask = 1 - apodized_mask
 
 from tqdm import trange 
 

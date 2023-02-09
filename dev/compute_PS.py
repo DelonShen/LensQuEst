@@ -4,6 +4,7 @@ N_runs = 1000
 nX = 400 # 1200
 nY = 400 #1200
 template_fname = 'Cls_%dx%d.pkl'%(nX,nY)
+run=False
 ###
 
 ##### 
@@ -126,111 +127,114 @@ from tqdm import trange
 import pickle
 mean_field = pickle.load(open('mask_simple%dx%d.pkl'%(nX,nY), 'rb'))
 
-for run_n in trange(N_runs):
-    # # Testing on simulated CMB Map
-    # Basically the next cells do the following
-    # 1. Generates a gaussain random field with the same power spectrum as the unlensed CMB. This will be a "realization" of the CMB
-    # 2. Generates a gaussain random field with teh same power spectrum as "kappa" in a universe? TODO wjat. This will be a specific realization of "kappa", e.g. we fix kappa
-    # 3. Lens our simulated CMB with our simulated Kapppa 
-    # 4. Generated gaussian random field with same power spectrum as we expect from detector noise and add this to our lensed CMB
-    #generate GRF with the same power spectrum as the unlensed CMB
-    cmb0Fourier = baseMap.genGRF(cmb.funlensedTT, test=False)
-    cmb0 = baseMap.inverseFourier(cmb0Fourier)
+if(run):
+    for run_n in trange(N_runs):
+        # # Testing on simulated CMB Map
+        # Basically the next cells do the following
+        # 1. Generates a gaussain random field with the same power spectrum as the unlensed CMB. This will be a "realization" of the CMB
+        # 2. Generates a gaussain random field with teh same power spectrum as "kappa" in a universe? TODO wjat. This will be a specific realization of "kappa", e.g. we fix kappa
+        # 3. Lens our simulated CMB with our simulated Kapppa 
+        # 4. Generated gaussian random field with same power spectrum as we expect from detector noise and add this to our lensed CMB
+        #generate GRF with the same power spectrum as the unlensed CMB
+        cmb0Fourier = baseMap.genGRF(cmb.funlensedTT, test=False)
+        cmb0 = baseMap.inverseFourier(cmb0Fourier)
 
-    kCmbFourier = baseMap.genGRF(p2d_cmblens.fPinterp, test=False)
-    kCmb = baseMap.inverseFourier(kCmbFourier)
+        kCmbFourier = baseMap.genGRF(p2d_cmblens.fPinterp, test=False)
+        kCmb = baseMap.inverseFourier(kCmbFourier)
 
-    lensedCmb = baseMap.doLensing(cmb0, kappaFourier=kCmbFourier)
-    lensedCmbFourier = baseMap.fourier(lensedCmb)
-
-
-    fgFourier = baseMap.genGRF(cmb.fForeground, test=False)
-    lensedCmbFourier = lensedCmbFourier + fgFourier
-    lensedCmb = baseMap.inverseFourier(lensedCmbFourier)
+        lensedCmb = baseMap.doLensing(cmb0, kappaFourier=kCmbFourier)
+        lensedCmbFourier = baseMap.fourier(lensedCmb)
 
 
-    noiseFourier = baseMap.genGRF(cmb.fdetectorNoise, test=False)
-    totalCmbFourier = lensedCmbFourier + noiseFourier
-    totalCmb = baseMap.inverseFourier(totalCmbFourier)
+        fgFourier = baseMap.genGRF(cmb.fForeground, test=False)
+        lensedCmbFourier = lensedCmbFourier + fgFourier
+        lensedCmb = baseMap.inverseFourier(lensedCmbFourier)
 
-    totalMaskedCmb = apodized_mask*totalCmb
-    totalMaskedCmbFourier = baseMap.fourier(totalMaskedCmb)
 
-    data = {}
-    Cls = {}
-    c_keys = ['Standard QE', 'AFC Eq(7)',
-                      'Standard QE Masked', 'AFC Eq(7) Masked',
-                      'Standard QE Masked MFS', 'AFC Eq(7) Masked MFS']
-    
-    fsky = np.sum(apodized_mask)/(nX*nY)
+        noiseFourier = baseMap.genGRF(cmb.fdetectorNoise, test=False)
+        totalCmbFourier = lensedCmbFourier + noiseFourier
+        totalCmb = baseMap.inverseFourier(totalCmbFourier)
 
-    c1 = fsky**(1.3)
-    c1 = fsky
-    c2 = fsky**2
-    
-    funcs = dict(zip(c_keys, 
-                     [baseMap.computeQuadEstKappaNorm, 
-                      baseMap.computeQuadEstKappaAutoCorrectionMap,
-                      baseMap.computeQuadEstKappaNorm, 
-                      baseMap.computeQuadEstKappaAutoCorrectionMap,
-                      baseMap.computeQuadEstKappaNorm, 
-                      baseMap.computeQuadEstKappaAutoCorrectionMap]))
-    
-    inp_data = dict(zip(c_keys, 
-                     [totalCmbFourier, 
-                      totalCmbFourier,
-                      totalMaskedCmbFourier, 
-                      totalMaskedCmbFourier,
-                      totalMaskedCmbFourier, 
-                      totalMaskedCmbFourier]))
-    for key in funcs:
-        data[key] = funcs[key](cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, 
-                                                           dataFourier=inp_data[key], test=False)
-        if(key=='Standard QE Masked MFS'):
-            data[key] -= mean_field
-        Cls[key] = [0,0,0]
-        Cls[key][0], Cls[key][1], Cls[key][2] = baseMap.powerSpectrum(dataFourier=data[key])
-        
-        if('Masked' in key):
-            if('AFC' in key):
-                Cls[key][1] /= c2
-            else:
-                Cls[key][1] /= c1
-    
+        totalMaskedCmb = apodized_mask*totalCmb
+        totalMaskedCmbFourier = baseMap.fourier(totalMaskedCmb)
 
-    c_keys += final_keys
-    
-    if(run_n==0):
-        Cls_tot['(Auto QE)-(Power Spectrum(hat NL))'] = np.array([[Cls['Standard QE'][0], #binning same 
-                                                    Cls['Standard QE'][1] - Cls['AFC Eq(7)'][1], #subtract power spectrums 
-                                                    Cls['Standard QE'][2]]])
-        
-        Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M]'] = np.array([[Cls['Standard QE Masked'][0], #binning same 
-                                                    Cls['Standard QE Masked'][1] - Cls['AFC Eq(7) Masked'][1], #subtract power spectrums 
-                                                    Cls['Standard QE Masked'][2]]])
-        Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M+MFS]'] = np.array([[Cls['Standard QE Masked MFS'][0], #binning same 
-                                                    Cls['Standard QE Masked MFS'][1] - Cls['AFC Eq(7) Masked MFS'][1], #subtract power spectrums 
-                                                    Cls['Standard QE Masked MFS'][2]]])
-    
-        continue
+        data = {}
+        Cls = {}
+        c_keys = ['Standard QE', 'AFC Eq(7)',
+                          'Standard QE Masked', 'AFC Eq(7) Masked',
+                          'Standard QE Masked MFS', 'AFC Eq(7) Masked MFS']
 
-    
-    
-    else:
-        Cls_tot['(Auto QE)-(Power Spectrum(hat NL))'] = np.vstack(([[Cls['Standard QE'][0], #binning same 
-                                                    Cls['Standard QE'][1] - Cls['AFC Eq(7)'][1], #subtract power spectrums 
-                                                    Cls['Standard QE'][2]]], Cls_tot['(Auto QE)-(Power Spectrum(hat NL))'] ))
-        
-        Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M]'] = np.vstack(([[Cls['Standard QE Masked'][0], #binning same 
-                                                    Cls['Standard QE Masked'][1] - Cls['AFC Eq(7) Masked'][1], #subtract power spectrums 
-                                                    Cls['Standard QE Masked'][2]]], Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M]'] ))
-        Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M+MFS]'] = np.vstack(([[Cls['Standard QE Masked MFS'][0], #binning same 
-                                                    Cls['Standard QE Masked MFS'][1] - Cls['AFC Eq(7) Masked MFS'][1], #subtract power spectrums 
-                                                    Cls['Standard QE Masked MFS'][2]]], Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M+MFS]'] ))
-    print(np.shape(Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M+MFS]'] ))
-    f = open(template_fname, 'wb') 
-    pickle.dump(Cls_tot, f)
+        fsky = np.sum(apodized_mask)/(nX*nY)
 
+        c1 = fsky
+        c2 = fsky**2
+
+        funcs = dict(zip(c_keys, 
+                         [baseMap.computeQuadEstKappaNorm, 
+                          baseMap.computeQuadEstKappaAutoCorrectionMap,
+                          baseMap.computeQuadEstKappaNorm, 
+                          baseMap.computeQuadEstKappaAutoCorrectionMap,
+                          baseMap.computeQuadEstKappaNorm, 
+                          baseMap.computeQuadEstKappaAutoCorrectionMap]))
+
+        inp_data = dict(zip(c_keys, 
+                         [totalCmbFourier, 
+                          totalCmbFourier,
+                          totalMaskedCmbFourier, 
+                          totalMaskedCmbFourier,
+                          totalMaskedCmbFourier, 
+                          totalMaskedCmbFourier]))
+        for key in funcs:
+            data[key] = funcs[key](cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, 
+                                                               dataFourier=inp_data[key], test=False)
+            if(key=='Standard QE Masked MFS'):
+                data[key] -= mean_field
+            Cls[key] = [0,0,0]
+            Cls[key][0], Cls[key][1], Cls[key][2] = baseMap.powerSpectrum(dataFourier=data[key])
+
+            if('Masked' in key):
+                if('AFC' in key): #scale noise by 1/fsky^2
+                    Cls[key][1] /= c2
+                else: #scale power specturm by 1/fsky
+                    Cls[key][1] /= c1
+                    Cls[key][2] /= c1
+
+
+        c_keys += final_keys
+
+        if(run_n==0):
+            Cls_tot['(Auto QE)-(Power Spectrum(hat NL))'] = np.array([[Cls['Standard QE'][0], #binning same 
+                                                        Cls['Standard QE'][1] - Cls['AFC Eq(7)'][1], #subtract power spectrums 
+                                                        Cls['Standard QE'][2]]])
+
+            Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M]'] = np.array([[Cls['Standard QE Masked'][0], #binning same 
+                                                        Cls['Standard QE Masked'][1] - Cls['AFC Eq(7) Masked'][1], #subtract power spectrums 
+                                                        Cls['Standard QE Masked'][2]]])
+            Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M+MFS]'] = np.array([[Cls['Standard QE Masked MFS'][0], #binning same 
+                                                        Cls['Standard QE Masked MFS'][1] - Cls['AFC Eq(7) Masked MFS'][1], #subtract power spectrums 
+                                                        Cls['Standard QE Masked MFS'][2]]])
+
+            continue
+
+
+
+        else:
+            Cls_tot['(Auto QE)-(Power Spectrum(hat NL))'] = np.vstack(([[Cls['Standard QE'][0], #binning same 
+                                                        Cls['Standard QE'][1] - Cls['AFC Eq(7)'][1], #subtract power spectrums 
+                                                        Cls['Standard QE'][2]]], Cls_tot['(Auto QE)-(Power Spectrum(hat NL))'] ))
+
+            Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M]'] = np.vstack(([[Cls['Standard QE Masked'][0], #binning same 
+                                                        Cls['Standard QE Masked'][1] - Cls['AFC Eq(7) Masked'][1], #subtract power spectrums 
+                                                        Cls['Standard QE Masked'][2]]], Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M]'] ))
+            Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M+MFS]'] = np.vstack(([[Cls['Standard QE Masked MFS'][0], #binning same 
+                                                        Cls['Standard QE Masked MFS'][1] - Cls['AFC Eq(7) Masked MFS'][1], #subtract power spectrums 
+                                                        Cls['Standard QE Masked MFS'][2]]], Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M+MFS]'] ))
+#         print(np.shape(Cls_tot['(Auto QE)-(Power Spectrum(hat NL)) [M+MFS]'] ))
+        f = open(template_fname, 'wb') 
+        pickle.dump(Cls_tot, f)
+else:
+    f = open(template_fname, 'rb') 
+    Cls_tot = pickle.load(f) 
 
 
 for i in range(N_runs-1):
@@ -243,7 +247,7 @@ for key in final_keys:
     Cls[key] = np.sum(np.transpose(Cls_tot[key], axes=[1,2,0])[1], axis=1)/N_runs
     sCls[key] = np.sqrt(np.sum(np.square(np.transpose(Cls_tot[key], axes=[1,2,0])[2]), axis=1))/np.sqrt(N_runs)
     
-fig, axs = plt.subplots(nrows=1, figsize=(10,8), sharey=True)
+fig, axs = plt.subplots(nrows=1, figsize=(15,8), sharey=True)
 axs = [axs]
 fig.subplots_adjust(wspace=0, hspace=0)
 
@@ -291,7 +295,7 @@ for key in final_keys:
 
     ax = axs[0]
     fctr = factor
-    print(list(zip(Cl, sCl)))
+#     print(list(zip(Cl, sCl)))
     ax.errorbar(lCen[Ipos], factor*(Cl[Ipos]), yerr=fctr*sCl[Ipos], c=col[key], alpha=.75, fmt=':', capsize=3, label=labels[key], capthick=1)
     tmp_data = {
        'x': lCen[Ipos],
@@ -308,12 +312,12 @@ for key in final_keys:
     bnds['y'] += [np.min(Cl[Ipos]), factor*np.max(Cl[Ipos])]
 
 
-fig.suptitle(r'Lensed CMB + Foregrounds + White Detector Noise \texttt{(CMB-S3)}', y=0.93)
+fig.suptitle(r'Lensed CMB + Foregrounds + White Detector Noise \texttt{(CMB-S3)}', y=0.95)
 
 for ax in axs:
     ax.set_xlim(np.min(bnds['x']), np.max(bnds['x']))
     ax.set_ylim(1e-10, 1e-4)
-    print(np.max(bnds['y']))
+#     print(np.max(bnds['y']))
 
 
     l=ax.legend(frameon=False, loc='upper left')
@@ -332,3 +336,4 @@ for ax in axs:
 
 
 plt.savefig('figures/Cl_compare%dx%d_more_data.pdf'%(nX, nY), bbox_inches='tight')
+plt.savefig('figures/Cl_compare%dx%d_more_data.png'%(nX, nY), bbox_inches='tight')
