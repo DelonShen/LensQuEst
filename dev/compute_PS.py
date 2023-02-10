@@ -3,7 +3,9 @@ N_runs = 1000
 # number of pixels for the flat map
 nX = 400 # 1200
 nY = 400 #1200
-template_fname = 'Cls_%dx%d.pkl'%(nX,nY)
+template_fname = 'Cls_%dx%d_point_sources.pkl'%(nX,nY)
+psfile = 'point_sources_bigger.png'
+psapod = 1.5
 run=False
 ###
 
@@ -96,8 +98,14 @@ def rgb2gray(rgb):
 from scipy.ndimage import gaussian_filter 
 from scipy.fft import fft2
 
-mask = 1-rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
-apodized_mask = gaussian_filter(mask, 5)
+mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
+apodized_mask = gaussian_filter(mask, 3)
+point_sources = rgb2gray(plt.imread(psfile))
+point_sources = gaussian_filter(point_sources, psapod) 
+apodized_mask += point_sources
+mask = 1-mask
+apodized_mask = 1 - apodized_mask
+
 fig, axs = plt.subplots(ncols=2, figsize=(16,8))
 fig.subplots_adjust(wspace=0, hspace=0)
 
@@ -120,12 +128,12 @@ cbar_ax = fig.add_axes([0.88, 0.15, 0.04, 0.7])
 fig.colorbar(im1, cax=cbar_ax)
 fig.suptitle('Mask', y=.9)
 
-# plt.savefig('figures/mask%dx%d.pdf'%(nX,nY), bbox_inches='tight')
+plt.savefig('figures/mask%dx%d_point_sources.pdf'%(nX,nY), bbox_inches='tight')
 
 
 from tqdm import trange
 import pickle
-mean_field = pickle.load(open('mask_simple%dx%d.pkl'%(nX,nY), 'rb'))
+mean_field = pickle.load(open('mask_simple%dx%d_point_sources.pkl'%(nX,nY), 'rb'))
 
 if(run):
     for run_n in trange(N_runs):
@@ -312,7 +320,7 @@ for key in final_keys:
     bnds['y'] += [np.min(Cl[Ipos]), factor*np.max(Cl[Ipos])]
 
 
-fig.suptitle(r'Lensed CMB + Foregrounds + White Detector Noise \texttt{(CMB-S3)}', y=0.95)
+fig.suptitle(r'Lensed CMB + Foregrounds + White Detector Noise + Point Sources \texttt{(CMB-S3)}', y=0.95)
 
 for ax in axs:
     ax.set_xlim(np.min(bnds['x']), np.max(bnds['x']))
@@ -335,5 +343,5 @@ for ax in axs:
 
 
 
-plt.savefig('figures/Cl_compare%dx%d_more_data.pdf'%(nX, nY), bbox_inches='tight')
-plt.savefig('figures/Cl_compare%dx%d_more_data.png'%(nX, nY), bbox_inches='tight')
+plt.savefig('figures/Cl_compare%dx%d_more_data_point_sources.pdf'%(nX, nY), bbox_inches='tight')
+plt.savefig('figures/Cl_compare%dx%d_more_data_point_sources.png'%(nX, nY), bbox_inches='tight')

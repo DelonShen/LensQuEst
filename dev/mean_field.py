@@ -20,6 +20,8 @@ from pn_2d import *
 #####
 N_runs = 400
 mask_file = 'mask_simple400x400.png'
+psfile = 'point_sources.png'
+psapod = 1
 template_name = mask_file.split('/')[-1].split('.')[0]
 template_fname = '%s_point_sources.pkl'%(template_name)
 process = True
@@ -82,11 +84,19 @@ from scipy.fft import fft2
 
 mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
 apodized_mask = gaussian_filter(mask, 3)
-point_sources = rgb2gray(plt.imread('point_sources.png'))
-point_sources = gaussian_filter(point_sources, 1) 
+point_sources = rgb2gray(plt.imread(psfile))
+point_sources = gaussian_filter(point_sources, psapod) 
 apodized_mask += point_sources
+nPos = np.where(apodized_mask>1)
+apodized_mask[nPos] = 1
 mask = 1-mask
 apodized_mask = 1 - apodized_mask
+
+for a in apodized_mask:
+    for b in a:
+        assert(b<=1 and b>=0)
+
+
 
 from tqdm import trange 
 
