@@ -3,10 +3,12 @@ N_runs = 1000
 # number of pixels for the flat map
 nX = 400 # 1200
 nY = 400 #1200
-template_fname = 'Cls_%dx%d_point_sources.pkl'%(nX,nY)
+template_fname = 'Cls_%dx%d_point_sources_bigger.pkl'%(nX,nY)
 psfile = 'point_sources_bigger.png'
+mask_file = 'mask_simple400x400.png'
+mean_field = 'mask_simple400x400_point_sources_bigger.pkl'
 psapod = 1.5
-run=False
+run=True
 ###
 
 ##### 
@@ -98,7 +100,7 @@ def rgb2gray(rgb):
 from scipy.ndimage import gaussian_filter 
 from scipy.fft import fft2
 
-mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
+mask = rgb2gray(plt.imread(mask_file))
 apodized_mask = gaussian_filter(mask, 3)
 point_sources = rgb2gray(plt.imread(psfile))
 point_sources = gaussian_filter(point_sources, psapod) 
@@ -133,7 +135,7 @@ plt.savefig('figures/mask%dx%d_point_sources.pdf'%(nX,nY), bbox_inches='tight')
 
 from tqdm import trange
 import pickle
-mean_field = pickle.load(open('mask_simple%dx%d_point_sources.pkl'%(nX,nY), 'rb'))
+mean_field = pickle.load(open(mean_field, 'rb'))
 
 if(run):
     for run_n in trange(N_runs):
@@ -343,5 +345,5 @@ for ax in axs:
 
 
 
-plt.savefig('figures/Cl_compare%dx%d_more_data_point_sources.pdf'%(nX, nY), bbox_inches='tight')
-plt.savefig('figures/Cl_compare%dx%d_more_data_point_sources.png'%(nX, nY), bbox_inches='tight')
+plt.savefig('figures/Cl_compare%dx%d_more_data_point_sources_bigger.pdf'%(nX, nY), bbox_inches='tight')
+plt.savefig('figures/Cl_compare%dx%d_more_data_point_sources_bigger.png'%(nX, nY), bbox_inches='tight')
