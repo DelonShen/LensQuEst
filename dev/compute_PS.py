@@ -8,7 +8,7 @@ psfile = 'point_sources_bigger.png'
 mask_file = 'mask_simple400x400.png'
 mean_field = 'mask_simple400x400_point_sources_bigger.pkl'
 psapod = 1.5
-run=True
+run=False
 ###
 
 ##### 
@@ -255,7 +255,7 @@ Cls = {}
 sCls = {}
 for key in final_keys:
     Cls[key] = np.sum(np.transpose(Cls_tot[key], axes=[1,2,0])[1], axis=1)/N_runs
-    sCls[key] = np.sqrt(np.sum(np.square(np.transpose(Cls_tot[key], axes=[1,2,0])[2]), axis=1))/np.sqrt(N_runs)
+    sCls[key] = np.sqrt(np.sum(np.square(np.transpose(Cls_tot[key], axes=[1,2,0])[2]), axis=1))/(N_runs)
     
 fig, axs = plt.subplots(nrows=1, figsize=(15,8), sharey=True)
 axs = [axs]
