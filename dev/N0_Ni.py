@@ -25,6 +25,11 @@ from cmb import *
 from flat_map import *
 from weight import *
 from pn_2d import *
+import pickle
+from tqdm import trange,tqdm 
+
+from itertools import product
+
 
 
 # In[22]:
@@ -75,7 +80,7 @@ cmb = StageIVCMB(beam=1., noise=1., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
 # power spectrum will look like
-forCtotal = lambda l: cmb.flensedTT(l) + cmb.fdetectorNoise(l)
+forCtotal = lambda l: cmb.ftotal(l)
 
 # reinterpolate: gain factor 10 in speed
 L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
@@ -137,8 +142,11 @@ import pickle
 
 from itertools import product
 
-N_RUNS = 90
-poss = list(product([True, False], range(N_RUNS)))
+N_RUNS = 95
+poss = list(product([True, False],[True, False], range(N_RUNS)))
+fsky = np.sum(apodized_mask)/(nX*nY)
+c1 = fsky
+c2 = fsky**2
 
 data = {}
 if(preload):
@@ -148,10 +156,8 @@ if(preload):
     for key in data:
         print(key, np.shape(data[key]))
 
-MASKED = False
 
-
-for LENSED, run_n in tqdm(poss):
+for MASKED, LENSED, run_n in tqdm(poss):
     post_fix = '%d_%d'%(MASKED,LENSED)
 
     mean_field = pickle.load(open(mean_field_file, 'rb'))
@@ -159,7 +165,6 @@ for LENSED, run_n in tqdm(poss):
         mean_field = np.zeros_like(mean_field)
 
     totalCmbFourier, totalCmb = 0, 0
-    kCmbFourier, kCmb = 0, 0
     if(not LENSED):
         totalCmbFourier = baseMap.genGRF(cmb.ftotal)
         totalCmb = baseMap.inverseFourier(totalCmbFourier)
@@ -183,7 +188,7 @@ for LENSED, run_n in tqdm(poss):
 
     if(MASKED):
         totalCmb = apodized_mask*totalCmb
-        totalCmbFourier = baseMap.fourier(totalMaskedCmb)
+        totalCmbFourier = baseMap.fourier(totalCmb)
 
     c_Data = {}
     
@@ -192,6 +197,8 @@ for LENSED, run_n in tqdm(poss):
                                                            cmb.fCtotal, 
                                                            lMin=lMin, lMax=lMax,
                                                            dataFourier=totalCmbFourier)
+    if(MASKED):
+        c_Data['k'+post_fix] -= mean_field
 
     #Nhat
     c_Data['sqrtNhat'+post_fix] = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.funlensedTT, 
@@ -215,10 +222,17 @@ for LENSED, run_n in tqdm(poss):
     c_Data['Nhat'+post_fix][0], c_Data['Nhat'+post_fix][1], c_Data['Nhat'+post_fix][2] = baseMap.powerSpectrum(dataFourier=c_Data['sqrtNhat'+post_fix])
     c_Data['kRkR'+post_fix][0], c_Data['kRkR'+post_fix][1], c_Data['kRkR'+post_fix][2] = baseMap.powerSpectrum(dataFourier=c_Data['kR'+post_fix])
 
-    if(LENSED):
-        c_Data['kTkT'+post_fix]   = [0,0,0]
-        c_Data['kTkT'+post_fix][0], c_Data['kTkT'+post_fix][1], c_Data['kTkT'+post_fix][2] = baseMap.powerSpectrum(dataFourier=kCmbFourier)
-    
+    if(MASKED):
+        #fsky corrections
+        c_Data['kk'+post_fix][1] /= c1
+        c_Data['kk'+post_fix][2] /= c1
+        
+        c_Data['Nhat'+post_fix][1] /= c2
+        c_Data['Nhat'+post_fix][2] /= c2
+
+        c_Data['kRkR'+post_fix][1] /= c2
+        c_Data['kRkR'+post_fix][2] /= c2
+
     for key in c_Data:
         if(key not in data.keys()):
             data[key] = np.array([c_Data[key]])

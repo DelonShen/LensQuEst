@@ -1,0 +1,31 @@
+nohup: ignoring input
+Map properties
+CMB experiment properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+k1_1 (5, 400, 201)
+sqrtNhat1_1 (5, 400, 201)
+kR1_1 (5, 400, 201)
+Nhat1_1 (5, 3, 50)
+kRkR1_1 (5, 3, 50)
+kk1_1 (5, 3, 50)
+k1_0 (5, 400, 201)
+sqrtNhat1_0 (5, 400, 201)
+kR1_0 (5, 400, 201)
+Nhat1_0 (5, 3, 50)
+kRkR1_0 (5, 3, 50)
+kk1_0 (5, 3, 50)
+k0_1 (5, 400, 201)
+sqrtNhat0_1 (5, 400, 201)
+kR0_1 (5, 400, 201)
+Nhat0_1 (5, 3, 50)
+kRkR0_1 (5, 3, 50)
+kk0_1 (5, 3, 50)
+k0_0 (5, 400, 201)
+sqrtNhat0_0 (5, 400, 201)
+kR0_0 (5, 400, 201)
+Nhat0_0 (5, 3, 50)
+kRkR0_0 (5, 3, 50)
+kk0_0 (5, 3, 50)
+  0%|          | 0/380 [00:00<?, ?it/s]  0%|          | 1/380 [00:45<4:48:48, 45.72s/it]  1%|          | 2/380 [01:32<4:50:24, 46.10s/it]  1%|          | 3/380 [02:18<4:49:27, 46.07s/it]
