@@ -1,17 +1,14 @@
-
-# In[15]:
-
-
 #######
-DATA_FNAME = '/data/delon/LensQuEst/map_sims.pkl'
+IN_DATA_FNAME = '/data/delon/LensQuEst/map_sims.pkl'
+DATA_FNAME = '/data/delon/LensQuEst/QE_from_map_sims.pkl'
+
 preload=True
-N_RUNS = 300
 import warnings
 warnings.filterwarnings("ignore")
 #####
 
 
-# In[2]:
+# In[3]:
 
 
 import os, sys
@@ -22,7 +19,7 @@ sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
 os.environ['PATH'] = "%s:/usr/local/cuda-11.2/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/anaconda/bin:/home/delon/texlive/bin/x86_64-linux:/home/delon/.local/bin:/home/delon/bin"%os.environ['PATH']
 
 
-# In[3]:
+# In[4]:
 
 
 from universe import *
@@ -36,7 +33,7 @@ import seaborn as sns
 from scipy.stats import spearmanr
 
 
-# In[4]:
+# In[5]:
 
 
 print("Map properties")
@@ -60,7 +57,7 @@ nBins = 21  # number of bins
 lRange = (1., 2.*lMax)  # range for power spectra
 
 
-# In[5]:
+# In[6]:
 
 
 print("CMB experiment properties")
@@ -80,7 +77,7 @@ F = np.array(list(map(forCtotal, L)))
 cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 
 
-# In[6]:
+# In[7]:
 
 
 print("CMB lensing power spectrum")
@@ -90,7 +87,7 @@ w_cmblens = WeightLensSingle(u, z_source=1100., name="cmblens")
 p2d_cmblens = P2dAuto(u, halofit, w_cmblens, save=False)
 
 
-# In[7]:
+# In[8]:
 
 
 print("Gets a theoretical prediction for the noise")
@@ -124,17 +121,50 @@ for a in apodized_mask:
 # plt.imshow(apodized_mask)
 
 
-# In[17]:
+# In[12]:
 
 
-from tqdm import trange,tqdm 
-import pickle
+f = open(IN_DATA_FNAME, 'rb') 
+in_data = pickle.load(f) 
+f.close()
+for key in in_data:
+    print(key, np.shape(in_data[key]))
 
-from itertools import product
 
-poss = list(product([True, False], range(N_RUNS)))
+# In[30]:
+
+
+pairs = [
+    [0,0], #N0
+    [0,1], #kappa
+    [1,0], #kappa
+    [1,1], #N1
+    [0,2], #N1
+    [2,0], #N1
+    [-1, -1], #QE
+    [-2, -2], #unlensed
+]
+
+data_names = {
+    0: 'cmb0F_1',
+    1: 'lCmbF_o1_1',
+    2: 'lCmbF_o2_1',
+    -1: 'lCmbF_1',
+    -2: 'totalF_0',
+}
+
+
+# In[ ]:
+
+
+from tqdm import trange, tqdm
 
 data = {}
+
+
+# In[43]:
+
+
 if(preload):
     f = open(DATA_FNAME, 'rb') 
     data = pickle.load(f) 
@@ -142,71 +172,48 @@ if(preload):
     for key in data:
         print(key, np.shape(data[key]))
 
-for LENSED, run_n in tqdm(poss):
-    post_fix = '_%d'%(LENSED)
+fgFourier = in_data['fgF_1']
+noiseFourier = in_data['noiseF_1']
 
-    c_Data = {}
-    c_Data['cmb0F'+post_fix] = None
-    c_Data['kCmbF'+post_fix] = None
-    c_Data['lCmbF'+post_fix] = None
-    for i in range(1,5):
-        c_Data['lCmbF_o%d'%(i)+post_fix] = None
-    c_Data['fgF'+post_fix] = None
-    c_Data['noiseF'+post_fix] = None
-    c_Data['totalF'+post_fix] = None
-    c_Data['totalF_M'+post_fix] = None
+for pair_idx in range(len(pairs)):
+    pair = pairs[pair_idx]
+    print('currently on %d of %d'%(pair_idx, len(pairs)))
+    pair_key = '%d%d'%(pair[0],pair[1])
+    keys = [data_names[p] for p in pair]
+    print(pair, keys)
+    N_data = min(len(in_data[keys[0]]), len(in_data[keys[1]]))
 
+    s_idx = 0
+    c_data = []
+
+    if(pair_key in data):
+        s_idx = len(data[pair_key])
+        c_data = data[pair_key]
     
-    totalCmbFourier, totalCmb = None, None
-    
-    if(not LENSED):
-        totalCmbFourier = baseMap.genGRF(cmb.ftotal)
-        totalCmb = baseMap.inverseFourier(totalCmbFourier)
+    for data_idx in trange(s_idx, N_data):
+        dataF0 = in_data[keys[0]][data_idx]
+        if(pair[0]-1 >= 0):  #isolate term
+            dataF0 = dataF0 - in_data[data_names[pair[0]-1]][data_idx]
+        dataF1 = in_data[keys[1]][data_idx]
+        if(pair[1]-1>=0):    #isolate term
+            dataF1 = dataF1 - in_data[data_names[pair[1]-1]][data_idx]
         
-    elif(LENSED):
-        cmb0Fourier = baseMap.genGRF(cmb.funlensedTT, test=False)
-        cmb0 = baseMap.inverseFourier(cmb0Fourier)
-        c_Data['cmb0F'+post_fix] = cmb0Fourier
-        
-        kCmbFourier = baseMap.genGRF(p2d_cmblens.fPinterp, test=False)
-        kCmb = baseMap.inverseFourier(kCmbFourier)
-        c_Data['kCmbF'+post_fix] = kCmbFourier
-        
-        for i in range(1,5):
-            lensedCmb = baseMap.doLensingTaylor(unlensed=cmb0, kappaFourier=kCmbFourier, order=i)
-            lensedCmbFourier = baseMap.fourier(lensedCmb)
-            c_Data['lCmbF_o%d'%(i)+post_fix] = lensedCmbFourier
+        if(pair[0]!=-2):
+            dataF0 = dataF0 + fgFourier[data_idx] + noiseFourier[data_idx]
+            dataF1 = dataF1 + fgFourier[data_idx] + noiseFourier[data_idx]
             
-        lensedCmb = baseMap.doLensing(cmb0, kappaFourier=kCmbFourier)
-        lensedCmbFourier = baseMap.fourier(lensedCmb)
-        c_Data['lCmbF'+post_fix] = lensedCmbFourier
-        
-        fgFourier = baseMap.genGRF(cmb.fForeground, test=False)
-        lensedCmbFourier = lensedCmbFourier + fgFourier
-        lensedCmb = baseMap.inverseFourier(lensedCmbFourier)
-        c_Data['fgF'+post_fix] = fgFourier
-
-        noiseFourier = baseMap.genGRF(cmb.fdetectorNoise, test=False)
-        totalCmbFourier = lensedCmbFourier + noiseFourier
-        totalCmb = baseMap.inverseFourier(totalCmbFourier)
-        c_Data['noiseF'+post_fix] = noiseFourier
-        
-    c_Data['totalF'+post_fix] = totalCmbFourier
-
-    totalCmb = apodized_mask*totalCmb
-    totalCmbFourier = baseMap.fourier(totalCmb)
-        
-    c_Data['totalF_M'+post_fix] = totalCmbFourier
-
-
-    for key in c_Data:
-        if(c_Data[key] is None):
-            continue
-        if(key not in data.keys()):
-            data[key] = np.array([c_Data[key]])
+        QE = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+                                             lMin=lMin, lMax=lMax, 
+                                             dataFourier=dataF0,
+                                             dataFourier2=dataF1)
+        if(len(c_data)==0):
+            c_data = np.array([QE])
         else:
-            data[key] = np.vstack((np.array([c_Data[key]]), data[key]))  
-            
+            c_data = np.vstack((c_data, np.array([QE])))
+        assert(len(c_data)==data_idx+1)
+        
+    data[pair_key] = c_data
+    
     f = open(DATA_FNAME, 'wb') 
     pickle.dump(data, f)
     f.close()
