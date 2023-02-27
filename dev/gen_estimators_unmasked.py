@@ -2,7 +2,7 @@
 IN_DATA_FNAME = '/data/delon/LensQuEst/map_sims.pkl'
 DATA_FNAME = '/data/delon/LensQuEst/QE_from_map_sims.pkl'
 
-preload=True
+preload=False
 import warnings
 warnings.filterwarnings("ignore")
 #####
@@ -182,9 +182,12 @@ for pair_idx in range(len(pairs)):
     keys = [data_names[p] for p in pair]
     print(pair, keys)
     N_data = min(len(in_data[keys[0]]), len(in_data[keys[1]]))
+    
 
     s_idx = 0
     c_data = []
+    c_data_sqrtN = []
+    c_data_kR  = []
 
     if(pair_key in data):
         s_idx = len(data[pair_key])
@@ -206,14 +209,39 @@ for pair_idx in range(len(pairs)):
                                              lMin=lMin, lMax=lMax, 
                                              dataFourier=dataF0,
                                              dataFourier2=dataF1)
+        sqrtNhat = []
+        kR = []
+        if(pair[0]==pair[1]):
+            sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.funlensedTT,
+                                                                    cmb.fCtotal, 
+                                                                    lMin=lMin, lMax=lMax, 
+                                                                    dataFourier=dataF0)
+            totalCmbFourierRandomized = baseMap.randomizePhases(dataF0)
+            kR = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+                                                 lMin=lMin, lMax=lMax,
+                                                 dataFourier=totalCmbFourierRandomized)
+            if(len(c_data_sqrtN)==0):
+                c_data_sqrtN = np.array([sqrtNhat])
+            else:
+                c_data_sqrtN = np.vstack((c_data_sqrtN, np.array([sqrtNhat])))
+
+            if(len(c_data_kR)==0):
+                c_data_kR = np.array([kR])
+            else:
+                c_data_kR = np.vstack((c_data_kR, np.array([kR])))
+
+
         if(len(c_data)==0):
             c_data = np.array([QE])
         else:
             c_data = np.vstack((c_data, np.array([QE])))
+            
+            
         assert(len(c_data)==data_idx+1)
         
     data[pair_key] = c_data
-    
+    data[pair_key+'_sqrtN'] = c_data_sqrtN
+    data[pair_key+'_kR'] = c_data_kR
     f = open(DATA_FNAME, 'wb') 
     pickle.dump(data, f)
     f.close()
