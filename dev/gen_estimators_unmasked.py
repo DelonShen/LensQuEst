@@ -1,6 +1,6 @@
 #######
-IN_DATA_FNAME = '/data/delon/LensQuEst/map_sims.pkl'
-DATA_FNAME = '/data/delon/LensQuEst/QE_from_map_sims.pkl'
+IN_DATA_FNAME = '/data/delon/LensQuEst/map_sims_800x800_20x20.pkl'
+DATA_FNAME = '/data/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20.pkl'
 
 preload=False
 import warnings
@@ -39,12 +39,12 @@ from scipy.stats import spearmanr
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 400 # 1200
-nY = 400 #1200
+nX = 800
+nY =800
 
 # map dimensions in degrees
-sizeX = 10.
-sizeY = 10.
+sizeX = 20.
+sizeY = 20.
 
 # basic map object
 baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
@@ -64,7 +64,7 @@ print("CMB experiment properties")
 
 # Adjust the lMin and lMax to the assumptions of the analysis
 # CMB S3 specs
-cmb = StageIVCMB(beam=1., noise=1., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
+cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
 
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
@@ -99,25 +99,25 @@ Ntheory = lambda l: fNqCmb_fft(l)
 
 
 #https://stackoverflow.com/questions/12201577/how-can-i-convert-an-rgb-image-into-grayscale-in-python
-def rgb2gray(rgb):
-    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
+# def rgb2gray(rgb):
+#     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
-from scipy.ndimage import gaussian_filter 
-from scipy.fft import fft2
+# from scipy.ndimage import gaussian_filter 
+# from scipy.fft import fft2
 
-mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
-apodized_mask = gaussian_filter(mask, 3)
-point_sources = rgb2gray(plt.imread('point_sources_bigger.png'))
-point_sources = gaussian_filter(point_sources, 1.5) 
-apodized_mask += point_sources
-nPos = np.where(apodized_mask>1)
-apodized_mask[nPos] = 1
-mask = 1-mask
-apodized_mask = 1 - apodized_mask
+# mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
+# apodized_mask = gaussian_filter(mask, 3)
+# point_sources = rgb2gray(plt.imread('point_sources_bigger.png'))
+# point_sources = gaussian_filter(point_sources, 1.5) 
+# apodized_mask += point_sources
+# nPos = np.where(apodized_mask>1)
+# apodized_mask[nPos] = 1
+# mask = 1-mask
+# apodized_mask = 1 - apodized_mask
 
-for a in apodized_mask:
-    for b in a:
-        assert(b<=1 and b>=0)
+# for a in apodized_mask:
+#     for b in a:
+#         assert(b<=1 and b>=0)
 # plt.imshow(apodized_mask)
 
 
@@ -205,30 +205,30 @@ for pair_idx in range(len(pairs)):
             dataF0 = dataF0 + fgFourier[data_idx] + noiseFourier[data_idx]
             dataF1 = dataF1 + fgFourier[data_idx] + noiseFourier[data_idx]
             
-        QE = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+        QE = baseMap.computeQuadEstKappaNorm(cmb.flensedTT, cmb.fCtotal, 
                                              lMin=lMin, lMax=lMax, 
                                              dataFourier=dataF0,
                                              dataFourier2=dataF1)
         sqrtNhat = []
         kR = []
         if(pair[0]==pair[1]):
-            sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.funlensedTT,
+            sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.flensedTT,
                                                                     cmb.fCtotal, 
                                                                     lMin=lMin, lMax=lMax, 
                                                                     dataFourier=dataF0)
             totalCmbFourierRandomized = baseMap.randomizePhases(dataF0)
-            kR = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
-                                                 lMin=lMin, lMax=lMax,
-                                                 dataFourier=totalCmbFourierRandomized)
+#             kR = baseMap.computeQuadEstKappaNorm(cmb.flensedTT, cmb.fCtotal, 
+#                                                  lMin=lMin, lMax=lMax,
+#                                                  dataFourier=totalCmbFourierRandomized)
             if(len(c_data_sqrtN)==0):
                 c_data_sqrtN = np.array([sqrtNhat])
             else:
                 c_data_sqrtN = np.vstack((c_data_sqrtN, np.array([sqrtNhat])))
 
-            if(len(c_data_kR)==0):
-                c_data_kR = np.array([kR])
-            else:
-                c_data_kR = np.vstack((c_data_kR, np.array([kR])))
+#             if(len(c_data_kR)==0):
+#                 c_data_kR = np.array([kR])
+#             else:
+#                 c_data_kR = np.vstack((c_data_kR, np.array([kR])))
 
 
         if(len(c_data)==0):
@@ -241,7 +241,7 @@ for pair_idx in range(len(pairs)):
         
     data[pair_key] = c_data
     data[pair_key+'_sqrtN'] = c_data_sqrtN
-    data[pair_key+'_kR'] = c_data_kR
+#     data[pair_key+'_kR'] = c_data_kR
     f = open(DATA_FNAME, 'wb') 
     pickle.dump(data, f)
     f.close()

@@ -1,0 +1,2 @@
+python -u gen_map_sims.py
+python -u gen_estimators_unmasked.py

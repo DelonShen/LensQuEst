@@ -3,9 +3,9 @@
 
 
 #######
-DATA_FNAME = '/data/delon/LensQuEst/map_sims.pkl'
-preload=True
-N_RUNS = 300
+DATA_FNAME = '/data/delon/LensQuEst/map_sims_800x800_20x20.pkl'
+preload=False
+N_RUNS = 100
 import warnings
 warnings.filterwarnings("ignore")
 #####
@@ -42,12 +42,12 @@ from scipy.stats import spearmanr
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 400 # 1200
-nY = 400 #1200
+nX = 800
+nY = 800
 
 # map dimensions in degrees
-sizeX = 10.
-sizeY = 10.
+sizeX = 20.
+sizeY = 20.
 
 # basic map object
 baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
@@ -67,7 +67,7 @@ print("CMB experiment properties")
 
 # Adjust the lMin and lMax to the assumptions of the analysis
 # CMB S3 specs
-cmb = StageIVCMB(beam=1., noise=1., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
+cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
 
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
@@ -102,26 +102,26 @@ Ntheory = lambda l: fNqCmb_fft(l)
 
 
 #https://stackoverflow.com/questions/12201577/how-can-i-convert-an-rgb-image-into-grayscale-in-python
-def rgb2gray(rgb):
-    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
-
-from scipy.ndimage import gaussian_filter 
-from scipy.fft import fft2
-
-mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
-apodized_mask = gaussian_filter(mask, 3)
-point_sources = rgb2gray(plt.imread('point_sources_bigger.png'))
-point_sources = gaussian_filter(point_sources, 1.5) 
-apodized_mask += point_sources
-nPos = np.where(apodized_mask>1)
-apodized_mask[nPos] = 1
-mask = 1-mask
-apodized_mask = 1 - apodized_mask
-
-for a in apodized_mask:
-    for b in a:
-        assert(b<=1 and b>=0)
-# plt.imshow(apodized_mask)
+#def rgb2gray(rgb):
+#    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
+#
+#from scipy.ndimage import gaussian_filter 
+#from scipy.fft import fft2
+#
+#mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
+#apodized_mask = gaussian_filter(mask, 3)
+#point_sources = rgb2gray(plt.imread('point_sources_bigger.png'))
+#point_sources = gaussian_filter(point_sources, 1.5) 
+#apodized_mask += point_sources
+#nPos = np.where(apodized_mask>1)
+#apodized_mask[nPos] = 1
+#mask = 1-mask
+#apodized_mask = 1 - apodized_mask
+#
+#for a in apodized_mask:
+#    for b in a:
+#        assert(b<=1 and b>=0)
+## plt.imshow(apodized_mask)
 
 
 # In[17]:
@@ -154,7 +154,7 @@ for LENSED, run_n in tqdm(poss):
     c_Data['fgF'+post_fix] = None
     c_Data['noiseF'+post_fix] = None
     c_Data['totalF'+post_fix] = None
-    c_Data['totalF_M'+post_fix] = None
+#    c_Data['totalF_M'+post_fix] = None
 
     
     totalCmbFourier, totalCmb = None, None
@@ -193,10 +193,10 @@ for LENSED, run_n in tqdm(poss):
         
     c_Data['totalF'+post_fix] = totalCmbFourier
 
-    totalCmb = apodized_mask*totalCmb
-    totalCmbFourier = baseMap.fourier(totalCmb)
-        
-    c_Data['totalF_M'+post_fix] = totalCmbFourier
+#    totalCmb = apodized_mask*totalCmb
+#    totalCmbFourier = baseMap.fourier(totalCmb)
+#        
+#    c_Data['totalF_M'+post_fix] = totalCmbFourier
 
 
     for key in c_Data:
