@@ -4,7 +4,7 @@
 
 #######
 DATA_FNAME = '/data/delon/LensQuEst/map_sims_800x800_20x20.pkl'
-preload=False
+preload=True
 N_RUNS = 100
 import warnings
 warnings.filterwarnings("ignore")
@@ -207,6 +207,9 @@ for LENSED, run_n in tqdm(poss):
         else:
             data[key] = np.vstack((np.array([c_Data[key]]), data[key]))  
             
+
     f = open(DATA_FNAME, 'wb') 
-    pickle.dump(data, f)
+    p = pickle.Pickler(f) 
+    p.fast = True 
+    p.dump(data)
     f.close()
