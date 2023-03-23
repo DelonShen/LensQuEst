@@ -5,6 +5,7 @@ WORKING_DIR = os.path.dirname(os.path.abspath(''))
 sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
 
 
+
 ##### 
 import warnings
 warnings.filterwarnings("ignore")
@@ -18,16 +19,20 @@ from weight import *
 from pn_2d import *
 
 #####
-N_runs = 400
-mask_file = 'mask_simple400x400.png'
-psfile = 'point_sources.png'
+N_runs = 100
+mask_file = 'mask_simple800x800.png'
+psfile = 'point_sources_800x800.png'
 psapod = 1
 template_name = mask_file.split('/')[-1].split('.')[0]
-template_fname = '%s_point_sources.pkl'%(template_name)
+template_fname = lambda order: '%s_point_sources_ORDER%d.pkl'%(template_name, order)
+
 process = True
 # number of pixels for the flat map
-nX = 400
-nY = 400
+nX = 800
+nY = 800
+# map dimensions in degrees
+sizeX = 20.
+sizeY = 20.
 
 print(template_fname)
 #####
@@ -37,9 +42,6 @@ print("Map properties")
 
 mean_field = None
 
-# map dimensions in degrees
-sizeX = 10.
-sizeY = 10.
 
 # basic map object
 baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
@@ -55,12 +57,12 @@ print("CMB experiment properties")
 
 # Adjust the lMin and lMax to the assumptions of the analysis
 # CMB S3 specs
-cmb = StageIVCMB(beam=1., noise=1., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
+cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
 
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
 # power spectrum will look like
-forCtotal = lambda l: cmb.flensedTT(l) + cmb.fdetectorNoise(l)
+forCtotal = lambda l: cmb.ftotal(l) 
 
 # reinterpolate: gain factor 10 in speed
 L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
@@ -82,7 +84,7 @@ def rgb2gray(rgb):
 from scipy.ndimage import gaussian_filter 
 from scipy.fft import fft2
 
-mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
+mask = rgb2gray(plt.imread(mask_file))
 apodized_mask = gaussian_filter(mask, 3)
 point_sources = rgb2gray(plt.imread(psfile))
 point_sources = gaussian_filter(point_sources, psapod) 
@@ -96,54 +98,63 @@ for a in apodized_mask:
     for b in a:
         assert(b<=1 and b>=0)
 
-
+plt.imshow(apodized_mask)
+plt.savefig('figures/apodized_masked_%dx%d.pdf'%(nX, nY),bbox_inches='tight')
 
 from tqdm import trange 
 
-for i in trange(N_runs):
-#    print('Run %d of %d'%(i, N_runs))
+for ORD in [-1,0,1,2,3]:
+    print('Taylor Order: %d'%(ORD))
+    print(template_fname(ORD))
+    for i in trange(N_runs):
+    #    print("\tGenerate GRF unlensed CMB map (debeamed)")
+        cmb0Fourier = baseMap.genGRF(cmb.funlensedTT, test=False)
+        cmb0 = baseMap.inverseFourier(cmb0Fourier)
 
-#    print("\tGenerate GRF unlensed CMB map (debeamed)")
-    cmb0Fourier = baseMap.genGRF(cmb.funlensedTT, test=False)
-    cmb0 = baseMap.inverseFourier(cmb0Fourier)
-
-#    print("\tGenerate GRF kappa map")
-    kCmbFourier = baseMap.genGRF(p2d_cmblens.fPinterp, test=False)
-    kCmb = baseMap.inverseFourier(kCmbFourier)
-
-
-#    print("\tLens the CMB map")
-    lensedCmb = baseMap.doLensing(cmb0, kappaFourier=kCmbFourier)
-    lensedCmbFourier = baseMap.fourier(lensedCmb)
+    #    print("\tGenerate GRF kappa map")
+        kCmbFourier = baseMap.genGRF(p2d_cmblens.fPinterp, test=False)
+        kCmb = baseMap.inverseFourier(kCmbFourier)
 
 
-#    print("\tGenerate FG map")
-    fgFourier = baseMap.genGRF(cmb.fForeground, test=False)
-    lensedCmbFourier = lensedCmbFourier + fgFourier
-    lensedCmb = baseMap.inverseFourier(lensedCmbFourier)
+    #    print("\tLens the CMB map")
+        
+        lensedCmb = None
+        
+        if(ORD == -1):
+            lensedCmb = baseMap.doLensing(cmb0, kappaFourier=kCmbFourier)
+        elif(ORD >= 0):
+            lensedCmb = baseMap.doLensingTaylor(unlensed=cmb0, kappaFourier=kCmbFourier, order=ORD)
+            if(ORD >= 1):
+                lensedCmb -= baseMap.doLensingTaylor(unlensed=cmb0, kappaFourier=kCmbFourier, order=ORD-1)
+                
+        lensedCmbFourier = baseMap.fourier(lensedCmb)
 
 
-#    print("\tAdd white detector noise (debeamed)")
-    noiseFourier = baseMap.genGRF(cmb.fdetectorNoise, test=False)
-    totalCmbFourier = lensedCmbFourier + noiseFourier
-    totalCmb = baseMap.inverseFourier(totalCmbFourier)
+    #    print("\tGenerate FG map")
+        fgFourier = baseMap.genGRF(cmb.fForeground, test=False)
+        lensedCmbFourier = lensedCmbFourier + fgFourier
+        lensedCmb = baseMap.inverseFourier(lensedCmbFourier)
 
 
-#    print("\tMasking the map")
-    totalMaskedCmb = apodized_mask*totalCmb
-    totalMaskedCmbFourier = baseMap.fourier(totalMaskedCmb)
+    #    print("\tAdd white detector noise (debeamed)")
+        noiseFourier = baseMap.genGRF(cmb.fdetectorNoise, test=False)
+        totalCmbFourier = lensedCmbFourier + noiseFourier
+        totalCmb = baseMap.inverseFourier(totalCmbFourier)
 
 
-    kappa_map = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, dataFourier=totalMaskedCmbFourier)
-    if(mean_field is None):
-        mean_field = kappa_map
-    else:
-        mean_field += kappa_map
-    f = open(template_fname, 'wb') 
-    pickle.dump(mean_field/(i+1), f)
+    #    print("\tMasking the map")
+        totalMaskedCmb = apodized_mask*totalCmb
+        totalMaskedCmbFourier = baseMap.fourier(totalMaskedCmb)
 
 
-f = open(template_fname, 'wb') 
-pickle.dump(mean_field/N_runs, f)
+        kappa_map = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, dataFourier=totalMaskedCmbFourier)
+        if(mean_field is None):
+            mean_field = kappa_map
+        else:
+            mean_field += kappa_map
+        f = open(template_fname(ORD), 'wb') 
+        pickle.dump(mean_field/(i+1), f)
 
-print(mean_field/N_runs)
+
+    f = open(template_fname(ORD), 'wb') 
+    pickle.dump(mean_field/N_runs, f)

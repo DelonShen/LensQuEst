@@ -1,8 +1,30 @@
 #######
 IN_DATA_FNAME = '/data/delon/LensQuEst/map_sims_800x800_20x20.pkl'
-DATA_FNAME = '/data/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20.pkl'
+DATA_FNAME = '/data/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_aux_N2.pkl'
 
-preload=True
+
+pairs = [
+#    [0,0], #N0
+#    [0,1], #kappa
+#    [1,0], #kappa
+#    [0,2], #N1
+#    [1,1], #N1
+#    [2,0], #N1
+    [0,3], #should vanish
+    [1,2], #should vanish
+    [2,1], #should vanish
+    [3,0], #should vanish
+    [0,4], #N2 
+    [1,3], #N2
+    [2,2], #N2
+    [3,1], #N2
+    [4,0], #N2
+#    [-1, -1], #QE
+#    [-2, -2], #unlensed
+]
+
+
+preload=False
 import warnings
 warnings.filterwarnings("ignore")
 #####
@@ -134,21 +156,13 @@ for key in in_data:
 # In[30]:
 
 
-pairs = [
-    [0,0], #N0
-    [0,1], #kappa
-    [1,0], #kappa
-    [1,1], #N1
-    [0,2], #N1
-    [2,0], #N1
-    [-1, -1], #QE
-    [-2, -2], #unlensed
-]
 
 data_names = {
     0: 'cmb0F_1',
     1: 'lCmbF_o1_1',
     2: 'lCmbF_o2_1',
+    3: 'lCmbF_o3_1',
+    4: 'lCmbF_o4_1',
     -1: 'lCmbF_1',
     -2: 'totalF_0',
 }
@@ -205,18 +219,17 @@ for pair_idx in range(len(pairs)):
             dataF0 = dataF0 + fgFourier[data_idx] + noiseFourier[data_idx]
             dataF1 = dataF1 + fgFourier[data_idx] + noiseFourier[data_idx]
             
-        QE = baseMap.computeQuadEstKappaNorm(cmb.flensedTT, cmb.fCtotal, 
+        QE = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
                                              lMin=lMin, lMax=lMax, 
                                              dataFourier=dataF0,
                                              dataFourier2=dataF1)
         sqrtNhat = []
         kR = []
         if(pair[0]==pair[1]):
-            sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.flensedTT,
+            sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.funlensedTT,
                                                                     cmb.fCtotal, 
                                                                     lMin=lMin, lMax=lMax, 
                                                                     dataFourier=dataF0)
-            totalCmbFourierRandomized = baseMap.randomizePhases(dataF0)
 
             if(len(c_data_sqrtN)==0):
                 c_data_sqrtN = np.array([sqrtNhat])
