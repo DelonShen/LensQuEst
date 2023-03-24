@@ -22,7 +22,7 @@ from pn_2d import *
 N_runs = 100
 mask_file = 'mask_simple800x800.png'
 psfile = 'point_sources_800x800.png'
-psapod = 1
+psapod = 2
 template_name = mask_file.split('/')[-1].split('.')[0]
 template_fname = lambda order: '%s_point_sources_ORDER%d.pkl'%(template_name, order)
 
@@ -103,7 +103,7 @@ plt.savefig('figures/apodized_masked_%dx%d.pdf'%(nX, nY),bbox_inches='tight')
 
 from tqdm import trange 
 
-for ORD in [-1,0,1,2,3]:
+for ORD in [-1,0,1,2,3,4]:
     print('Taylor Order: %d'%(ORD))
     print(template_fname(ORD))
     for i in trange(N_runs):

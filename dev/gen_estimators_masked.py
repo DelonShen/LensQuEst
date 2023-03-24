@@ -4,7 +4,7 @@ DATA_FNAME = '/data/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clun
 
 mask_file = 'mask_simple800x800.png'
 psfile = 'point_sources_800x800.png'
-psapod = 1
+psapod = 2
 
 
 template_name = mask_file.split('/')[-1].split('.')[0]
