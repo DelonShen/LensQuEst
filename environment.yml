@@ -2,7 +2,7 @@ name: nblensing
 channels:
   - defaults
 dependencies:
-  - python
+  - python=3.9
   - jupyter
   - pip
   - pip:

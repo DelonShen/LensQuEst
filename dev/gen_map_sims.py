@@ -1,11 +1,13 @@
 
 # In[15]:
-
+import sys
 
 #######
-DATA_FNAME = '/data/delon/LensQuEst/map_sims_800x800_20x20.pkl'
-preload=True
-N_RUNS = 100
+DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(eval(sys.argv[1]))
+print(DATA_FNAME)
+
+preload=False
+N_RUNS = 10
 import warnings
 warnings.filterwarnings("ignore")
 #####
@@ -17,9 +19,6 @@ warnings.filterwarnings("ignore")
 import os, sys
 WORKING_DIR = os.path.dirname(os.path.abspath(''))
 sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
-
-#to get latex to work, shoulldn't be necessary for most ppl
-os.environ['PATH'] = "%s:/usr/local/cuda-11.2/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/anaconda/bin:/home/delon/texlive/bin/x86_64-linux:/home/delon/.local/bin:/home/delon/bin"%os.environ['PATH']
 
 
 # In[3]:
