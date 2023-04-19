@@ -178,7 +178,7 @@ RDN0_data = {
 }
 
 
-oup_fname = '/data/delon/LensQuEst/RDN0-in_data-%d.pkl'%(d_idx)
+oup_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-%d.pkl'%(d_idx)
 print(oup_fname)
 f = open(oup_fname, 'wb') 
 pickle.dump(RDN0_data, f)
