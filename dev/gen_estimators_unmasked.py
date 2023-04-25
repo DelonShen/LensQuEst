@@ -1,23 +1,23 @@
 #######
-IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,11)]
+IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
 
 
 pairs = [
-   [0,0], #N0
-   [0,1], #kappa
-   [1,0], #kappa
-   [0,2], #N1
-   [1,1], #N1
-   [2,0], #N1
-    [0,3], #should vanish
-    [1,2], #should vanish
-    [2,1], #should vanish
-    [3,0], #should vanish
-    [0,4], #N2 
-    [1,3], #N2
-    [2,2], #N2
-    [3,1], #N2
-    [4,0], #N2
+#   [0,0], #N0
+#   [0,1], #kappa
+#   [1,0], #kappa
+#   [0,2], #N1
+#   [1,1], #N1
+#   [2,0], #N1
+#    [0,3], #should vanish
+#    [1,2], #should vanish
+#    [2,1], #should vanish
+#    [3,0], #should vanish
+#    [0,4], #N2 
+#    [1,3], #N2
+#    [2,2], #N2
+#    [3,1], #N2
+#    [4,0], #N2
    [-1, -1], #QE
    [-2, -2], #unlensed
 ]
@@ -140,16 +140,16 @@ Ntheory = lambda l: fNqCmb_fft(l)
 
 # In[12]:
 in_data = {}
-
-for fname in IN_DATA_FNAMES:
-    f = open(fname, 'rb') 
-    c_in_data = pickle.load(f) 
-    f.close()
-    for key in c_in_data:
-        if(key not in in_data.keys()):
-            in_data[key] = np.array(c_in_data[key])
-        else:
-            in_data[key] = np.vstack( (in_data[key],np.array(c_in_data[key])) )
+file_idx = eval(sys.argv[3])
+fname = IN_DATA_FNAMES[file_idx]
+f = open(fname, 'rb') 
+c_in_data = pickle.load(f) 
+f.close()
+for key in c_in_data:
+    if(key not in in_data.keys()):
+        in_data[key] = np.array(c_in_data[key])
+    else:
+        in_data[key] = np.vstack( (in_data[key],np.array(c_in_data[key])) )
 
 
 for key in in_data:
@@ -244,7 +244,7 @@ for data_idx in trange(s_idx, N_data):
     
 data[pair_key] = c_data
 data[pair_key+'_sqrtN'] = c_data_sqrtN
-f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_%d_%d.pkl'%(pair[0], pair[1]), 'wb') 
+f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_FILE%d_pair_%d_%d.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
 pickle.dump(data, f)
 f.close()
 
