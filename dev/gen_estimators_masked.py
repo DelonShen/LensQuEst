@@ -1,5 +1,5 @@
 #######
-IN_DATA_FNAME = '/data/delon/LensQuEst/map_sims_800x800_20x20.pkl'
+IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
 DATA_FNAME = '/data/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_masked.pkl'
 
 mask_file = 'mask_simple800x800.png'
@@ -11,27 +11,26 @@ template_name = mask_file.split('/')[-1].split('.')[0]
 mean_field_file = '%s_point_sources.pkl'%(template_name)
 
 pairs = [
-   [0,0], #N0
-   [0,1], #kappa
-   [1,0], #kappa
-   [0,2], #N1
-   [1,1], #N1
-   [2,0], #N1
-    [0,3], #should vanish
-    [1,2], #should vanish
-    [2,1], #should vanish
-    [3,0], #should vanish
-    [0,4], #N2 
-    [1,3], #N2
-    [2,2], #N2
-    [3,1], #N2
-    [4,0], #N2
+#    [0,0], #N0
+#    [0,1], #kappa
+#    [1,0], #kappa
+#    [0,2], #N1
+#    [1,1], #N1
+#    [2,0], #N1
+#     [0,3], #should vanish
+#     [1,2], #should vanish
+#     [2,1], #should vanish
+#     [3,0], #should vanish
+#     [0,4], #N2 
+#     [1,3], #N2
+#     [2,2], #N2
+#     [3,1], #N2
+#     [4,0], #N2
    [-1, -1], #QE
    [-2, -2], #unlensed
 ]
 
 
-preload=False
 import warnings
 warnings.filterwarnings("ignore")
 #####
@@ -43,9 +42,6 @@ warnings.filterwarnings("ignore")
 import os, sys
 WORKING_DIR = os.path.dirname(os.path.abspath(''))
 sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
-
-#to get latex to work, shoulldn't be necessary for most ppl
-os.environ['PATH'] = "%s:/usr/local/cuda-11.2/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/anaconda/bin:/home/delon/texlive/bin/x86_64-linux:/home/delon/.local/bin:/home/delon/bin"%os.environ['PATH']
 
 
 # In[4]:
@@ -149,10 +145,18 @@ for a in apodized_mask:
 plt.imshow(apodized_mask)
 plt.savefig('figures/apodized_masked_%dx%d.pdf'%(nX, nY),bbox_inches='tight')
 
-
-f = open(IN_DATA_FNAME, 'rb') 
-in_data = pickle.load(f) 
+in_data = {}
+file_idx = eval(sys.argv[3])
+fname = IN_DATA_FNAMES[file_idx-1]
+f = open(fname, 'rb') 
+c_in_data = pickle.load(f) 
 f.close()
+for key in c_in_data:
+    if(key not in in_data.keys()):
+        in_data[key] = np.array(c_in_data[key])
+    else:
+        in_data[key] = np.vstack( (in_data[key],np.array(c_in_data[key])) )
+
 for key in in_data:
     print(key, np.shape(in_data[key]))
 
@@ -177,90 +181,75 @@ data_names = {
 
 from tqdm import trange, tqdm
 
-data = {}
+fgFourier = in_data['fgF_1']
+noiseFourier = in_data['noiseF_1']
 
 
 # In[43]:
 
 
-if(preload):
-    f = open(DATA_FNAME, 'rb') 
-    data = pickle.load(f) 
-    f.close()
-    for key in data:
-        print(key, np.shape(data[key]))
-
 fgFourier = in_data['fgF_1']
 noiseFourier = in_data['noiseF_1']
 
+pair = [eval(sys.argv[1]), eval(sys.argv[2])]
+data = {}
 
 mean_field = pickle.load(open(mean_field_file, 'rb'))
 
-for pair_idx in range(len(pairs)):
-    pair = pairs[pair_idx]
-    print('currently on %d of %d'%(pair_idx, len(pairs)))
-    pair_key = '%d%d'%(pair[0],pair[1])
-    keys = [data_names[p] for p in pair]
-    print(pair, keys)
-    N_data = min(len(in_data[keys[0]]), len(in_data[keys[1]]))
+
+pair_key = '%d%d'%(pair[0],pair[1])
+keys = [data_names[p] for p in pair]
+print(pair, keys)
+N_data = min(len(in_data[keys[0]]), len(in_data[keys[1]]))
+
+c_data = []
+c_data_sqrtN = []
+c_data_kR  = []
     
-
-    s_idx = 0
-    c_data = []
-    c_data_sqrtN = []
-    c_data_kR  = []
-
-    if(pair_key in data):
-        s_idx = len(data[pair_key])
-        c_data = data[pair_key]
+for data_idx in trange(N_data):
+    dataF0 = in_data[keys[0]][data_idx]
+    if(pair[0]-1 >= 0):  #isolate term
+        dataF0 = dataF0 - in_data[data_names[pair[0]-1]][data_idx]
+    dataF1 = in_data[keys[1]][data_idx]
+    if(pair[1]-1>=0):    #isolate term
+        dataF1 = dataF1 - in_data[data_names[pair[1]-1]][data_idx]
     
-    for data_idx in trange(s_idx, N_data):
+    if(pair[0]!=-2):
+        dataF0 = dataF0 + fgFourier[data_idx] + noiseFourier[data_idx]
+        dataF1 = dataF1 + fgFourier[data_idx] + noiseFourier[data_idx]
         
-        dataF0 = in_data[keys[0]][data_idx]
-        if(pair[0]-1 >= 0):  #isolate term
-            dataF0 = dataF0 - in_data[data_names[pair[0]-1]][data_idx]
-            
-        dataF1 = in_data[keys[1]][data_idx]
-        if(pair[1]-1>=0):    #isolate term
-            dataF1 = dataF1 - in_data[data_names[pair[1]-1]][data_idx]
-        
-        if(pair[0]!=-2):
-            dataF0 = dataF0 + fgFourier[data_idx] + noiseFourier[data_idx]
-            dataF1 = dataF1 + fgFourier[data_idx] + noiseFourier[data_idx]
-        
-        
-        dataF0 = baseMap.fourier(baseMap.inverseFourier(dataF0)*apodized_mask)
-        dataF1 = baseMap.fourier(baseMap.inverseFourier(dataF1)*apodized_mask)
-        
-        
-        QE = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
-                                             lMin=lMin, lMax=lMax, 
-                                             dataFourier=dataF0,
-                                             dataFourier2=dataF1)
-        sqrtNhat = []
-        kR = []
-        if(pair[0]==pair[1]):
-            sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.funlensedTT,
-                                                                    cmb.fCtotal, 
-                                                                    lMin=lMin, lMax=lMax, 
-                                                                    dataFourier=dataF0)
+    dataF0 = baseMap.fourier(baseMap.inverseFourier(dataF0)*apodized_mask)
+    dataF1 = baseMap.fourier(baseMap.inverseFourier(dataF1)*apodized_mask)
 
-            if(len(c_data_sqrtN)==0):
-                c_data_sqrtN = np.array([sqrtNhat])
-            else:
-                c_data_sqrtN = np.vstack((c_data_sqrtN, np.array([sqrtNhat])))
+    QE = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+                                         lMin=lMin, lMax=lMax, 
+                                         dataFourier=dataF0,
+                                         dataFourier2=dataF1)
+    sqrtNhat = []
+    kR = []
+    if(pair[0]==pair[1]):
+        sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.funlensedTT,
+                                                                cmb.fCtotal, 
+                                                                lMin=lMin, lMax=lMax, 
+                                                                dataFourier=dataF0)
 
-
-        if(len(c_data)==0):
-            c_data = np.array([QE])
+        if(len(c_data_sqrtN)==0):
+            c_data_sqrtN = np.array([sqrtNhat])
         else:
-            c_data = np.vstack((c_data, np.array([QE])))
-            
-            
-        assert(len(c_data)==data_idx+1)
+            c_data_sqrtN = np.vstack((c_data_sqrtN, np.array([sqrtNhat])))
 
-    data[pair_key+'_m'] = c_data
-    data[pair_key+'_m'+'_sqrtN'] = c_data_sqrtN
-    f = open(DATA_FNAME, 'wb') 
-    pickle.dump(data, f)
-    f.close()
+
+    if(len(c_data)==0):
+        c_data = np.array([QE])
+    else:
+        c_data = np.vstack((c_data, np.array([QE])))
+        
+        
+    assert(len(c_data)==data_idx+1)
+
+
+data[pair_key+'_m'] = c_data
+data[pair_key+'_m'+'_sqrtN'] = c_data_sqrtN
+f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_FILE%d_pair_%d_%d_MASKED.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
+pickle.dump(data, f)
+f.close()

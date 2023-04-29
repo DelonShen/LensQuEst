@@ -1,0 +1,561 @@
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/condabin/conda
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/conda
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/conda-env
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/activate
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/deactivate
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/profile.d/conda.sh
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/fish/conf.d/conda.fish
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/shell/condabin/Conda.psm1
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/shell/condabin/conda-hook.ps1
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/lib/python3.10/site-packages/xontrib/conda.xsh
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/profile.d/conda.csh
+no change     /home/users/delon/.bashrc
+No action taken.
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-100.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-101.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-102.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-103.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-104.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-105.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-106.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-107.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-108.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-109.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-110.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-111.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-112.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-113.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-114.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-115.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-116.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-117.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-118.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-119.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-120.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-121.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-122.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-123.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-124.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-125.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-126.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-127.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-128.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-129.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-130.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-131.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-132.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+lCmbF_o1_1 (100, 800, 401)
+lCmbF_o2_1 (100, 800, 401)
+lCmbF_o3_1 (100, 800, 401)
+lCmbF_o4_1 (100, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-133.pkl
+Map properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise

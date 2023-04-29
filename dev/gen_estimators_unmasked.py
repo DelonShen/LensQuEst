@@ -141,7 +141,7 @@ Ntheory = lambda l: fNqCmb_fft(l)
 # In[12]:
 in_data = {}
 file_idx = eval(sys.argv[3])
-fname = IN_DATA_FNAMES[file_idx]
+fname = IN_DATA_FNAMES[file_idx-1]
 f = open(fname, 'rb') 
 c_in_data = pickle.load(f) 
 f.close()
