@@ -17,4 +17,3 @@ See 'conda init --help' for more information and options.
 IMPORTANT: You may need to close and restart your shell after running 'conda init'.
 
 
-slurmstepd: error: *** JOB 17759117 ON sh03-03n59 CANCELLED AT 2023-04-28T14:47:48 ***

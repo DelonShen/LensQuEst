@@ -17,11 +17,3 @@ See 'conda init --help' for more information and options.
 IMPORTANT: You may need to close and restart your shell after running 'conda init'.
 
 
-Traceback (most recent call last):
-  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 13, in <module>
-    from universe import *
-  File "/home/users/delon/LensQuEst/LensQuEst/universe.py", line 1, in <module>
-    from headers import *
-  File "/home/users/delon/LensQuEst/LensQuEst/headers.py", line 1, in <module>
-    import numpy as np
-ModuleNotFoundError: No module named 'numpy'

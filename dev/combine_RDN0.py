@@ -5,7 +5,9 @@ warnings.filterwarnings("ignore")
 #####
 import sys
 d_idx = eval(sys.argv[1])
-
+nBins = 51
+if(len(sys.argv) == 3):
+    nBins = eval(sys.argv[2])
 import os, sys
 WORKING_DIR = os.path.dirname(os.path.abspath(''))
 sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
@@ -39,7 +41,6 @@ baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
 lMin = 30.; lMax = 3.5e3
 
 # ell bins for power spectra
-nBins = 21  # number of bins
 lRange = (1., 2.*lMax)  # range for power spectra
 
 
@@ -200,7 +201,7 @@ for i in range(len(ds1s)):
 
     for s,a,b in [[1,ds1,ds1], [1,ds1,s1d], [1,s1d,ds1],[1,s1d,s1d],[-1,s1s2,s1s2],[-1,s1s2,s2s1]]:
         t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, 
-                                                dataFourier2=b)
+                                                dataFourier2=b, nBins=nBins)
         c_data += s*[[t0,t1,t2]] 
 
     c_ps_data = {}
@@ -220,5 +221,5 @@ if(ck not in ps_data.keys()):
 else:
     ps_data[ck] = np.vstack((ps_data[ck], np.array([c_ps_data[ck]])))  
 
-with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d.pkl'%(d_idx), "wb") as f:
+with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d.pkl'%(d_idx, nBins), "wb") as f:
     pickle.dump(ps_data, f)
