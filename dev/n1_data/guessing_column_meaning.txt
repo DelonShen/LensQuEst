@@ -1,0 +1,4 @@
+lensedCls: lensed power spectra
+lenspotentialCls: unlensed power spectra, power spectra of lensing potential
+N0_analytical: (guessing columns) L PP(same as lenspotentialCls) ...
+N1_analytical

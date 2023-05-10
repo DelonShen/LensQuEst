@@ -68,15 +68,22 @@ f = open(lensedcmbfile, "w")
 print('# %15s %15s %15s %15s %15s'%('L', 'TT', 'EE', 'BB', 'TE'), file=f)
 for l in range(int(lRange[0])+1, int(lRange[1])):
     print('  %15s %15e %15e %15e %15e'%(l,
-                                        cmb.ftotal(l),
-                                        cmb.flensedEE(l),
-                                        cmb.flensedBB(l), 
-                                        cmb.flensedTE(l)), file=f)
+                                         (l*l+1)/(2*np.pi)*cmb.ftotal(l),
+                                        (l*l+1)/(2*np.pi)*cmb.flensedEE(l),
+                                        (l*l+1)/(2*np.pi)*cmb.flensedBB(l), 
+                                        (l*l+1)/(2*np.pi)*cmb.flensedTE(l)), file=f)
 f.close()
 
 phifile = "n1_data/lenspotentialCls.dat"
 f = open(phifile, "w") 
 print('# %15s %15s %15s %15s %15s %15s %15s %15s'%('L', 'TT', 'EE', 'BB', 'TE', 'PP', 'TP', 'EP'), file=f)
+
+
+#Taking TP from sample data since it should be good enough 
+l_dat = np.loadtxt('n1_data/test_data_set_lenspotentialCls.dat').T[0]
+TP = np.loadtxt('n1_data/test_data_set_lenspotentialCls.dat').T[-2]
+fTP = interp1d(l_dat, TP, kind='linear', bounds_error=False, fill_value=0.)
+
 for l in range(int(lRange[0])+1, int(lRange[1])):
     KK = p2d_cmblens.fPinterp(l)
     
@@ -84,9 +91,15 @@ for l in range(int(lRange[0])+1, int(lRange[1])):
     #not just k or phi
     phiphi =  -2. * KK / l**2
     phiphi =  -2. * phiphi / l**2
+    phiphi = (l*(l+1))**2/(2*np.pi)* phiphi #convention from CAMB
+
     print('  %15s %15e %15e %15e %15e %15e %15e %15e'%(l,
+                                                       (l*l+1)/(2*np.pi)*cmb.funlensedTT(l),
+                                                       (l*l+1)/(2*np.pi)*cmb.funlensedEE(l),
+                                                       (l*l+1)/(2*np.pi)*cmb.funlensedBB(l),
+                                                       (l*l+1)/(2*np.pi)*cmb.funlensedTE(l),
                                                        phiphi,
-                                                       0,0,0,0,0,0), file=f)
+                                                       fTP(l),0), file=f)
 f.close()
 
 FWHM = 1.4 #arcmin
@@ -101,10 +114,10 @@ tmp_output = 'n1_data'
 print('computing N1')
 
 #### TEST WITH SAMPLE DATA
-# phifile = 'n1_data/test_data_set_lenspotentialCls.dat'
-# lensedcmbfile = 'n1_data/test_data_set_lensedCls.dat'
-# FWHM = 3.5 #arcmin
-# noise_level = 17.72 #muK*arcmin
+phifile = 'n1_data/test_data_set_lenspotentialCls.dat'
+lensedcmbfile = 'n1_data/test_data_set_lensedCls.dat'
+FWHM = 3.5 #arcmin
+noise_level = 17.72 #muK*arcmin
 ####
 
 bias.compute_n0(phifile, lensedcmbfile, FWHM/60,
