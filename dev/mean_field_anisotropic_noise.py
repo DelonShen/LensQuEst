@@ -100,7 +100,7 @@ plt.savefig('figures/apodized_masked_%dx%d.pdf'%(nX, nY),bbox_inches='tight')
 
 def apply_cos(fourierData):
     realData = baseMap.inverseFourier(fourierData)
-    f = lambda x: np.cos(np.pi*x/2050)
+    f = lambda x: -3*np.cos(np.pi*x/2000)+4
     frow = np.array(list(map(f, range(len(realData[0])))))
     realData = realData * frow
     return baseMap.fourier(realData)
