@@ -177,7 +177,7 @@ plt.plot(xtmp, f(xtmp))
 
 def apply_cos(fourierData):
     realData = baseMap.inverseFourier(fourierData)
-    f = lambda x: -3*np.cos(np.pi*x/2000)+4
+    f = lambda x: 1+.3*np.sin(np.pi*x/400)
     frow = np.array(list(map(f, range(len(realData[0])))))
     realData = realData * frow
     return baseMap.fourier(realData)
@@ -212,11 +212,11 @@ for data_idx in trange(s_idx, N_data):
     if(pair[1]-1>=0):    #isolate term
         dataF1 = dataF1 - in_data[data_names[pair[1]-1]][data_idx]
     
-    if(pair[0]!=-2):
-        dataF0 = dataF0 + fgFourier[data_idx] + apply_cos(noiseFourier[data_idx])
-        dataF1 = dataF1 + fgFourier[data_idx] + apply_cos(noiseFourier[data_idx])
+    if(pair[0]!=-2): #only noise no foregrounds
+        dataF0 = dataF0 + apply_cos(noiseFourier[data_idx])
+        dataF1 = dataF1 + apply_cos(noiseFourier[data_idx])
         
-    QE = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+    QE = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=dataF0,
                                          dataFourier2=dataF1)
@@ -244,6 +244,6 @@ for data_idx in trange(s_idx, N_data):
 
 data[pair_key] = c_data
 data[pair_key+'_sqrtN'] = c_data_sqrtN
-f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_anisotropic_noise_FILE%d_pair_%d_%d.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
+f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clensed_weight_anisotropic_noise_FILE%d_pair_%d_%d.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
 pickle.dump(data, f)
 f.close()

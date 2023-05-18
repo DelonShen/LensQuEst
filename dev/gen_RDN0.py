@@ -134,19 +134,19 @@ for s_idx in trange(len(in_data['totalF_0'])//2):
     s1 = in_data['totalF_0'][s_idx]
     s2 = in_data['totalF_0'][s_idx+len(in_data['totalF_0'])//2]
 
-    ds1 = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+    ds1 = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=d,
                                          dataFourier2=s1)
-    s1d = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+    s1d = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=s1,
                                          dataFourier2=d)
-    s1s2 = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+    s1s2 = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=s1,
                                          dataFourier2=s2)
-    s2s1 = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+    s2s1 = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=s2,
                                          dataFourier2=s1)

@@ -1,6 +1,5 @@
 #######
 IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
-DATA_FNAME = '/data/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_masked.pkl'
 
 mask_file = 'mask_simple800x800.png'
 psfile = 'point_sources_800x800.png'
@@ -193,7 +192,7 @@ noiseFourier = in_data['noiseF_1']
 
 def apply_cos(fourierData):
     realData = baseMap.inverseFourier(fourierData)
-    f = lambda x: -3*np.cos(np.pi*x/2000)+4
+    f = lambda x: 1+.3*np.sin(np.pi*x/400)
     frow = np.array(list(map(f, range(len(realData[0])))))
     realData = realData * frow
     return baseMap.fourier(realData)
@@ -221,14 +220,14 @@ for data_idx in trange(N_data):
     if(pair[1]-1>=0):    #isolate term
         dataF1 = dataF1 - in_data[data_names[pair[1]-1]][data_idx]
     
-    if(pair[0]!=-2):
-        dataF0 = dataF0 + fgFourier[data_idx] + apply_cos(noiseFourier[data_idx])
-        dataF1 = dataF1 + fgFourier[data_idx] + apply_cos(noiseFourier[data_idx])
+    if(pair[0]!=-2): #only noise no foregrounds
+        dataF0 = dataF0 + apply_cos(noiseFourier[data_idx])
+        dataF1 = dataF1 + apply_cos(noiseFourier[data_idx])
         
     dataF0 = baseMap.fourier(baseMap.inverseFourier(dataF0)*apodized_mask)
     dataF1 = baseMap.fourier(baseMap.inverseFourier(dataF1)*apodized_mask)
 
-    QE = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+    QE = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=dataF0,
                                          dataFourier2=dataF1)
@@ -257,6 +256,6 @@ for data_idx in trange(N_data):
 
 data[pair_key+'_m'] = c_data
 data[pair_key+'_m'+'_sqrtN'] = c_data_sqrtN
-f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_anisotropic_noise_FILE%d_pair_%d_%d_MASKED.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
+f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clensed_weight_anisotropic_noise_FILE%d_pair_%d_%d_MASKED.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
 pickle.dump(data, f)
 f.close()

@@ -1694,6 +1694,147 @@ class FlatMap(object):
 
       return resultFourier
 
+   def computeQuadEstPhiNormalizationLensedWeightsFFT(self, fC0, fCl, fCtot, lMin=1., lMax=1.e5, test=False, cache=None):
+      """the normalization is N_l^phiphi,
+      Works great, and super fast.
+      """
+   
+      # Actual calculation
+      def doCalculation():
+         # inverse-var weighted map
+         def f(l):
+            if (l<lMin) or (l>lMax):
+               return 0.
+            result = 1./fCtot(l)
+            if not np.isfinite(result):
+               result = 0.
+            return result
+         iVarFourier = np.array(list(map(f, self.l.flatten())))
+         iVarFourier = iVarFourier.reshape(self.l.shape) # 1/ Ctot(L-l)
+         iVar = self.inverseFourier(dataFourier=iVarFourier)
+
+         # C map
+         def f(l):
+            if (l<lMin) or (l>lMax):
+               return 0.
+            result = fC0(l)*fCl(l)/fCtot(l)
+            if not np.isfinite(result):
+               result = 0.
+            return result
+         CFourier = np.array(list(map(f, self.l.flatten()))) #C0(l) * g(l)/Ctot(l)
+         CFourier = CFourier.reshape(self.l.shape)
+
+         # term 1x
+         term1x = self.inverseFourier(dataFourier= self.lx**2 * CFourier) 
+         term1x *= iVar
+         term1xFourier = self.fourier(data=term1x)
+         term1xFourier *= self.lx**2 
+         #
+         # term 1y
+         term1y = self.inverseFourier(dataFourier= self.ly**2 * CFourier)
+         term1y *= iVar
+         term1yFourier = self.fourier(data=term1y)
+         term1yFourier *= self.ly**2
+         #
+         # term 1xy
+         term1xy = self.inverseFourier(dataFourier= 2. * self.lx * self.ly * CFourier)
+         term1xy *= iVar
+         term1xyFourier = self.fourier(data=term1xy)
+         term1xyFourier *= self.lx * self.ly
+         
+         if test:
+            self.plotFourier(term1xFourier)
+            self.plotFourier(term1yFourier)
+            self.plotFourier(term1xyFourier)
+            self.plotFourier(term1xFourier+term1yFourier+term1xyFourier)
+         
+
+         # WF map
+         def f(l):
+            if (l<lMin) or (l>lMax):
+               return 0.
+            result = fC0(l)/fCtot(l)
+            # artificial factor of i such that f(-l) = f(l)*,
+            # such that f(x) is real
+            result *= 1.j
+            if not np.isfinite(result):
+               result = 0.
+            return result
+         WFFourier = np.array(list(map(f, self.l.flatten())))
+         WFFourier = WFFourier.reshape(self.l.shape)
+
+         # term 2
+         term2_x_0 = self.inverseFourier(dataFourier= self.lx * WFFourier)
+         term2_y_0 = self.inverseFourier(dataFourier= self.ly * WFFourier)
+            
+          # WF map
+         def f(l):
+            if (l<lMin) or (l>lMax):
+               return 0.
+            result = fCl(l)/fCtot(l)
+            # artificial factor of i such that f(-l) = f(l)*,
+            # such that f(x) is real
+            result *= 1.j
+            if not np.isfinite(result):
+               result = 0.
+            return result
+         WFFourier = np.array(list(map(f, self.l.flatten())))
+         WFFourier = WFFourier.reshape(self.l.shape)
+           
+         # term 2
+         term2_x_l = self.inverseFourier(dataFourier= self.lx * WFFourier)
+         term2_y_l = self.inverseFourier(dataFourier= self.ly * WFFourier)            
+        
+         # term 2x
+         term2x = term2_x_l*term2_x_0
+         term2xFourier = self.fourier(data=term2x)
+         term2xFourier *= self.lx**2
+         # minus sign to correct the artificial i**2
+         term2xFourier *= -1.
+         #
+         # term 2y
+         term2y = term2_y_l*term2_y_0
+         term2yFourier = self.fourier(data=term2y)
+         term2yFourier *= self.ly**2
+         # minus sign to correct the artificial i**2
+         term2yFourier *= -1.
+         #
+         # term 2xy #TODO: possible algebra error in FFT eval pdf, ask manu.
+         term2xy = term2_x_l * term2_y_0 + term2_y_l * term2_x_0
+         term2xyFourier = self.fourier(data=term2xy)
+         term2xyFourier *= self.lx * self.ly
+         # minus sign to correct the artificial i**2
+         term2xyFourier *= -1.
+
+         if test:
+            self.plotFourier(term2xFourier)
+            self.plotFourier(term2yFourier)
+            self.plotFourier(term2xyFourier)
+            self.plotFourier(term2xFourier+term2yFourier+term2xyFourier)
+
+         # add all terms
+         resultFourier = term1xFourier + term1yFourier + term1xyFourier
+         resultFourier += term2xFourier + term2yFourier + term2xyFourier
+
+         # cut off the high ells from phi normalization map
+         f = lambda l: (l<=2.*lMax)
+         resultFourier = self.filterFourierIsotropic(f, dataFourier=resultFourier, test=False)
+
+         # invert
+         resultFourier = 1./resultFourier
+         resultFourier[np.where(np.isfinite(resultFourier)==False)] = 0.
+
+         if test:
+            plt.loglog(self.l.flatten(), resultFourier.flatten(), 'b.')
+            plt.show()
+      
+         return resultFourier
+
+      resultFourier = doCalculation()
+      return resultFourier
+
+
+
 
    def forecastN0Kappa(self, fC0, fCtot, fCfg=None, lMin=1., lMax=1.e5, test=False, cache=None):
       """Interpolates the result for N_L^kappa = f(L),
@@ -1746,6 +1887,22 @@ class FlatMap(object):
          self.saveDataFourier(resultFourier, path)
       return resultFourier
    
+   def computeQuadEstKappaNormLensedWeights(self, fC0, fCl, fCtot, lMin=1., lMax=1.e5, dataFourier=None, dataFourier2=None, path=None, test=False, cache=None):
+      '''Returns the normalized quadratic estimator for kappa in Fourier space,
+      and saves it to file if needed.
+      '''
+      # non-normalized QE for phi
+      resultFourier = self.quadEstPhiNonNorm(fCl, fCtot, lMin=lMin, lMax=lMax, dataFourier=dataFourier, dataFourier2=dataFourier2, test=test)
+      # convert from phi to kappa
+      resultFourier = self.kappaFromPhi(resultFourier)
+      # compute normalization
+      normalizationFourier = self.computeQuadEstPhiNormalizationLensedWeightsFFT(fC0, fCl, fCtot, lMin=lMin, lMax=lMax, test=test, cache=cache)
+      # normalized (not mean field-subtracted) QE for kappa
+      resultFourier *= normalizationFourier
+      # save to file if needed
+      if path is not None:
+         self.saveDataFourier(resultFourier, path)
+      return resultFourier
    
    
    

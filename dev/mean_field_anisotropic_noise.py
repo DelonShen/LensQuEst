@@ -100,7 +100,7 @@ plt.savefig('figures/apodized_masked_%dx%d.pdf'%(nX, nY),bbox_inches='tight')
 
 def apply_cos(fourierData):
     realData = baseMap.inverseFourier(fourierData)
-    f = lambda x: -3*np.cos(np.pi*x/2000)+4
+    f = lambda x: 1+.3*np.sin(np.pi*x/400)
     frow = np.array(list(map(f, range(len(realData[0])))))
     realData = realData * frow
     return baseMap.fourier(realData)
@@ -124,10 +124,10 @@ for i in trange(N_runs):
     lensedCmbFourier = baseMap.fourier(lensedCmb)
 
 
-#    print("\tGenerate FG map")
-    fgFourier = baseMap.genGRF(cmb.fForeground, test=False)
-    lensedCmbFourier = lensedCmbFourier + fgFourier
-    lensedCmb = baseMap.inverseFourier(lensedCmbFourier)
+# #    print("\tGenerate FG map") # no foregrorunds for aniso noise
+#     fgFourier = baseMap.genGRF(cmb.fForeground, test=False)
+#     lensedCmbFourier = lensedCmbFourier + fgFourier
+#     lensedCmb = baseMap.inverseFourier(lensedCmbFourier)
 
 
 #    print("\tAdd white detector noise (debeamed)")
@@ -144,7 +144,9 @@ for i in trange(N_runs):
 #     plt.imshow(totalMaskedCmb)
 #     plt.show()
 
-    kappa_map = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, dataFourier=totalMaskedCmbFourier)
+    kappa_map = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
+                                                             lMin=lMin, lMax=lMax,
+                                                             dataFourier=totalMaskedCmbFourier)
     if(mean_field is None):
         mean_field = kappa_map
     else:
