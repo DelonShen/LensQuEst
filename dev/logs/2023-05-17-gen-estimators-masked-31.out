@@ -89,3 +89,55 @@ noiseF_1 (10, 800, 401)
 totalF_1 (10, 800, 401)
 totalF_0 (10, 800, 401)
 [-2, -2] ['totalF_0', 'totalF_0']
+Map properties
+CMB experiment properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (10, 800, 401)
+kCmbF_1 (10, 800, 401)
+lCmbF_1 (10, 800, 401)
+fgF_1 (10, 800, 401)
+noiseF_1 (10, 800, 401)
+totalF_1 (10, 800, 401)
+totalF_0 (10, 800, 401)
+[-1, -1] ['lCmbF_1', 'lCmbF_1']
+Map properties
+CMB experiment properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (10, 800, 401)
+kCmbF_1 (10, 800, 401)
+lCmbF_1 (10, 800, 401)
+fgF_1 (10, 800, 401)
+noiseF_1 (10, 800, 401)
+totalF_1 (10, 800, 401)
+totalF_0 (10, 800, 401)
+[-2, -2] ['totalF_0', 'totalF_0']
+Map properties
+CMB experiment properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (10, 800, 401)
+kCmbF_1 (10, 800, 401)
+lCmbF_1 (10, 800, 401)
+fgF_1 (10, 800, 401)
+noiseF_1 (10, 800, 401)
+totalF_1 (10, 800, 401)
+totalF_0 (10, 800, 401)
+[-1, -1] ['lCmbF_1', 'lCmbF_1']
+Map properties
+CMB experiment properties
+CMB lensing power spectrum
+Gets a theoretical prediction for the noise
+computing the reconstruction noise
+cmb0F_1 (10, 800, 401)
+kCmbF_1 (10, 800, 401)
+lCmbF_1 (10, 800, 401)
+fgF_1 (10, 800, 401)
+noiseF_1 (10, 800, 401)
+totalF_1 (10, 800, 401)
+totalF_0 (10, 800, 401)
+[-2, -2] ['totalF_0', 'totalF_0']
