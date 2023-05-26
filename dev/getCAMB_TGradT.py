@@ -14,7 +14,7 @@ results = camb.get_results(pars)
 print('Getiting cmb power dict')
 powers = results.get_cmb_power_spectra(pars, CMB_unit='muK')
 print('getting PP PT PE')
-cl = results.get_lens_potential_cls( CMB_unit='muK')  # PT PP PE
+cl = results.get_lens_potential_cls( CMB_unit='muK')  # PP PT PE
 print('getting TT EE BB TE')
 c_lensed = results.get_lensed_scalar_cls( CMB_unit='muK') #TT EE BB TE
 print('getting TGradT')
