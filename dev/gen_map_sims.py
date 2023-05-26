@@ -133,6 +133,38 @@ from itertools import product
 
 poss = list(product([True, False], range(N_RUNS)))
 
+
+
+oup_fname = '../data/input/universe_Planck15/camb/CAMB_outputs.pkl'
+print(oup_fname)
+f = open(oup_fname, 'rb') 
+powers,cl,c_lensed,c_lens_response = pickle.load(f)
+f.close()
+totCL=powers['total']
+unlensedCL=powers['unlensed_scalar']
+
+L = np.arange(unlensedCL.shape[0])
+
+unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+F = unlensedTT
+funlensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+L = np.arange(cl.shape[0])
+PP = cl[:,0]
+rawPP = PP*2*np.pi/((L*(L+1))**2)
+rawKK = L**4/4 * rawPP
+
+fKK = interp1d(L, rawKK, kind='linear', bounds_error=False, fill_value=0.)
+
+L = np.arange(totCL.shape[0])
+
+lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+F = lensedTT
+flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+
+
 data = {}
 if(preload):
     f = open(DATA_FNAME, 'rb') 
@@ -159,15 +191,15 @@ for LENSED, run_n in tqdm(poss):
     totalCmbFourier, totalCmb = None, None
     
     if(not LENSED):
-        totalCmbFourier = baseMap.genGRF(cmb.ftotal)
+        totalCmbFourier = baseMap.genGRF(ftot)
         totalCmb = baseMap.inverseFourier(totalCmbFourier)
         
     elif(LENSED):
-        cmb0Fourier = baseMap.genGRF(cmb.funlensedTT, test=False)
+        cmb0Fourier = baseMap.genGRF(funlensedTT, test=False)
         cmb0 = baseMap.inverseFourier(cmb0Fourier)
         c_Data['cmb0F'+post_fix] = cmb0Fourier
         
-        kCmbFourier = baseMap.genGRF(p2d_cmblens.fPinterp, test=False)
+        kCmbFourier = baseMap.genGRF(fKK, test=False)
         kCmb = baseMap.inverseFourier(kCmbFourier)
         c_Data['kCmbF'+post_fix] = kCmbFourier
         
