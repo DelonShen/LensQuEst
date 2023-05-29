@@ -1,3 +1,20 @@
+import pickle
+import warnings
+
+import os, sys
+WORKING_DIR = os.path.dirname(os.path.abspath(''))
+sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
+
+from universe import *
+from halo_fit import *
+from cmb import *
+from flat_map import *
+from weight import *
+from pn_2d import *
+import pickle
+import seaborn as sns
+from scipy.stats import spearmanr
+import numpy as np
 #######
 IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
 
@@ -24,30 +41,54 @@ pairs = [
 
 
 
-import warnings
 warnings.filterwarnings("ignore")
 #####
 
+oup_fname = '../data/input/universe_Planck15/camb/CAMB_outputs.pkl'
+print(oup_fname)
+f = open(oup_fname, 'rb') 
+powers,cl,c_lensed,c_lens_response = pickle.load(f)
+f.close()
+
+totCL=powers['total']
+unlensedCL=powers['unlensed_scalar']
+
+L = np.arange(unlensedCL.shape[0])
+
+unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+F = unlensedTT
+funlensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+L = np.arange(cl.shape[0])
+PP = cl[:,0]
+rawPP = PP*2*np.pi/((L*(L+1))**2)
+rawKK = L**4/4 * rawPP
+
+fKK = interp1d(L, rawKK, kind='linear', bounds_error=False, fill_value=0.)
+
+L = np.arange(totCL.shape[0])
+
+lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+F = lensedTT
+flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+
+ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+
+
+L = np.arange(c_lens_response.shape[0])
+
+cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+
+fTgradT = interp1d(L, cTgradT, kind='linear', bounds_error=False, fill_value=0.)
 
 # In[3]:
 
 
-import os, sys
-WORKING_DIR = os.path.dirname(os.path.abspath(''))
-sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
 
 # In[4]:
 
 
-from universe import *
-from halo_fit import *
-from cmb import *
-from flat_map import *
-from weight import *
-from pn_2d import *
-import pickle
-import seaborn as sns
-from scipy.stats import spearmanr
 
 
 # In[5]:
@@ -86,7 +127,7 @@ cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=Fals
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
 # power spectrum will look like
-forCtotal = lambda l: cmb.ftotal(l) 
+forCtotal = lambda l: ftot(l) 
 
 # reinterpolate: gain factor 10 in speed
 L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
@@ -170,6 +211,10 @@ data_names = {
 }
 
 
+
+
+
+
 # In[ ]:
 
 
@@ -216,14 +261,14 @@ for data_idx in trange(s_idx, N_data):
         dataF0 = dataF0 + fgFourier[data_idx] + noiseFourier[data_idx]
         dataF1 = dataF1 + fgFourier[data_idx] + noiseFourier[data_idx]
         
-    QE = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+    QE = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=dataF0,
                                          dataFourier2=dataF1)
     sqrtNhat = []
     kR = []
     if(pair[0]==pair[1]):
-        sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.funlensedTT,
+        sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(funlensedTT,
                                                                 cmb.fCtotal, 
                                                                 lMin=lMin, lMax=lMax, 
                                                                 dataFourier=dataF0)
@@ -244,7 +289,7 @@ for data_idx in trange(s_idx, N_data):
     
 data[pair_key] = c_data
 data[pair_key+'_sqrtN'] = c_data_sqrtN
-f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_FILE%d_pair_%d_%d.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
+f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_FILE%d_pair_%d_%d.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
 pickle.dump(data, f)
 f.close()
 

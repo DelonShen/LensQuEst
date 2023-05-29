@@ -17,6 +17,67 @@ from scipy.stats import spearmanr
 import matplotlib
 from tqdm import trange, tqdm
 
+
+oup_fname = '../data/input/universe_Planck15/camb/CAMB_outputs.pkl'
+print(oup_fname)
+f = open(oup_fname, 'rb') 
+powers,cl,c_lensed,c_lens_response = pickle.load(f)
+f.close()
+
+totCL=powers['total']
+unlensedCL=powers['unlensed_scalar']
+
+#unlensed
+L = np.arange(unlensedCL.shape[0])
+
+unlensedTT = unlensedCL[:,0]
+F = unlensedTT
+funlensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+unlensedEE = unlensedCL[:,1]
+F = unlensedEE
+funlensedEE = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+unlensedBB = unlensedCL[:,2]
+F = unlensedBB
+funlensedBB = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+unlensedTE = unlensedCL[:,3]
+F = unlensedTE
+funlensedTE = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+#lens potential
+L = np.arange(cl.shape[0])
+PP = cl[:,0]
+fPP = interp1d(L, PP, kind='linear', bounds_error=False, fill_value=0.)
+
+PT = cl[:,1]
+fPT = interp1d(L, PT, kind='linear', bounds_error=False, fill_value=0.)
+
+PE = cl[:,2]
+fPE = interp1d(L, PE, kind='linear', bounds_error=False, fill_value=0.)
+
+#lensed maps
+L = np.arange(totCL.shape[0])
+
+lensedTT = totCL[:,0]
+F = lensedTT
+flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+lensedEE = totCL[:,1]
+F = lensedEE
+flensedEE = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+lensedBB = totCL[:,2]
+F = lensedBB
+flensedBB = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+lensedTE = totCL[:,3]
+F = lensedTE
+flensedTE = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+
+
 print("Map properties")
 
 # number of pixels for the flat map
@@ -41,37 +102,26 @@ lRange = (1., 2.*lMax)  # range for power spectra
 # CMB S4/SO specs
 cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
 
-# Total power spectrum, for the lens reconstruction
-# basiscally gets what we theoretically expect the
-# power spectrum will look like
-forCtotal = lambda l: cmb.ftotal(l) 
 
-# reinterpolate: gain factor 10 in speed
-L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
-F = np.array(list(map(forCtotal, L)))
-cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+#compute totalTT
+lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+F = lensedTT
+flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 
-print("CMB lensing power spectrum")
-u = UnivPlanck15()
-halofit = Halofit(u, save=False)
-w_cmblens = WeightLensSingle(u, z_source=1100., name="cmblens")
-p2d_cmblens = P2dAuto(u, halofit, w_cmblens, save=False)
+ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
 
-print("Gets a theoretical prediction for the noise")
-fNqCmb_fft = baseMap.forecastN0Kappa(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
-Ntheory = lambda l: fNqCmb_fft(l) 
 
-ell = list([i for i in lRange])
 
+lRange = [1., 7e3]
 lensedcmbfile = "n1_data/lensedCls.dat"
 f = open(lensedcmbfile, "w") 
 print('# %15s %15s %15s %15s %15s'%('L', 'TT', 'EE', 'BB', 'TE'), file=f)
 for l in range(int(lRange[0])+1, int(lRange[1])):
     print('  %15s %15e %15e %15e %15e'%(l,
-                                         (l*l+1)/(2*np.pi)*cmb.ftotal(l),
-                                        (l*l+1)/(2*np.pi)*cmb.flensedEE(l),
-                                        (l*l+1)/(2*np.pi)*cmb.flensedBB(l), 
-                                        (l*l+1)/(2*np.pi)*cmb.flensedTE(l)), file=f)
+                                        ftot(l)*l*(l+1)/(2*np.pi),
+                                        flensedEE(l),
+                                        flensedBB(l), 
+                                        flensedTE(l)), file=f)
 f.close()
 
 phifile = "n1_data/lenspotentialCls.dat"
@@ -79,45 +129,33 @@ f = open(phifile, "w")
 print('# %15s %15s %15s %15s %15s %15s %15s %15s'%('L', 'TT', 'EE', 'BB', 'TE', 'PP', 'TP', 'EP'), file=f)
 
 
-#Taking TP from sample data since it should be good enough 
-l_dat = np.loadtxt('n1_data/test_data_set_lenspotentialCls.dat').T[0]
-TP = np.loadtxt('n1_data/test_data_set_lenspotentialCls.dat').T[-2]
-fTP = interp1d(l_dat, TP, kind='linear', bounds_error=False, fill_value=0.)
-
 for l in range(int(lRange[0])+1, int(lRange[1])):
-    KK = p2d_cmblens.fPinterp(l)
-    
-    #do twice since we're considering power spectrum <phi phi> and <kk>
-    #not just k or phi
-    phiphi =  -2. * KK / l**2
-    phiphi =  -2. * phiphi / l**2
-    phiphi = (l*(l+1))**2/(2*np.pi)* phiphi #convention from CAMB
 
     print('  %15s %15e %15e %15e %15e %15e %15e %15e'%(l,
-                                                       (l*l+1)/(2*np.pi)*cmb.funlensedTT(l),
-                                                       (l*l+1)/(2*np.pi)*cmb.funlensedEE(l),
-                                                       (l*l+1)/(2*np.pi)*cmb.funlensedBB(l),
-                                                       (l*l+1)/(2*np.pi)*cmb.funlensedTE(l),
-                                                       phiphi,
-                                                       fTP(l),0), file=f)
+                                                       funlensedTT(l),
+                                                       funlensedEE(l),
+                                                       funlensedBB(l),
+                                                       funlensedTE(l),
+                                                       fPP(l),
+                                                       fPT(l),
+                                                       fPE(l)), file=f)
 f.close()
 
 FWHM = 1.4 #arcmin
 noise_level = 7 #muK*arcmin
 
 lmin = 2
-
-lmax = lMax
+lmax = 3.5e3
 lmaxout = lmax
 lmax_TT = lmax
 tmp_output = 'n1_data'
 print('computing N1')
 
 #### TEST WITH SAMPLE DATA
-phifile = 'n1_data/test_data_set_lenspotentialCls.dat'
-lensedcmbfile = 'n1_data/test_data_set_lensedCls.dat'
-FWHM = 3.5 #arcmin
-noise_level = 17.72 #muK*arcmin
+# phifile = 'n1_data/test_data_set_lenspotentialCls.dat'
+# lensedcmbfile = 'n1_data/test_data_set_lensedCls.dat'
+# FWHM = 3.5 #arcmin
+# noise_level = 17.72 #muK*arcmin
 ####
 
 bias.compute_n0(phifile, lensedcmbfile, FWHM/60,
