@@ -1,14 +1,29 @@
+import pickle
+import warnings
+
+import os, sys
+WORKING_DIR = os.path.dirname(os.path.abspath(''))
+sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
+
+from universe import *
+from halo_fit import *
+from cmb import *
+from flat_map import *
+from weight import *
+from pn_2d import *
+import pickle
+import seaborn as sns
+from scipy.stats import spearmanr
+import numpy as np
+
 #######
 IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
-DATA_FNAME = '/data/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_masked.pkl'
-
 mask_file = 'mask_simple800x800.png'
 psfile = 'point_sources_800x800.png'
 psapod = 2
 
 
 template_name = mask_file.split('/')[-1].split('.')[0]
-mean_field_file = '%s_point_sources.pkl'%(template_name)
 
 pairs = [
 #    [0,0], #N0
@@ -29,6 +44,47 @@ pairs = [
    [-1, -1], #QE
    [-2, -2], #unlensed
 ]
+
+
+
+oup_fname = '../data/input/universe_Planck15/camb/CAMB_outputs.pkl'
+print(oup_fname)
+f = open(oup_fname, 'rb') 
+powers,cl,c_lensed,c_lens_response = pickle.load(f)
+f.close()
+
+totCL=powers['total']
+unlensedCL=powers['unlensed_scalar']
+
+L = np.arange(unlensedCL.shape[0])
+
+unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+F = unlensedTT
+funlensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+L = np.arange(cl.shape[0])
+PP = cl[:,0]
+rawPP = PP*2*np.pi/((L*(L+1))**2)
+rawKK = L**4/4 * rawPP
+
+fKK = interp1d(L, rawKK, kind='linear', bounds_error=False, fill_value=0.)
+
+L = np.arange(totCL.shape[0])
+
+lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+F = lensedTT
+flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+
+ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+
+
+L = np.arange(c_lens_response.shape[0])
+
+cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+
+fTgradT = interp1d(L, cTgradT, kind='linear', bounds_error=False, fill_value=0.)
+
 
 
 import warnings
@@ -94,30 +150,12 @@ cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=Fals
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
 # power spectrum will look like
-forCtotal = lambda l: cmb.ftotal(l) 
+forCtotal = lambda l: ftot(l) 
 
 # reinterpolate: gain factor 10 in speed
 L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
 F = np.array(list(map(forCtotal, L)))
 cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
-
-
-# In[7]:
-
-
-print("CMB lensing power spectrum")
-u = UnivPlanck15()
-halofit = Halofit(u, save=False)
-w_cmblens = WeightLensSingle(u, z_source=1100., name="cmblens")
-p2d_cmblens = P2dAuto(u, halofit, w_cmblens, save=False)
-
-
-# In[8]:
-
-
-print("Gets a theoretical prediction for the noise")
-fNqCmb_fft = baseMap.forecastN0Kappa(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
-Ntheory = lambda l: fNqCmb_fft(l) 
 
 
 # In[9]:
@@ -194,7 +232,6 @@ noiseFourier = in_data['noiseF_1']
 pair = [eval(sys.argv[1]), eval(sys.argv[2])]
 data = {}
 
-mean_field = pickle.load(open(mean_field_file, 'rb'))
 
 
 pair_key = '%d%d'%(pair[0],pair[1])
@@ -221,14 +258,14 @@ for data_idx in trange(N_data):
     dataF0 = baseMap.fourier(baseMap.inverseFourier(dataF0)*apodized_mask)
     dataF1 = baseMap.fourier(baseMap.inverseFourier(dataF1)*apodized_mask)
 
-    QE = baseMap.computeQuadEstKappaNorm(cmb.funlensedTT, cmb.fCtotal, 
+    QE = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=dataF0,
                                          dataFourier2=dataF1)
     sqrtNhat = []
     kR = []
     if(pair[0]==pair[1]):
-        sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.funlensedTT,
+        sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(funlensedTT,
                                                                 cmb.fCtotal, 
                                                                 lMin=lMin, lMax=lMax, 
                                                                 dataFourier=dataF0)
@@ -250,6 +287,6 @@ for data_idx in trange(N_data):
 
 data[pair_key+'_m'] = c_data
 data[pair_key+'_m'+'_sqrtN'] = c_data_sqrtN
-f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_FILE%d_pair_%d_%d_MASKED.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
+f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_FILE%d_pair_%d_%d_MASKED.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
 pickle.dump(data, f)
 f.close()
