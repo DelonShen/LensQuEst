@@ -1,21 +1,10 @@
-#######
-IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
+import pickle
 import warnings
-warnings.filterwarnings("ignore")
-#####
 
-
-import numpy as np
 import os, sys
 WORKING_DIR = os.path.dirname(os.path.abspath(''))
 sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
-
-import sys
-
-
-
-#to get latex to work, shoulldn't be necessary for most ppl
-os.environ['PATH'] = "%s:/usr/local/cuda-11.2/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/anaconda/bin:/home/delon/texlive/bin/x86_64-linux:/home/delon/.local/bin:/home/delon/bin"%os.environ['PATH']
+from tqdm import tqdm,trange
 
 from universe import *
 from halo_fit import *
@@ -26,8 +15,85 @@ from pn_2d import *
 import pickle
 import seaborn as sns
 from scipy.stats import spearmanr
-import matplotlib
-from tqdm import tqdm, trange
+import numpy as np
+#######
+IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
+
+
+pairs = [
+#   [0,0], #N0
+#   [0,1], #kappa
+#   [1,0], #kappa
+#   [0,2], #N1
+#   [1,1], #N1
+#   [2,0], #N1
+#    [0,3], #should vanish
+#    [1,2], #should vanish
+#    [2,1], #should vanish
+#    [3,0], #should vanish
+#    [0,4], #N2 
+#    [1,3], #N2
+#    [2,2], #N2
+#    [3,1], #N2
+#    [4,0], #N2
+   [-1, -1], #QE
+   [-2, -2], #unlensed
+]
+
+
+
+warnings.filterwarnings("ignore")
+#####
+
+oup_fname = '../data/input/universe_Planck15/camb/CAMB_outputs.pkl'
+print(oup_fname)
+f = open(oup_fname, 'rb') 
+powers,cl,c_lensed,c_lens_response = pickle.load(f)
+f.close()
+
+totCL=powers['total']
+unlensedCL=powers['unlensed_scalar']
+
+L = np.arange(unlensedCL.shape[0])
+
+unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+F = unlensedTT
+funlensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+L = np.arange(cl.shape[0])
+PP = cl[:,0]
+rawPP = PP*2*np.pi/((L*(L+1))**2)
+rawKK = L**4/4 * rawPP
+
+fKK = interp1d(L, rawKK, kind='linear', bounds_error=False, fill_value=0.)
+
+L = np.arange(totCL.shape[0])
+
+lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+F = lensedTT
+flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+
+ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+
+
+L = np.arange(c_lens_response.shape[0])
+
+cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+
+fTgradT = interp1d(L, cTgradT, kind='linear', bounds_error=False, fill_value=0.)
+
+# In[3]:
+
+
+
+# In[4]:
+
+
+
+
+# In[5]:
+
 
 print("Map properties")
 
@@ -49,7 +115,11 @@ lMin = 30.; lMax = 3.5e3
 nBins = 21  # number of bins
 lRange = (1., 2.*lMax)  # range for power spectra
 
-#### print("CMB experiment properties")
+
+# In[6]:
+
+
+print("CMB experiment properties")
 
 # Adjust the lMin and lMax to the assumptions of the analysis
 # CMB S3 specs
@@ -58,22 +128,13 @@ cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=Fals
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
 # power spectrum will look like
-forCtotal = lambda l: cmb.ftotal(l) 
+forCtotal = lambda l: ftot(l) 
 
 # reinterpolate: gain factor 10 in speed
 L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
 F = np.array(list(map(forCtotal, L)))
 cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 
-print("CMB lensing power spectrum")
-u = UnivPlanck15()
-halofit = Halofit(u, save=False)
-w_cmblens = WeightLensSingle(u, z_source=1100., name="cmblens")
-p2d_cmblens = P2dAuto(u, halofit, w_cmblens, save=False)
-
-print("Gets a theoretical prediction for the noise")
-fNqCmb_fft = baseMap.forecastN0Kappa(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
-Ntheory = lambda l: fNqCmb_fft(l) 
 
 in_data = {}
 
@@ -116,7 +177,6 @@ ps_data = {}
 
 
 #RDN0
-from tqdm import tqdm,trange
 
     
 d_idx = eval(sys.argv[1])
@@ -134,19 +194,19 @@ for s_idx in trange(len(in_data['totalF_0'])//2):
     s1 = in_data['totalF_0'][s_idx]
     s2 = in_data['totalF_0'][s_idx+len(in_data['totalF_0'])//2]
 
-    ds1 = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
+    ds1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=d,
                                          dataFourier2=s1)
-    s1d = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
+    s1d = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=s1,
                                          dataFourier2=d)
-    s1s2 = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
+    s1s2 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=s1,
                                          dataFourier2=s2)
-    s2s1 = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
+    s2s1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=s2,
                                          dataFourier2=s1)

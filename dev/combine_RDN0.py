@@ -197,23 +197,25 @@ for i in range(len(ds1s)):
     s1d = s1ds[i]
     s1s2= s1s2s[i]
     s2s1= s2s1s[i]
-    c_data = []
+    curr_data = []
 
     for s,a,b in [[1,ds1,ds1], [1,ds1,s1d], [1,s1d,ds1],[1,s1d,s1d],[-1,s1s2,s1s2],[-1,s1s2,s2s1]]:
         t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, 
                                                 dataFourier2=b, nBins=nBins)
-        c_data += s*[[t0,t1,t2]] 
+        curr_data += [[t0,s*t1,t2]] 
 
     c_ps_data = {}
 
     c_ps_data[ck] = [0,0,0]
 
-    c_ps_data[ck][0], c_ps_data[ck][1], c_ps_data[ck][2] = tmp_combine_Cl(c_data)
+    c_ps_data[ck][0], c_ps_data[ck][1], c_ps_data[ck][2] = tmp_combine_Cl(curr_data)
 
     if(c_data is None):
         c_data = np.array([c_ps_data[ck]])
     else:
         c_data = np.vstack((c_data, np.array([c_ps_data[ck]])))
+        
+assert(c_data.shape[0] == len(ds1s))
 RDN0_for_data = combine_Cl(c_data)
 del c_data
 if(ck not in ps_data.keys()):
