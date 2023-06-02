@@ -1,0 +1,32 @@
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/condabin/conda
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/conda
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/conda-env
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/activate
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/deactivate
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/profile.d/conda.sh
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/fish/conf.d/conda.fish
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/shell/condabin/Conda.psm1
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/shell/condabin/conda-hook.ps1
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/lib/python3.10/site-packages/xontrib/conda.xsh
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/profile.d/conda.csh
+no change     /home/users/delon/.bashrc
+No action taken.
+../data/input/universe_Planck15/camb/CAMB_outputs.pkl
+Map properties
+CMB experiment properties
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+cmb0F_1 (500, 800, 401)
+kCmbF_1 (500, 800, 401)
+lCmbF_1 (500, 800, 401)
+fgF_1 (500, 800, 401)
+noiseF_1 (500, 800, 401)
+totalF_1 (500, 800, 401)
+totalF_0 (500, 800, 401)
+CURR 0
+/scratch/users/delon/LensQuEst/RDN0-in_data-351-0.pkl

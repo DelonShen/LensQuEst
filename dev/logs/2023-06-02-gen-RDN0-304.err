@@ -1,0 +1,20 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+  0%|                                                                                              | 0/50 [00:00<?, ?it/s]  2%|█▋                                                                                    | 1/50 [00:00<00:18,  2.61it/s]  4%|███▍                                                                                  | 2/50 [00:01<00:37,  1.27it/s]  6%|█████▏                                                                                | 3/50 [00:02<00:37,  1.24it/s]  8%|██████▉                                                                               | 4/50 [00:03<00:39,  1.16it/s] 10%|████████▌                                                                             | 5/50 [00:04<00:42,  1.06it/s] 12%|██████████▎                                                                           | 6/50 [00:05<00:46,  1.06s/it] 14%|████████████                                                                          | 7/50 [00:07<00:50,  1.18s/it] 16%|█████████████▊                                                                        | 8/50 [00:08<00:54,  1.30s/it] 18%|███████████████▍                                                                      | 9/50 [00:10<00:58,  1.42s/it] 20%|█████████████████                                                                    | 10/50 [00:12<01:02,  1.56s/it] 22%|██████████████████▋                                                                  | 11/50 [00:14<01:06,  1.70s/it] 24%|████████████████████▍                                                                | 12/50 [00:16<01:09,  1.84s/it] 26%|██████████████████████                                                               | 13/50 [00:18<01:14,  2.00s/it] 28%|███████████████████████▊                                                             | 14/50 [00:21<01:16,  2.14s/it] 30%|█████████████████████████▌                                                           | 15/50 [00:23<01:19,  2.28s/it] 32%|███████████████████████████▏                                                         | 16/50 [00:26<01:22,  2.41s/it]

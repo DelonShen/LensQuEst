@@ -151,7 +151,31 @@ for fname in tqdm(IN_DATA_FNAMES):
 
 for key in in_data:
     print(key, np.shape(in_data[key]))
+
+d_idx = eval(sys.argv[1])
+d = in_data['totalF_1'][d_idx]
+
     
+# d_idx = eval(sys.argv[1])
+
+# IN_DATA_IDX = d_idx//10
+# fname = IN_DATA_FNAMES[IN_DATA_IDX]
+
+# f = open(fname, 'rb') 
+# c_in_data = pickle.load(f) 
+# f.close()
+# for key in c_in_data:
+#     if(key not in in_data.keys()):
+#         in_data[key] = np.array(c_in_data[key])
+#     else:
+#         in_data[key] = np.vstack( (in_data[key],np.array(c_in_data[key])) )
+
+
+# d = in_data['totalF_1'][d_idx%10]
+
+for key in in_data:
+    print(key, np.shape(in_data[key]))
+
     
 pairs = [
     [0,0], #N0
@@ -179,67 +203,95 @@ ps_data = {}
 #RDN0
 
     
-d_idx = eval(sys.argv[1])
 RDN0_data = {}
 
-d = in_data['totalF_1'][d_idx]
 
 ds1s = []
 s1ds = []
 s1s2s= []
 s2s1s= []
 
-for s_idx in trange(len(in_data['totalF_0'])//2):
-#     for s_idx in trange(2):
-    s1 = in_data['totalF_0'][s_idx]
-    s2 = in_data['totalF_0'][s_idx+len(in_data['totalF_0'])//2]
 
-    ds1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
-                                         lMin=lMin, lMax=lMax, 
-                                         dataFourier=d,
-                                         dataFourier2=s1)
-    s1d = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
-                                         lMin=lMin, lMax=lMax, 
-                                         dataFourier=s1,
-                                         dataFourier2=d)
-    s1s2 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
-                                         lMin=lMin, lMax=lMax, 
-                                         dataFourier=s1,
-                                         dataFourier2=s2)
-    s2s1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
-                                         lMin=lMin, lMax=lMax, 
-                                         dataFourier=s2,
-                                         dataFourier2=s1)
+tmp_idx = 0
+for s_idx in range(50):
+    print('CURR', s_idx)
+    for s2_idx in trange(50):
+        s1 = in_data['totalF_0'][s_idx]
+        s2 = in_data['totalF_0'][s2_idx+len(in_data['totalF_0'])//2]
 
-    if(len(ds1s)==0):
-        ds1s = np.array([ds1])
-    else:
-        ds1s = np.vstack((ds1s, np.array([ds1])))
+        ds1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
+                                             lMin=lMin, lMax=lMax, 
+                                             dataFourier=d,
+                                             dataFourier2=s1)
+        s1d = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
+                                             lMin=lMin, lMax=lMax, 
+                                             dataFourier=s1,
+                                             dataFourier2=d)
+        s1s2 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
+                                             lMin=lMin, lMax=lMax, 
+                                             dataFourier=s1,
+                                             dataFourier2=s2)
+        s2s1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
+                                             lMin=lMin, lMax=lMax, 
+                                             dataFourier=s2,
+                                             dataFourier2=s1)
 
-    if(len(s1ds)==0):
-        s1ds = np.array([s1d])
-    else:
-        s1ds = np.vstack((s1ds, np.array([s1d])))
+#         if(len(ds1s)==0):
+#             ds1s = np.array([ds1])
+#         else:
+#             ds1s = np.vstack((ds1s, np.array([ds1])))
 
-    if(len(s1s2s)==0):
-        s1s2s = np.array([s1s2])
-    else:
-        s1s2s = np.vstack((s1s2s, np.array([s1s2])))
+#         if(len(s1ds)==0):
+#             s1ds = np.array([s1d])
+#         else:
+#             s1ds = np.vstack((s1ds, np.array([s1d])))
 
-    if(len(s2s1s)==0):
-        s2s1s = np.array([s2s1])
-    else:
-        s2s1s = np.vstack((s2s1s, np.array([s2s1])))
-RDN0_data = {
-    'ds1s' : ds1s,
-    's1ds' : s1ds,
-    's1s2s': s1s2s,
-    's2s1s': s2s1s
-}
+#         if(len(s1s2s)==0):
+#             s1s2s = np.array([s1s2])
+#         else:
+#             s1s2s = np.vstack((s1s2s, np.array([s1s2])))
+
+#         if(len(s2s1s)==0):
+#             s2s1s = np.array([s2s1])
+#         else:
+#             s2s1s = np.vstack((s2s1s, np.array([s2s1])))
+            
+            
+            
+            
+        RDN0_data = {
+            'ds1' : ds1,
+            's1d' : s1d,
+            's1s2': s1s2,
+            's2s1': s2s1
+        }
 
 
-oup_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-%d.pkl'%(d_idx)
-print(oup_fname)
-f = open(oup_fname, 'wb') 
-pickle.dump(RDN0_data, f)
-f.close()
+        oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d.pkl'%(d_idx,tmp_idx)
+        print(oup_fname)
+        f = open(oup_fname, 'wb') 
+        pickle.dump(RDN0_data, f)
+        f.close()
+        tmp_idx += 1
+        
+        del ds1
+        del s1d
+        del s1s2
+        del s2s1
+
+
+# RDN0_data = {
+#     'ds1s' : ds1s,
+#     's1ds' : s1ds,
+#     's1s2s': s1s2s,
+#     's2s1s': s2s1s
+# }
+
+
+# oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d.pkl'%(d_idx)
+# print(oup_fname)
+# f = open(oup_fname, 'wb') 
+# pickle.dump(RDN0_data, f)
+# f.close()
+
+

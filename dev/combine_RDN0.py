@@ -192,7 +192,7 @@ s1s2s= RDN0_data['s1s2s']
 s2s1s= RDN0_data['s2s1s']
 
 c_data = None
-for i in range(len(ds1s)):
+for i in trange(len(ds1s)):
     ds1 = ds1s[i]
     s1d = s1ds[i]
     s1s2= s1s2s[i]
@@ -216,6 +216,7 @@ for i in range(len(ds1s)):
         c_data = np.vstack((c_data, np.array([c_ps_data[ck]])))
         
 assert(c_data.shape[0] == len(ds1s))
+print("ASDF", c_data.shape)
 RDN0_for_data = combine_Cl(c_data)
 del c_data
 if(ck not in ps_data.keys()):
