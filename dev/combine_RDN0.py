@@ -1,10 +1,10 @@
 #######
-IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
 import warnings
 warnings.filterwarnings("ignore")
 #####
 import sys
 d_idx = eval(sys.argv[1])
+# d_idx = 0
 nBins = 51
 if(len(sys.argv) == 3):
     nBins = eval(sys.argv[2])
@@ -23,6 +23,47 @@ import seaborn as sns
 from scipy.stats import spearmanr
 import matplotlib
 from tqdm import trange, tqdm
+
+
+oup_fname = '../data/input/universe_Planck15/camb/CAMB_outputs.pkl'
+print(oup_fname)
+f = open(oup_fname, 'rb') 
+powers,cl,c_lensed,c_lens_response = pickle.load(f)
+f.close()
+
+totCL=powers['total']
+unlensedCL=powers['unlensed_scalar']
+
+L = np.arange(unlensedCL.shape[0])
+
+unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+F = unlensedTT
+funlensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+L = np.arange(cl.shape[0])
+PP = cl[:,0]
+rawPP = PP*2*np.pi/((L*(L+1))**2)
+rawKK = L**4/4 * rawPP
+
+fKK = interp1d(L, rawKK, kind='linear', bounds_error=False, fill_value=0.)
+
+L = np.arange(totCL.shape[0])
+
+lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+F = lensedTT
+flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
+
+ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+
+
+L = np.arange(c_lens_response.shape[0])
+
+cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+
+fTgradT = interp1d(L, cTgradT, kind='linear', bounds_error=False, fill_value=0.)
+
+
 
 print("Map properties")
 
@@ -51,7 +92,7 @@ cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=Fals
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
 # power spectrum will look like
-forCtotal = lambda l: cmb.ftotal(l) 
+forCtotal = lambda l: ftot(l) 
 
 # reinterpolate: gain factor 10 in speed
 L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
@@ -65,7 +106,7 @@ w_cmblens = WeightLensSingle(u, z_source=1100., name="cmblens")
 p2d_cmblens = P2dAuto(u, halofit, w_cmblens, save=False)
 
 print("Gets a theoretical prediction for the noise")
-fNqCmb_fft = baseMap.forecastN0Kappa(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
+fNqCmb_fft = baseMap.forecastN0Kappa(funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
 Ntheory = lambda l: fNqCmb_fft(l) 
 
 in_data = {}
@@ -119,56 +160,8 @@ data_names = {
 
 
 data = {}
-# # pbar = trange(len(pairs))
-# for file_idx in trange(1,51):
-#     for pair_idx in range(len(pairs)):
-#         pair = pairs[pair_idx]
-        
-#         f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clunlensed_weight_FILE%d_pair_%d_%d.pkl'%(file_idx, pair[0], pair[1]), 'rb')  
-#         c_data = pickle.load(f)
-#         f.close()        
-#         for key in c_data:
-#             if(key not in data.keys()):
-#                 data[key] = np.array(c_data[key])
-#             else:
-#                 data[key] = np.vstack((data[key], np.array(c_data[key])))  
-# #             print(np.shape(data[key]))
 
 
-
-for key in data:
-    print(key, np.shape(data[key]))
-    
-    
-def combine_Cl(Cls_tot):
-    n_runs = np.shape(Cls_tot)[0]
-    print(n_runs, np.shape(Cls_tot))
-    lCen = Cls_tot[0][0]
-    Cls = np.sum(np.transpose(Cls_tot, axes=[1,2,0])[1], axis=1)/n_runs
-    sCls = np.sqrt(np.sum(np.square(np.transpose(Cls_tot, axes=[1,2,0])[2]), axis=1))/n_runs
-    return lCen, Cls, sCls
-
-def combine_sketchy(Cl0, Cli):
-    n_runs = np.shape(Cl0)[0]
-    print(n_runs, np.shape(Cl0))
-    ret = np.copy(Cl0)
-    ret = np.transpose(ret, axes=[1,2,0])
-    ret[1] = np.array([
-        [Cl0[run_idx][1][bin_idx]+
-         sum([Cli[i][run_idx][1][bin_idx] for i in range(len(Cli))]) 
-                     for run_idx in range(n_runs)] 
-                    for bin_idx in range(len(Cl0[0][1]))])
-    ret[2] = np.array([[np.sqrt(Cl0[run_idx][2][bin_idx]**2+sum([Cli[i][run_idx][2][bin_idx]**2 
-                                                               for i in range(len(Cli))]))
-                     for run_idx in range(n_runs)] 
-                    for bin_idx in range(len(Cl0[0][1]))])
-    return np.transpose(ret, axes=[2,0,1])
-
-
-ps_data = {}
-
-#estimate RDN0
-ck = 'RDN(0)'
 
 def tmp_combine_Cl(Cls_tot):
     n_runs = np.shape(Cls_tot)[0]
@@ -177,52 +170,51 @@ def tmp_combine_Cl(Cls_tot):
 #     sCls =  np.sum(np.transpose(Cls_tot, axes=[1,2,0])[2], axis=1)
     sCls = np.sqrt(np.sum(np.square(np.transpose(Cls_tot, axes=[1,2,0])[2]), axis=1))
     return lCen, Cls, sCls
+ck = 'RDN(0)'
 
 
-RDN0_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-in_data-%d.pkl'%(d_idx)
-RDN0_data = None
-try:
-    with open(RDN0_fname,"rb") as f:
-        RDN0_data = pickle.load(f)
-except IOError:
-    assert(1==0)
-ds1s = RDN0_data['ds1s']
-s1ds = RDN0_data['s1ds']
-s1s2s= RDN0_data['s1s2s']
-s2s1s= RDN0_data['s2s1s']
+import multiprocessing as mp
 
-c_data = None
-for i in trange(len(ds1s)):
-    ds1 = ds1s[i]
-    s1d = s1ds[i]
-    s1s2= s1s2s[i]
-    s2s1= s2s1s[i]
+def process_data(tmp_idx):
+    oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d.pkl' % (d_idx, tmp_idx)
+    f = open(oup_fname, 'rb')
+    RDN0_data = pickle.load(f)
+    f.close()
+
+    ds1 = RDN0_data['ds1']
+    s1d = RDN0_data['s1d']
+    s1s2 = RDN0_data['s1s2']
+    s2s1 = RDN0_data['s2s1']
     curr_data = []
 
-    for s,a,b in [[1,ds1,ds1], [1,ds1,s1d], [1,s1d,ds1],[1,s1d,s1d],[-1,s1s2,s1s2],[-1,s1s2,s2s1]]:
-        t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, 
-                                                dataFourier2=b, nBins=nBins)
-        curr_data += [[t0,s*t1,t2]] 
+    for s, a, b in [[1, ds1, ds1], [1, ds1, s1d], [1, s1d, ds1], [1, s1d, s1d], [-1, s1s2, s1s2], [-1, s1s2, s2s1]]:
+        t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+        curr_data.append([t0, s * t1, t2])
 
     c_ps_data = {}
-
-    c_ps_data[ck] = [0,0,0]
-
+    c_ps_data[ck] = [0, 0, 0]
     c_ps_data[ck][0], c_ps_data[ck][1], c_ps_data[ck][2] = tmp_combine_Cl(curr_data)
 
-    if(c_data is None):
-        c_data = np.array([c_ps_data[ck]])
-    else:
-        c_data = np.vstack((c_data, np.array([c_ps_data[ck]])))
-        
-assert(c_data.shape[0] == len(ds1s))
-print("ASDF", c_data.shape)
-RDN0_for_data = combine_Cl(c_data)
-del c_data
-if(ck not in ps_data.keys()):
-    ps_data[ck] = np.array([c_ps_data[ck]])
-else:
-    ps_data[ck] = np.vstack((ps_data[ck], np.array([c_ps_data[ck]])))  
+    return c_ps_data[ck]
+
+pool = mp.Pool()
+
+results = list(tqdm(pool.imap(process_data,  range(2500)), total=2500))
+
+
+pool.close()
+pool.join()
+
+tot = np.zeros_like(results[0])
+tot[0] = results[0][0]
+for result in results:
+    assert(all(tot[0] == result[0]))
+    tot[1] += result[1]
+    tot[2] += np.square(result[2])
+    
+    
+tot[1] = tot[1] / (2500)
+tot[2] = np.sqrt(tot[2])/ (2500)
 
 with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d.pkl'%(d_idx, nBins), "wb") as f:
-    pickle.dump(ps_data, f)
+    pickle.dump(tot, f)

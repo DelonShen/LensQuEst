@@ -224,7 +224,7 @@ for data_idx in trange(s_idx, N_data):
     sqrtNhat = []
     kR = []
     if(pair[0]==pair[1]):
-        sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(funlensedTT,
+        sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(fTgradT,
                                                                 cmb.fCtotal, 
                                                                 lMin=lMin, lMax=lMax, 
                                                                 dataFourier=dataF0)

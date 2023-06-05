@@ -216,6 +216,9 @@ tmp_idx = 0
 for s_idx in range(50):
     print('CURR', s_idx)
     for s2_idx in trange(50):
+        if(s_idx != 49 or s2_idx != 49):
+            tmp_idx += 1 
+            continue
         s1 = in_data['totalF_0'][s_idx]
         s2 = in_data['totalF_0'][s2_idx+len(in_data['totalF_0'])//2]
 
