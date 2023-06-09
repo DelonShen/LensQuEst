@@ -1,0 +1,37 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:61: RuntimeWarning: invalid value encountered in divide
+  unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:67: RuntimeWarning: invalid value encountered in divide
+  rawPP = PP*2*np.pi/((L*(L+1))**2)
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:74: RuntimeWarning: invalid value encountered in divide
+  lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:84: RuntimeWarning: invalid value encountered in divide
+  cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:22<03:23, 22.62s/it] 20%|██        | 2/10 [00:45<03:01, 22.69s/it] 30%|███       | 3/10 [01:07<02:37, 22.57s/it] 40%|████      | 4/10 [01:31<02:17, 22.86s/it] 50%|█████     | 5/10 [01:54<01:55, 23.03s/it] 60%|██████    | 6/10 [02:18<01:33, 23.35s/it] 70%|███████   | 7/10 [02:42<01:10, 23.52s/it] 80%|████████  | 8/10 [03:05<00:46, 23.38s/it] 90%|█████████ | 9/10 [03:28<00:23, 23.42s/it]100%|██████████| 10/10 [03:51<00:00, 23.19s/it]100%|██████████| 10/10 [03:51<00:00, 23.15s/it]
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:61: RuntimeWarning: invalid value encountered in divide
+  unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:67: RuntimeWarning: invalid value encountered in divide
+  rawPP = PP*2*np.pi/((L*(L+1))**2)
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:74: RuntimeWarning: invalid value encountered in divide
+  lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:84: RuntimeWarning: invalid value encountered in divide
+  cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:24<03:40, 24.52s/it] 20%|██        | 2/10 [00:47<03:08, 23.53s/it] 30%|███       | 3/10 [01:10<02:42, 23.15s/it] 40%|████      | 4/10 [01:33<02:19, 23.24s/it] 50%|█████     | 5/10 [01:56<01:56, 23.21s/it] 60%|██████    | 6/10 [02:19<01:32, 23.04s/it] 70%|███████   | 7/10 [02:42<01:08, 22.99s/it] 80%|████████  | 8/10 [03:05<00:45, 22.95s/it] 90%|█████████ | 9/10 [03:28<00:23, 23.04s/it]100%|██████████| 10/10 [03:51<00:00, 23.07s/it]100%|██████████| 10/10 [03:51<00:00, 23.14s/it]
