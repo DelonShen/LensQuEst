@@ -1,0 +1,20 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+  0%|          | 0/2500 [00:00<?, ?it/s]  0%|          | 1/2500 [00:00<38:40,  1.08it/s]  0%|          | 3/2500 [00:02<35:09,  1.18it/s]  2%|▏         | 46/2500 [00:02<01:41, 24.17it/s]  2%|▏         | 54/2500 [00:07<06:26,  6.32it/s]  3%|▎         | 68/2500 [00:09<05:52,  6.89it/s]  6%|▌         | 149/2500 [00:14<03:17, 11.91it/s] 11%|█         | 267/2500 [00:23<03:02, 12.25it/s] 13%|█▎        | 324/2500 [00:27<02:50, 12.76it/s] 13%|█▎        | 324/2500 [00:39<02:50, 12.76it/s] 17%|█▋        | 425/2500 [00:40<03:24, 10.14it/s] 21%|██▏       | 535/2500 [00:45<02:28, 13.25it/s] 22%|██▏       | 553/2500 [00:49<02:51, 11.32it/s] 23%|██▎       | 585/2500 [00:55<03:25,  9.33it/s] 25%|██▍       | 617/2500 [01:00<03:47,  8.27it/s] 26%|██▌       | 642/2500 [01:18<07:09,  4.33it/s]slurmstepd: error: *** JOB 22730885 ON sh03-03n16 CANCELLED AT 2023-06-21T21:09:49 ***

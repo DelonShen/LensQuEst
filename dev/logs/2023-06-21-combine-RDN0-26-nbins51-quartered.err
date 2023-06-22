@@ -1,0 +1,20 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+  0%|          | 0/625 [00:00<?, ?it/s]  0%|          | 1/625 [00:00<02:38,  3.93it/s]  1%|          | 5/625 [00:00<00:50, 12.38it/s]  2%|▏         | 12/625 [00:00<00:31, 19.19it/s]  9%|▉         | 56/625 [00:00<00:05, 99.77it/s] 11%|█         | 70/625 [00:01<00:12, 44.31it/s] 22%|██▏       | 136/625 [00:01<00:05, 87.18it/s] 25%|██▌       | 159/625 [00:02<00:04, 99.60it/s] 28%|██▊       | 174/625 [00:03<00:14, 32.14it/s] 29%|██▉       | 184/625 [00:05<00:20, 21.12it/s] 35%|███▍      | 218/625 [00:05<00:13, 31.04it/s] 41%|████      | 257/625 [00:07<00:12, 29.90it/s] 45%|████▍     | 281/625 [00:07<00:10, 31.84it/s] 48%|████▊     | 299/625 [00:09<00:13, 25.07it/s] 56%|█████▌    | 351/625 [00:12<00:13, 19.83it/s] 65%|██████▌   | 409/625 [00:12<00:06, 30.93it/s] 68%|██████▊   | 426/625 [00:13<00:06, 32.29it/s] 69%|██████▉   | 433/625 [00:13<00:07, 26.92it/s] 85%|████████▌ | 533/625 [00:14<00:01, 48.86it/s] 87%|████████▋ | 543/625 [00:15<00:01, 46.70it/s]100%|██████████| 625/625 [00:15<00:00, 40.79it/s]

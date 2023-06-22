@@ -1,0 +1,20 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+  0%|          | 0/2500 [00:00<?, ?it/s]  0%|          | 1/2500 [00:00<38:27,  1.08it/s]  0%|          | 2/2500 [00:01<23:14,  1.79it/s]  0%|          | 3/2500 [00:01<16:47,  2.48it/s]  0%|          | 7/2500 [00:03<16:27,  2.53it/s]  2%|▏         | 47/2500 [00:03<01:37, 25.13it/s]  2%|▏         | 54/2500 [00:06<05:03,  8.07it/s]  3%|▎         | 78/2500 [00:08<04:26,  9.07it/s]  3%|▎         | 84/2500 [00:09<04:15,  9.45it/s]  8%|▊         | 198/2500 [00:14<02:11, 17.52it/s] 12%|█▏        | 296/2500 [00:14<01:07, 32.65it/s] 12%|█▏        | 307/2500 [00:17<01:35, 23.00it/s] 13%|█▎        | 315/2500 [00:27<04:57,  7.35it/s] 13%|█▎        | 329/2500 [00:30<05:15,  6.88it/s] 19%|█▊        | 467/2500 [00:37<02:47, 12.17it/s] 21%|██▏       | 533/2500 [00:39<02:06, 15.56it/s] 22%|██▏       | 550/2500 [00:47<03:21,  9.68it/s] 22%|██▏       | 556/2500 [00:55<05:31,  5.86it/s] 22%|██▏       | 556/2500 [01:09<05:31,  5.86it/s] 30%|███       | 761/2500 [01:12<03:05,  9.37it/s] 31%|███       | 771/2500 [01:18<03:45,  7.67it/s] 35%|███▍      | 863/2500 [01:18<02:15, 12.07it/s] 37%|███▋      | 929/2500 [01:26<02:23, 10.92it/s]slurmstepd: error: *** JOB 22730882 ON sh03-03n13 CANCELLED AT 2023-06-21T21:09:49 ***

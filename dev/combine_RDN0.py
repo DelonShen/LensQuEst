@@ -199,7 +199,13 @@ def process_data(tmp_idx):
 
 pool = mp.Pool()
 
-results = list(tqdm(pool.imap(process_data,  range(2500)), total=2500))
+
+tot = 2500
+import numpy as np
+tmp = np.reshape(list(range(tot)), (50,50))
+toProcess = tmp[:25,:25].flatten() #throw away half the sims
+nToProcess = len(toProcess)
+results = list(tqdm(pool.imap(process_data,  toProcess), total=nToProcess))
 
 
 pool.close()
@@ -213,8 +219,10 @@ for result in results:
     tot[2] += np.square(result[2])
     
     
-tot[1] = tot[1] / (2500)
-tot[2] = np.sqrt(tot[2])/ (2500)
+tot[1] = tot[1] / (nToProcess)
+tot[2] = np.sqrt(tot[2])/ (nToProcess)
 
-with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d.pkl'%(d_idx, nBins), "wb") as f:
+savefname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d_quartered.pkl'%(d_idx, nBins)
+with open(savefname, "wb") as f:
+    print(savefname)
     pickle.dump(tot, f)
