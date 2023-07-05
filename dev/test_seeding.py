@@ -3,11 +3,11 @@
 import sys
 
 #######
-DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(eval(sys.argv[1]))
+DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/test_seed_%d.pkl'%(eval(sys.argv[1]))
 print(DATA_FNAME)
 
 preload=False
-N_RUNS = 10
+N_RUNS = 1
 import warnings
 warnings.filterwarnings("ignore")
 #####
@@ -59,42 +59,42 @@ nBins = 21  # number of bins
 lRange = (1., 2.*lMax)  # range for power spectra
 
 
-# # In[5]:
+# In[5]:
 
 
-# print("CMB experiment properties")
+print("CMB experiment properties")
 
-# # Adjust the lMin and lMax to the assumptions of the analysis
-# # CMB S3 specs
-# cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
+# Adjust the lMin and lMax to the assumptions of the analysis
+# CMB S3 specs
+cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
 
-# # Total power spectrum, for the lens reconstruction
-# # basiscally gets what we theoretically expect the
-# # power spectrum will look like
-# forCtotal = lambda l: cmb.ftotal(l) 
+# Total power spectrum, for the lens reconstruction
+# basiscally gets what we theoretically expect the
+# power spectrum will look like
+forCtotal = lambda l: cmb.ftotal(l) 
 
-# # reinterpolate: gain factor 10 in speed
-# L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
-# F = np.array(list(map(forCtotal, L)))
-# cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
-
-
-# # In[6]:
+# reinterpolate: gain factor 10 in speed
+L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
+F = np.array(list(map(forCtotal, L)))
+cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 
 
-# print("CMB lensing power spectrum")
-# u = UnivPlanck15()
-# halofit = Halofit(u, save=False)
-# w_cmblens = WeightLensSingle(u, z_source=1100., name="cmblens")
-# p2d_cmblens = P2dAuto(u, halofit, w_cmblens, save=False)
+# In[6]:
 
 
-# # In[7]:
+print("CMB lensing power spectrum")
+u = UnivPlanck15()
+halofit = Halofit(u, save=False)
+w_cmblens = WeightLensSingle(u, z_source=1100., name="cmblens")
+p2d_cmblens = P2dAuto(u, halofit, w_cmblens, save=False)
 
 
-# print("Gets a theoretical prediction for the noise")
-# fNqCmb_fft = baseMap.forecastN0Kappa(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
-# Ntheory = lambda l: fNqCmb_fft(l) 
+# In[7]:
+
+
+print("Gets a theoretical prediction for the noise")
+fNqCmb_fft = baseMap.forecastN0Kappa(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
+Ntheory = lambda l: fNqCmb_fft(l) 
 
 
 # In[9]:
@@ -131,7 +131,7 @@ import pickle
 
 from itertools import product
 
-poss = list(product([True, False], range(N_RUNS)))
+poss = list(product([False], range(N_RUNS)))
 
 
 
