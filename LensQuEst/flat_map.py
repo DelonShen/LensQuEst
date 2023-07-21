@@ -11,12 +11,13 @@ class FlatMap(object):
       self.name = name
       self.nX = nX
       self.sizeX = sizeX
-      self.dX = float(sizeX)/(nX-1)
+      self.dX = float(sizeX)/(nX)
+    
       x = self.dX * np.arange(nX)   # the x value corresponds to the center of the cell
       #
       self.nY = nY
       self.sizeY = sizeY
-      self.dY = float(sizeY)/(nY-1)
+      self.dY = float(sizeY)/(nY)
       y = self.dY * np.arange(nY)   # the y value corresponds to the center of the cell
       #
       self.x, self.y = np.meshgrid(x, y, indexing='ij')

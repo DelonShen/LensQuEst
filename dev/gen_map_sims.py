@@ -3,10 +3,9 @@
 import sys
 
 #######
-DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(eval(sys.argv[1]))
+DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(eval(sys.argv[1]))
 print(DATA_FNAME)
 
-preload=False
 N_RUNS = 10
 import warnings
 warnings.filterwarnings("ignore")
@@ -41,8 +40,8 @@ from scipy.stats import spearmanr
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 800
-nY = 800
+nX = 1200
+nY = 1200
 
 # map dimensions in degrees
 sizeX = 20.
@@ -54,77 +53,6 @@ baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
 # multipoles to include in the lensing reconstruction
 lMin = 30.; lMax = 3.5e3
 
-# ell bins for power spectra
-nBins = 21  # number of bins
-lRange = (1., 2.*lMax)  # range for power spectra
-
-
-# # In[5]:
-
-
-# print("CMB experiment properties")
-
-# # Adjust the lMin and lMax to the assumptions of the analysis
-# # CMB S3 specs
-# cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
-
-# # Total power spectrum, for the lens reconstruction
-# # basiscally gets what we theoretically expect the
-# # power spectrum will look like
-# forCtotal = lambda l: cmb.ftotal(l) 
-
-# # reinterpolate: gain factor 10 in speed
-# L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
-# F = np.array(list(map(forCtotal, L)))
-# cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
-
-
-# # In[6]:
-
-
-# print("CMB lensing power spectrum")
-# u = UnivPlanck15()
-# halofit = Halofit(u, save=False)
-# w_cmblens = WeightLensSingle(u, z_source=1100., name="cmblens")
-# p2d_cmblens = P2dAuto(u, halofit, w_cmblens, save=False)
-
-
-# # In[7]:
-
-
-# print("Gets a theoretical prediction for the noise")
-# fNqCmb_fft = baseMap.forecastN0Kappa(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
-# Ntheory = lambda l: fNqCmb_fft(l) 
-
-
-# In[9]:
-
-
-#https://stackoverflow.com/questions/12201577/how-can-i-convert-an-rgb-image-into-grayscale-in-python
-#def rgb2gray(rgb):
-#    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
-#
-#from scipy.ndimage import gaussian_filter 
-#from scipy.fft import fft2
-#
-#mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
-#apodized_mask = gaussian_filter(mask, 3)
-#point_sources = rgb2gray(plt.imread('point_sources_bigger.png'))
-#point_sources = gaussian_filter(point_sources, 1.5) 
-#apodized_mask += point_sources
-#nPos = np.where(apodized_mask>1)
-#apodized_mask[nPos] = 1
-#mask = 1-mask
-#apodized_mask = 1 - apodized_mask
-#
-#for a in apodized_mask:
-#    for b in a:
-#        assert(b<=1 and b>=0)
-## plt.imshow(apodized_mask)
-
-
-# In[17]:
-
 
 from tqdm import trange,tqdm 
 import pickle
@@ -132,7 +60,6 @@ import pickle
 from itertools import product
 
 poss = list(product([True, False], range(N_RUNS)))
-
 
 
 oup_fname = '../data/input/universe_Planck15/camb/CAMB_outputs.pkl'
@@ -162,16 +89,34 @@ lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
 F = lensedTT
 flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 
+
+
+
+ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+
+L = np.arange(c_lens_response.shape[0])
+
+cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+fTgradT = interp1d(L, cTgradT, kind='linear', bounds_error=False, fill_value=0.)
+
+# Adjust the lMin and lMax to the assumptions of the analysis
+# CMB S4/SO specs
+cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=False)
+
+# Total power spectrum, for the lens reconstruction
+# basiscally gets what we theoretically expect the
+# power spectrum will look like
+forCtotal = lambda l: ftot(l) 
+
+# reinterpolate: gain factor 10 in speed
+L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
+F = np.array(list(map(forCtotal, L)))
+cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+
 ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
 
 
 data = {}
-if(preload):
-    f = open(DATA_FNAME, 'rb') 
-    data = pickle.load(f) 
-    f.close()
-    for key in data:
-        print(key, np.shape(data[key]))
 
 for LENSED, run_n in tqdm(poss):
     post_fix = '_%d'%(LENSED)
@@ -185,7 +130,6 @@ for LENSED, run_n in tqdm(poss):
     c_Data['fgF'+post_fix] = None
     c_Data['noiseF'+post_fix] = None
     c_Data['totalF'+post_fix] = None
-#    c_Data['totalF_M'+post_fix] = None
 
     
     totalCmbFourier, totalCmb = None, None
@@ -223,12 +167,6 @@ for LENSED, run_n in tqdm(poss):
         c_Data['noiseF'+post_fix] = noiseFourier
         
     c_Data['totalF'+post_fix] = totalCmbFourier
-
-#    totalCmb = apodized_mask*totalCmb
-#    totalCmbFourier = baseMap.fourier(totalCmb)
-#        
-#    c_Data['totalF_M'+post_fix] = totalCmbFourier
-
 
     for key in c_Data:
         if(c_Data[key] is None):
