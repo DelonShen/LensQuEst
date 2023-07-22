@@ -16,7 +16,7 @@ import seaborn as sns
 from scipy.stats import spearmanr
 import numpy as np
 #######
-IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
+IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(i) for i in range(1,51)]
 
 
 pairs = [
@@ -98,7 +98,7 @@ print("Map properties")
 
 # number of pixels for the flat map
 nX = 800
-nY =800
+nY = 800
 
 # map dimensions in degrees
 sizeX = 20.
@@ -111,7 +111,6 @@ baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
 lMin = 30.; lMax = 3.5e3
 
 # ell bins for power spectra
-nBins = 21  # number of bins
 lRange = (1., 2.*lMax)  # range for power spectra
 
 
@@ -164,6 +163,7 @@ data_names = {
     4: 'lCmbF_o4_1',
     -1: 'lCmbF_1',
     -2: 'totalF_0',
+    -3: 'totalF_randomized_0',
 }
 
 
@@ -196,16 +196,11 @@ print(pair, keys)
 N_data = min(len(in_data[keys[0]]), len(in_data[keys[1]]))
 
 
-s_idx = 0
 c_data = []
 c_data_sqrtN = []
 c_data_kR  = []
 
-if(pair_key in data):
-    s_idx = len(data[pair_key])
-    c_data = data[pair_key]
-
-for data_idx in trange(s_idx, N_data):
+for data_idx in trange(N_data):
     dataF0 = in_data[keys[0]][data_idx]
     if(pair[0]-1 >= 0):  #isolate term
         dataF0 = dataF0 - in_data[data_names[pair[0]-1]][data_idx]
@@ -213,7 +208,7 @@ for data_idx in trange(s_idx, N_data):
     if(pair[1]-1>=0):    #isolate term
         dataF1 = dataF1 - in_data[data_names[pair[1]-1]][data_idx]
     
-    if(pair[0]!=-2):
+    if(pair[0]!=-2 and pair[0] !=-3):
         dataF0 = dataF0 + fgFourier[data_idx] + noiseFourier[data_idx]
         dataF1 = dataF1 + fgFourier[data_idx] + noiseFourier[data_idx]
         
@@ -245,7 +240,7 @@ for data_idx in trange(s_idx, N_data):
     
 data[pair_key] = c_data
 data[pair_key+'_sqrtN'] = c_data_sqrtN
-f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_FILE%d_pair_%d_%d.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
+f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/estimators_FILE%d_pair_%d_%d.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
 pickle.dump(data, f)
 f.close()
 

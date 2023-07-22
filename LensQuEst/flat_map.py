@@ -13,12 +13,12 @@ class FlatMap(object):
       self.sizeX = sizeX
       self.dX = float(sizeX)/(nX)
     
-      x = self.dX * np.arange(nX)   # the x value corresponds to the center of the cell
+      x = self.dX * np.arange(nX) + 0.5*self.dX   # the x value corresponds to the center of the cell
       #
       self.nY = nY
       self.sizeY = sizeY
       self.dY = float(sizeY)/(nY)
-      y = self.dY * np.arange(nY)   # the y value corresponds to the center of the cell
+      y = self.dY * np.arange(nY) + 0.5*self.dY  # the y value corresponds to the center of the cell
       #
       self.x, self.y = np.meshgrid(x, y, indexing='ij')
       #
@@ -672,7 +672,7 @@ class FlatMap(object):
       
       # generate Gaussian white noise in real space
       data = np.zeros_like(self.data)
-      data = np.random.normal(loc=0., scale=1./np.sqrt(self.dX*self.dY), size=len(self.x.flatten()))
+      data = np.random.normal(loc=0., scale=1./np.sqrt(self.dX*self.dY), size=len(self.x.flatten())) 
       data = data.reshape(np.shape(self.x))
    
       # Fourier transform
@@ -680,13 +680,13 @@ class FlatMap(object):
       if test:
          # check that the power spectrum is Cl = 1
          self.powerSpectrum(dataFourier, theory=[lambda l:1.], plot=True)
-
+      
       # multiply by desired power spectrum
       f = lambda l: np.sqrt(fCl(l))
       clFourier = np.array(list(map(f, self.l.flatten())))
       clFourier = np.nan_to_num(clFourier)
       clFourier = clFourier.reshape(np.shape(self.l))
-      dataFourier *= clFourier
+      dataFourier *= clFourier 
       if test:
          # check 0 mode
          print("l=0 mode is:", dataFourier[0,0])

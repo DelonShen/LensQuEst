@@ -1,0 +1,43 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+  0%|                                                                                              | 0/20 [00:00<?, ?it/s]  5%|████▎                                                                                 | 1/20 [00:11<03:32, 11.21s/it] 10%|████████▌                                                                             | 2/20 [00:22<03:21, 11.18s/it] 15%|████████████▉                                                                         | 3/20 [00:33<03:09, 11.18s/it] 20%|█████████████████▏                                                                    | 4/20 [00:44<02:58, 11.16s/it] 25%|█████████████████████▌                                                                | 5/20 [00:55<02:47, 11.18s/it] 30%|█████████████████████████▊                                                            | 6/20 [01:07<02:36, 11.18s/it] 35%|██████████████████████████████                                                        | 7/20 [01:18<02:25, 11.17s/it] 40%|██████████████████████████████████▍                                                   | 8/20 [01:29<02:13, 11.14s/it] 45%|██████████████████████████████████████▋                                               | 9/20 [01:39<02:00, 10.97s/it] 50%|██████████████████████████████████████████▌                                          | 10/20 [01:50<01:49, 10.94s/it] 55%|██████████████████████████████████████████████▊                                      | 11/20 [02:00<01:34, 10.55s/it] 60%|███████████████████████████████████████████████████                                  | 12/20 [02:09<01:21, 10.20s/it] 65%|███████████████████████████████████████████████████████▎                             | 13/20 [02:19<01:09,  9.97s/it] 70%|███████████████████████████████████████████████████████████▍                         | 14/20 [02:29<00:59,  9.90s/it] 75%|███████████████████████████████████████████████████████████████▊                     | 15/20 [02:38<00:49,  9.82s/it] 80%|████████████████████████████████████████████████████████████████████                 | 16/20 [02:48<00:39,  9.79s/it] 85%|████████████████████████████████████████████████████████████████████████▎            | 17/20 [02:58<00:29,  9.79s/it] 90%|████████████████████████████████████████████████████████████████████████████▌        | 18/20 [03:07<00:19,  9.80s/it] 95%|████████████████████████████████████████████████████████████████████████████████▊    | 19/20 [03:17<00:09,  9.79s/it]100%|█████████████████████████████████████████████████████████████████████████████████████| 20/20 [03:27<00:00,  9.77s/it]100%|█████████████████████████████████████████████████████████████████████████████████████| 20/20 [03:27<00:00, 10.37s/it]
+  0%|                                                                                              | 0/10 [00:00<?, ?it/s] 10%|████████▌                                                                             | 1/10 [00:20<03:04, 20.48s/it] 20%|█████████████████▏                                                                    | 2/10 [00:40<02:43, 20.47s/it] 30%|█████████████████████████▊                                                            | 3/10 [01:00<02:21, 20.27s/it] 40%|██████████████████████████████████▍                                                   | 4/10 [01:21<02:01, 20.20s/it] 50%|███████████████████████████████████████████                                           | 5/10 [01:41<01:41, 20.23s/it] 60%|███████████████████████████████████████████████████▌                                  | 6/10 [02:01<01:20, 20.22s/it] 70%|████████████████████████████████████████████████████████████▏                         | 7/10 [02:21<01:00, 20.14s/it] 80%|████████████████████████████████████████████████████████████████████▊                 | 8/10 [02:41<00:40, 20.11s/it] 90%|█████████████████████████████████████████████████████████████████████████████▍        | 9/10 [03:01<00:20, 20.08s/it]100%|█████████████████████████████████████████████████████████████████████████████████████| 10/10 [03:21<00:00, 20.08s/it]100%|█████████████████████████████████████████████████████████████████████████████████████| 10/10 [03:21<00:00, 20.17s/it]
+  0%|                                                                                              | 0/10 [00:00<?, ?it/s]  0%|                                                                                              | 0/10 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/users/delon/LensQuEst/dev/gen_estimators_unmasked.py", line 215, in <module>
+    QE = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 1879, in computeQuadEstKappaNorm
+    resultFourier = self.quadEstPhiNonNorm(fC0, fCtot, lMin=lMin, lMax=lMax, dataFourier=dataFourier, dataFourier2=dataFourier2, test=test)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 1423, in quadEstPhiNonNorm
+    iVarDataFourier = self.filterFourierIsotropic(f, dataFourier=dataFourier, test=test)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 830, in filterFourierIsotropic
+    result = dataFourier * W
+ValueError: operands could not be broadcast together with shapes (300,151) (800,401) 
+  0%|                                                                                              | 0/10 [00:00<?, ?it/s]  0%|                                                                                              | 0/10 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/users/delon/LensQuEst/dev/gen_estimators_unmasked.py", line 215, in <module>
+    QE = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 1879, in computeQuadEstKappaNorm
+    resultFourier = self.quadEstPhiNonNorm(fC0, fCtot, lMin=lMin, lMax=lMax, dataFourier=dataFourier, dataFourier2=dataFourier2, test=test)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 1423, in quadEstPhiNonNorm
+    iVarDataFourier = self.filterFourierIsotropic(f, dataFourier=dataFourier, test=test)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 830, in filterFourierIsotropic
+    result = dataFourier * W
+ValueError: operands could not be broadcast together with shapes (300,151) (800,401) 

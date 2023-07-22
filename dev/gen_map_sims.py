@@ -3,7 +3,8 @@
 import sys
 
 #######
-DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(eval(sys.argv[1]))
+DATA_IDX = eval(sys.argv[1])
+DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(DATA_IDX)
 print(DATA_FNAME)
 
 N_RUNS = 10
@@ -40,8 +41,8 @@ from scipy.stats import spearmanr
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 1200
-nY = 1200
+nX = 800
+nY = 800
 
 # map dimensions in degrees
 sizeX = 20.
@@ -113,12 +114,19 @@ L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
 F = np.array(list(map(forCtotal, L)))
 cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 
-ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+
+f = lambda l: np.sqrt(cmb.fCtotal(l))
+clFourier = np.array(list(map(f, baseMap.l.flatten())))
+clFourier = np.nan_to_num(clFourier)
+clFourier = clFourier.reshape(np.shape(baseMap.l))
 
 
 data = {}
+frandomizePhase = lambda z: np.abs(z) * np.exp(1j*np.random.uniform(0., 2.*np.pi))
 
 for LENSED, run_n in tqdm(poss):
+    
+    
     post_fix = '_%d'%(LENSED)
 
     c_Data = {}
@@ -136,7 +144,17 @@ for LENSED, run_n in tqdm(poss):
     
     if(not LENSED):
         totalCmbFourier = baseMap.genGRF(ftot)
-        totalCmb = baseMap.inverseFourier(totalCmbFourier)
+        c_Data['totalF'+post_fix] = totalCmbFourier
+        
+        
+        dataFourier = np.ones_like(totalCmbFourier)
+        dataFourier *= clFourier * np.sqrt(baseMap.sizeX* baseMap.sizeY)
+
+        
+        TRand = np.array(list(map(frandomizePhase, dataFourier.flatten())))
+        TRand = TRand.reshape(dataFourier.shape)
+        
+        c_Data['totalF_randomized'+post_fix] = TRand
         
     elif(LENSED):
         cmb0Fourier = baseMap.genGRF(funlensedTT, test=False)
@@ -157,16 +175,14 @@ for LENSED, run_n in tqdm(poss):
         c_Data['lCmbF'+post_fix] = lensedCmbFourier
         
         fgFourier = baseMap.genGRF(cmb.fForeground, test=False)
-        lensedCmbFourier = lensedCmbFourier + fgFourier
-        lensedCmb = baseMap.inverseFourier(lensedCmbFourier)
         c_Data['fgF'+post_fix] = fgFourier
+        lensedCmbFourier = lensedCmbFourier + fgFourier
 
         noiseFourier = baseMap.genGRF(cmb.fdetectorNoise, test=False)
-        totalCmbFourier = lensedCmbFourier + noiseFourier
-        totalCmb = baseMap.inverseFourier(totalCmbFourier)
         c_Data['noiseF'+post_fix] = noiseFourier
+        totalCmbFourier = lensedCmbFourier + noiseFourier
         
-    c_Data['totalF'+post_fix] = totalCmbFourier
+        c_Data['totalF'+post_fix] = totalCmbFourier
 
     for key in c_Data:
         if(c_Data[key] is None):
