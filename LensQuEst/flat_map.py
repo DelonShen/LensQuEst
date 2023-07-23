@@ -12,13 +12,16 @@ class FlatMap(object):
       self.nX = nX
       self.sizeX = sizeX
       self.dX = float(sizeX)/(nX)
-    
-      x = self.dX * np.arange(nX) + 0.5*self.dX   # the x value corresponds to the center of the cell
+#       self.dX0 = float(sizeX)/(nX)
+
+      x = self.dX * np.arange(nX) + 0.5 * ( self.dX )  # the x value corresponds to the center of the cell
       #
       self.nY = nY
       self.sizeY = sizeY
       self.dY = float(sizeY)/(nY)
-      y = self.dY * np.arange(nY) + 0.5*self.dY  # the y value corresponds to the center of the cell
+#       self.dY0 = float(sizeY)/(nY)
+
+      y = self.dY * np.arange(nY) + 0.5 * (self. dY)  # the y value corresponds to the center of the cell
       #
       self.x, self.y = np.meshgrid(x, y, indexing='ij')
       #
@@ -34,7 +37,7 @@ class FlatMap(object):
       
       self.l = np.sqrt(self.lx**2 + self.ly**2)
       self.dataFourier = np.zeros((nX,nY//2+1))
-   
+           
    def copy(self):
       newMap = FlatMap(nX=self.nX, nY=self.nY, sizeX=self.sizeX, sizeY=self.sizeY, name=self.name)
       newMap.data = self.data.copy()
@@ -1329,9 +1332,9 @@ class FlatMap(object):
       x0 = self.x - dx
       y0 = self.y - dy
       # enforce periodic boundary conditions
-      fx = lambda x: x - (self.sizeX+self.dX)*( (x+0.5*self.dX)//(self.sizeX+self.dX) )
+      fx = lambda x: x - (self.sizeX)*( (x)//(self.sizeX) )
       x0 = fx(x0)
-      fy = lambda y: y - (self.sizeY+self.dY)*( (y+0.5*self.dY)//(self.sizeY+self.dY) )
+      fy = lambda y: y - (self.sizeY)*( (y)//(self.sizeY) )
       y0 = fy(y0)
 
       # interpolate the unlensed map
@@ -1345,7 +1348,6 @@ class FlatMap(object):
             lensed[iX, iY] = fInterp(x0[iX, iY], y0[iX, iY])
 
       return lensed
-
 
 
 #   # lenses the sky map by displacement and interpolation

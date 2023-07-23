@@ -98,8 +98,8 @@ fTgradT = interp1d(L, cTgradT, kind='linear', bounds_error=False, fill_value=0.)
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 800
-nY =800
+nX = 1200
+nY =1200
 
 # map dimensions in degrees
 sizeX = 20.

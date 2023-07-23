@@ -41,8 +41,8 @@ from scipy.stats import spearmanr
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 800
-nY = 800
+nX = 1200
+nY = 1200
 
 # map dimensions in degrees
 sizeX = 20.
@@ -126,7 +126,9 @@ frandomizePhase = lambda z: np.abs(z) * np.exp(1j*np.random.uniform(0., 2.*np.pi
 
 for LENSED, run_n in tqdm(poss):
     
-    
+    np.random.seed(LENSED*6000000 + DATA_IDX*1483 + run_n )
+        
+        
     post_fix = '_%d'%(LENSED)
 
     c_Data = {}
