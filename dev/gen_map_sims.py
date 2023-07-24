@@ -1,4 +1,4 @@
-
+800
 # In[15]:
 import sys
 
@@ -41,8 +41,8 @@ from scipy.stats import spearmanr
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 1200
-nY = 1200
+nX = 800
+nY = 800
 
 # map dimensions in degrees
 sizeX = 20.
