@@ -1,0 +1,55 @@
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/condabin/conda
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/conda
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/conda-env
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/activate
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/deactivate
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/profile.d/conda.sh
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/fish/conf.d/conda.fish
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/shell/condabin/Conda.psm1
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/shell/condabin/conda-hook.ps1
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/lib/python3.10/site-packages/xontrib/conda.xsh
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/profile.d/conda.csh
+no change     /home/users/delon/.bashrc
+No action taken.
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_26.pkl
+Map properties
+../data/input/universe_Planck15/camb/CAMB_outputs.pkl
+../data/input/universe_Planck15/camb/CAMB_outputs.pkl
+Map properties
+CMB experiment properties
+cmb0F_1 (10, 800, 401)
+kCmbF_1 (10, 800, 401)
+lCmbF_1 (10, 800, 401)
+fgF_1 (10, 800, 401)
+noiseF_1 (10, 800, 401)
+totalF_1 (10, 800, 401)
+totalF_0 (10, 800, 401)
+totalF_randomized_0 (10, 800, 401)
+[-3, -3]
+[-3, -3] ['totalF_randomized_0', 'totalF_randomized_0']
+../data/input/universe_Planck15/camb/CAMB_outputs.pkl
+Map properties
+CMB experiment properties
+cmb0F_1 (10, 800, 401)
+kCmbF_1 (10, 800, 401)
+lCmbF_1 (10, 800, 401)
+fgF_1 (10, 800, 401)
+noiseF_1 (10, 800, 401)
+totalF_1 (10, 800, 401)
+totalF_0 (10, 800, 401)
+totalF_randomized_0 (10, 800, 401)
+[-1, -1]
+[-1, -1] ['lCmbF_1', 'lCmbF_1']
+../data/input/universe_Planck15/camb/CAMB_outputs.pkl
+Map properties
+CMB experiment properties
+cmb0F_1 (10, 800, 401)
+kCmbF_1 (10, 800, 401)
+lCmbF_1 (10, 800, 401)
+fgF_1 (10, 800, 401)
+noiseF_1 (10, 800, 401)
+totalF_1 (10, 800, 401)
+totalF_0 (10, 800, 401)
+totalF_randomized_0 (10, 800, 401)
+[-2, -2]
+[-2, -2] ['totalF_0', 'totalF_0']

@@ -683,7 +683,7 @@ class FlatMap(object):
          self.powerSpectrum(dataFourier, theory=[lambda l:1.], plot=True)
       
       # multiply by desired power spectrum
-      f = lambda l: np.sqrt(fCl(l)) 
+      f = lambda l: np.sqrt(fCl(l)) #S* ((self.sizeX + self.dX)*(self.sizeY + self.dY) / (self.sizeX * self.sizeY))**(-1/2)
       clFourier = np.array(list(map(f, self.l.flatten())))
       clFourier = np.nan_to_num(clFourier)
       clFourier = clFourier.reshape(np.shape(self.l))
