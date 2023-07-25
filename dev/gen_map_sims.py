@@ -150,7 +150,7 @@ for LENSED, run_n in tqdm(poss):
         
         
         dataFourier = np.ones_like(totalCmbFourier)
-        dataFourier *= clFourier * np.sqrt(baseMap.sizeX* baseMap.sizeY)
+        dataFourier *= clFourier * np.sqrt((baseMap.sizeX+baseMap.dX)* (baseMap.sizeY+baseMap.dY))
 
         
         TRand = np.array(list(map(frandomizePhase, dataFourier.flatten())))

@@ -443,7 +443,7 @@ class FlatMap(object):
       Cl, lEdges, binIndices = stats.binned_statistic(ell, power, statistic='mean', bins=lEdges)
       Cl = np.nan_to_num(Cl)
       # finite volume correction
-      Cl /= self.sizeX*self.sizeY
+      Cl /= (self.sizeX+self.dX)*(self.sizeY+self.dY)
       # 1sigma uncertainty on Cl
       if fsCl is None:
          sCl = Cl*np.sqrt(2)
@@ -2498,7 +2498,7 @@ class FlatMap(object):
       # normalized correction for QE kappa auto-spectrum correction map
       resultFourier *= normalizationFourier**2
 #!!!!!!!!! weird factor needed. I haven't figured out why
-      resultFourier /= self.sizeX*self.sizeY
+      resultFourier /= (self.sizeX+self.dX)*(self.sizeY+self.dY)
       # take square root, so that all you have to do is to take the power spectrum
       resultFourier = np.sqrt(np.real(resultFourier))
       # save to file if needed
@@ -4303,4 +4303,4 @@ class FlatMap(object):
       N = n0Kappa.flatten()[where]
       lnfln = interp1d(np.log(L), np.log(N), kind='linear', bounds_error=False, fill_value=np.inf)
       f = lambda l: np.exp(lnfln(np.log(l)))
-      return f
+      return f 
