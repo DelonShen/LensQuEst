@@ -12,14 +12,12 @@ class FlatMap(object):
       self.nX = nX
       self.sizeX = sizeX
       self.dX = float(sizeX)/(nX-1)
-      self.dX0 = float(sizeX)/(nX)
 
       x = self.dX * np.arange(nX)   # the x value corresponds to the center of the cell
 
       self.nY = nY
       self.sizeY = sizeY
       self.dY = float(sizeY)/(nY-1)
-      self.dY0 = float(sizeY)/(nY)
 
       y = self.dY * np.arange(nY)  # the y value corresponds to the center of the cell
       #
@@ -402,7 +400,7 @@ class FlatMap(object):
       result = np.fft.rfftn(data)
 #      # use pyfftw's fft. Make sure the real-space data has type np.float128
 #      result = pyfftw.interfaces.numpy_fft.rfftn((np.float128)(data))
-      result *= self.dX0 * self.dY0
+      result *= self.dX * self.dY
       return result
 
    def inverseFourier(self, dataFourier=None):
@@ -416,7 +414,7 @@ class FlatMap(object):
       result = np.fft.irfftn(dataFourier)
 #      # use pyfftw's fft. Make sure the Fourier data has type np.complex128
 #      result = pyfftw.interfaces.numpy_fft.irfftn((np.complex128)(dataFourier))
-      result /= self.dX0 * self.dY0
+      result /= self.dX * self.dY
       return result
    
    ###############################################################################
@@ -675,7 +673,7 @@ class FlatMap(object):
       
       # generate Gaussian white noise in real space
       data = np.zeros_like(self.data)
-      data = np.random.normal(loc=0., scale=1./np.sqrt(self.dX0*self.dY0), size=len(self.x.flatten())) 
+      data = np.random.normal(loc=0., scale=1./np.sqrt(self.dX*self.dY), size=len(self.x.flatten())) 
       data = data.reshape(np.shape(self.x))
    
       # Fourier transform
@@ -685,7 +683,7 @@ class FlatMap(object):
          self.powerSpectrum(dataFourier, theory=[lambda l:1.], plot=True)
       
       # multiply by desired power spectrum
-      f = lambda l: np.sqrt(fCl(l))
+      f = lambda l: np.sqrt(fCl(l)) * ((self.sizeX + self.dX)*(self.sizeY + self.dY) / (self.sizeX * self.sizeY))**(-1/2)
       clFourier = np.array(list(map(f, self.l.flatten())))
       clFourier = np.nan_to_num(clFourier)
       clFourier = clFourier.reshape(np.shape(self.l))
