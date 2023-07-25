@@ -11,15 +11,15 @@ class FlatMap(object):
       self.name = name
       self.nX = nX
       self.sizeX = sizeX
-      self.dX = float(sizeX)/(nX)
+      self.dX = float(sizeX)/(nX-1)
 
-      x = self.dX * np.arange(nX) + 0.5*self.dX   # the x value corresponds to the center of the cell
+      x = self.dX * np.arange(nX)   # the x value corresponds to the center of the cell
 
       self.nY = nY
       self.sizeY = sizeY
-      self.dY = float(sizeY)/(nY)
+      self.dY = float(sizeY)/(nY-1)
 
-      y = self.dY * np.arange(nY) + 0.5*self.dX  # the y value corresponds to the center of the cell
+      y = self.dY * np.arange(nY)  # the y value corresponds to the center of the cell
       #
       self.x, self.y = np.meshgrid(x, y, indexing='ij')
       #
@@ -28,9 +28,9 @@ class FlatMap(object):
       self.data = np.zeros((nX,nY))
    
       lx = np.zeros(nX)
-      lx[:nX//2+1] = 2.*np.pi/(sizeX) * np.arange(nX//2+1)
-      lx[nX//2+1:] = 2.*np.pi/(sizeX) * np.arange(-nX//2+1, 0, 1)
-      ly = 2.*np.pi/(sizeY) * np.arange(nY//2+1)
+      lx[:nX//2+1] = 2.*np.pi/(sizeX + self.dX) * np.arange(nX//2+1)
+      lx[nX//2+1:] = 2.*np.pi/(sizeX + self.dX) * np.arange(-nX//2+1, 0, 1)
+      ly = 2.*np.pi/(sizeY + self.dY) * np.arange(nY//2+1)
       self.lx, self.ly = np.meshgrid(lx, ly, indexing='ij')
       
       self.l = np.sqrt(self.lx**2 + self.ly**2)
@@ -1330,9 +1330,9 @@ class FlatMap(object):
       x0 = self.x - dx
       y0 = self.y - dy
       # enforce periodic boundary conditions
-      fx = lambda x: x - (self.sizeX)*( (x+0.5*self.dX)//(self.sizeX) )
+      fx = lambda x: x - (self.sizeX+self.dX)*( (x+0.5*self.dX)//(self.sizeX+self.dX) )
       x0 = fx(x0)
-      fy = lambda y: y - (self.sizeY)*( (y+0.5*self.dY)//(self.sizeY) )
+      fy = lambda y: y - (self.sizeY+self.dY)*( (y+0.5*self.dY)//(self.sizeY+self.dY) )
       y0 = fy(y0)
 
       # interpolate the unlensed map
