@@ -164,14 +164,8 @@ for LENSED, run_n in tqdm(poss):
         c_Data['cmb0F'+post_fix] = cmb0Fourier
         
         kCmbFourier = baseMap.genGRF(fKK, test=False)
-        kCmb = baseMap.inverseFourier(kCmbFourier)
         c_Data['kCmbF'+post_fix] = kCmbFourier
-        
-#        for i in range(1,5):
-#            lensedCmb = baseMap.doLensingTaylor(unlensed=cmb0, kappaFourier=kCmbFourier, order=i)
-#            lensedCmbFourier = baseMap.fourier(lensedCmb)
-#            c_Data['lCmbF_o%d'%(i)+post_fix] = lensedCmbFourier
-            
+                    
         lensedCmb = baseMap.doLensing(cmb0, kappaFourier=kCmbFourier)
         lensedCmbFourier = baseMap.fourier(lensedCmb)
         c_Data['lCmbF'+post_fix] = lensedCmbFourier

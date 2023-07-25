@@ -39,7 +39,7 @@ totalF_1 (10, 800, 401)
 totalF_0 (10, 800, 401)
 totalF_randomized_0 (10, 800, 401)
 [-1, -1]
-[-1, -1] ['lCmbF_1', 'lCmbF_1']
+[-1, -1] ['totalF_1', 'totalF_1']
 ../data/input/universe_Planck15/camb/CAMB_outputs.pkl
 Map properties
 CMB experiment properties

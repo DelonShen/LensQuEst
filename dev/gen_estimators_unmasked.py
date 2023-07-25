@@ -161,7 +161,7 @@ data_names = {
     2: 'lCmbF_o2_1',
     3: 'lCmbF_o3_1',
     4: 'lCmbF_o4_1',
-    -1: 'lCmbF_1',
+    -1: 'totalF_1',
     -2: 'totalF_0',
     -3: 'totalF_randomized_0',
 }
@@ -202,16 +202,7 @@ c_data_kR  = []
 
 for data_idx in trange(N_data):
     dataF0 = in_data[keys[0]][data_idx]
-    if(pair[0]-1 >= 0):  #isolate term
-        dataF0 = dataF0 - in_data[data_names[pair[0]-1]][data_idx]
-    dataF1 = in_data[keys[1]][data_idx]
-    if(pair[1]-1>=0):    #isolate term
-        dataF1 = dataF1 - in_data[data_names[pair[1]-1]][data_idx]
-    
-    if(pair[0]!=-2 and pair[0] !=-3):
-        dataF0 = dataF0 + fgFourier[data_idx] + noiseFourier[data_idx]
-        dataF1 = dataF1 + fgFourier[data_idx] + noiseFourier[data_idx]
-        
+    dataF1 = in_data[keys[1]][data_idx]        
     QE = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
                                          lMin=lMin, lMax=lMax, 
                                          dataFourier=dataF0,

@@ -28,9 +28,9 @@ class FlatMap(object):
       self.data = np.zeros((nX,nY))
    
       lx = np.zeros(nX)
-      lx[:nX//2+1] = 2.*np.pi/(sizeX + self.dX) * np.arange(nX//2+1)
-      lx[nX//2+1:] = 2.*np.pi/(sizeX + self.dX) * np.arange(-nX//2+1, 0, 1)
-      ly = 2.*np.pi/(sizeY + self.dY) * np.arange(nY//2+1)
+      lx[:nX//2+1] = 2.*np.pi/(sizeX) * np.arange(nX//2+1)
+      lx[nX//2+1:] = 2.*np.pi/(sizeX) * np.arange(-nX//2+1, 0, 1)
+      ly = 2.*np.pi/(sizeY) * np.arange(nY//2+1)
       self.lx, self.ly = np.meshgrid(lx, ly, indexing='ij')
       
       self.l = np.sqrt(self.lx**2 + self.ly**2)
@@ -683,7 +683,7 @@ class FlatMap(object):
          self.powerSpectrum(dataFourier, theory=[lambda l:1.], plot=True)
       
       # multiply by desired power spectrum
-      f = lambda l: np.sqrt(fCl(l)) #S* ((self.sizeX + self.dX)*(self.sizeY + self.dY) / (self.sizeX * self.sizeY))**(-1/2)
+      f = lambda l: np.sqrt(fCl(l)) 
       clFourier = np.array(list(map(f, self.l.flatten())))
       clFourier = np.nan_to_num(clFourier)
       clFourier = clFourier.reshape(np.shape(self.l))
