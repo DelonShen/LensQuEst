@@ -150,7 +150,7 @@ for LENSED, run_n in tqdm(poss):
         
         
         dataFourier = np.ones_like(totalCmbFourier)
-        dataFourier *= clFourier * np.sqrt((baseMap.sizeX+baseMap.dX)* (baseMap.sizeY+baseMap.dY))
+        dataFourier *= clFourier * np.sqrt((baseMap.sizeX + baseMap.dX)* (baseMap.sizeY+baseMap.dY))
 
         
         TRand = np.array(list(map(frandomizePhase, dataFourier.flatten())))
@@ -166,7 +166,7 @@ for LENSED, run_n in tqdm(poss):
         kCmbFourier = baseMap.genGRF(fKK, test=False)
         c_Data['kCmbF'+post_fix] = kCmbFourier
                     
-        lensedCmb = baseMap.doLensing(cmb0, kappaFourier=kCmbFourier)
+        lensedCmb = baseMap.doLensing(unlensed=cmb0, kappaFourier=kCmbFourier)
         lensedCmbFourier = baseMap.fourier(lensedCmb)
         c_Data['lCmbF'+post_fix] = lensedCmbFourier
         

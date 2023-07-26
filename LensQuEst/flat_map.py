@@ -28,9 +28,9 @@ class FlatMap(object):
       self.data = np.zeros((nX,nY))
    
       lx = np.zeros(nX)
-      lx[:nX//2+1] = 2.*np.pi/(sizeX) * np.arange(nX//2+1)
-      lx[nX//2+1:] = 2.*np.pi/(sizeX) * np.arange(-nX//2+1, 0, 1)
-      ly = 2.*np.pi/(sizeY) * np.arange(nY//2+1)
+      lx[:nX//2+1] = 2.*np.pi/(sizeX + self.dX) * np.arange(nX//2+1)
+      lx[nX//2+1:] = 2.*np.pi/(sizeX + self.dX) * np.arange(-nX//2+1, 0, 1)
+      ly = 2.*np.pi/(sizeY + self.dY) * np.arange(nY//2+1)
       self.lx, self.ly = np.meshgrid(lx, ly, indexing='ij')
       
       self.l = np.sqrt(self.lx**2 + self.ly**2)
@@ -683,7 +683,7 @@ class FlatMap(object):
          self.powerSpectrum(dataFourier, theory=[lambda l:1.], plot=True)
       
       # multiply by desired power spectrum
-      f = lambda l: np.sqrt(fCl(l)) 
+      f = lambda l: np.sqrt(fCl(l)) #S* ((self.sizeX + self.dX)*(self.sizeY + self.dY) / (self.sizeX * self.sizeY))**(-1/2)
       clFourier = np.array(list(map(f, self.l.flatten())))
       clFourier = np.nan_to_num(clFourier)
       clFourier = clFourier.reshape(np.shape(self.l))
@@ -1296,6 +1296,25 @@ class FlatMap(object):
          lensed += 1./24. * self.inverseFourier(unlensedFourier*(1j*self.ly)**4) * dy**4
       return lensed
 
+   def periodic_enforcing(self, x0):
+      """
+      so we have three regions [-0.5 dX, 0], [0, sizeX] [sizeX, sizeX + 0.5 dX]
+      which I will call region A, B, and C
+      
+      the pixel we consider is [x0-0.5 dX, x0+0.5dX]
+          if pixel lies partially to the left  of region A (e.g. x0 - 0.5 dX < -0.5 dX) then
+              x0 -> x0 +  sizeX + dX
+          if pixel lies fully within the three regions, nothing happens
+              x0 -> x0
+          if pixel lies partially to the right of region C (e.g. x0 + 0.5 dX > sizeX + 0.5 dX) then
+              x0 -> x0 - sizeX - dX
+      """
+      if(x0 < 0):
+         x0 = x0 + self.sizeX 
+      elif(x0 > self.sizeX):
+         x0 = x0 - self.sizeX 
+      assert(x0 - 0.5 * self.dX >= -0.5 * self.dX and x0 + 0.5 * self.dX <= self.sizeX + 0.5 * self.dX)
+      return x0
 
    def doLensing(self, unlensed=None, kappaFourier=None, phiFourier=None, dxdyFourier=None):
       """lenses the sky map by displacement and interpolation
@@ -1329,11 +1348,10 @@ class FlatMap(object):
       # ie we get the lensed map T at n by evaluating the unlensed map T0 at n0 = n-d
       x0 = self.x - dx
       y0 = self.y - dy
+      vfunc = np.vectorize(self.periodic_enforcing)
       # enforce periodic boundary conditions
-      fx = lambda x: x - (self.sizeX+self.dX)*( (x+0.5*self.dX)//(self.sizeX+self.dX) )
-      x0 = fx(x0)
-      fy = lambda y: y - (self.sizeY+self.dY)*( (y+0.5*self.dY)//(self.sizeY+self.dY) )
-      y0 = fy(y0)
+      x0 = vfunc(x0)
+      y0 = vfunc(y0)
 
       # interpolate the unlensed map
       #fInterp = RectBivariateSpline(self.x[:,0], self.y[0,:], unlensed, kx=1, ky=1, s=0)
