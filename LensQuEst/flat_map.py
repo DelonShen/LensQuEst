@@ -11,15 +11,13 @@ class FlatMap(object):
       self.name = name
       self.nX = nX
       self.sizeX = sizeX
-      self.dX = float(sizeX)/(nX-1)
-
-      x = self.dX * np.arange(nX)   # the x value corresponds to the center of the cell
-
+      self.dX = float(sizeX)/(nX)
+      x = self.dX * np.arange(nX) + 0.5*self.dX   # the x value corresponds to the center of the cell
+      #
       self.nY = nY
       self.sizeY = sizeY
-      self.dY = float(sizeY)/(nY-1)
-
-      y = self.dY * np.arange(nY)  # the y value corresponds to the center of the cell
+      self.dY = float(sizeY)/(nY)
+      y = self.dY * np.arange(nY) + 0.5*self.dY   # the y value corresponds to the center of the cell
       #
       self.x, self.y = np.meshgrid(x, y, indexing='ij')
       #
@@ -28,14 +26,14 @@ class FlatMap(object):
       self.data = np.zeros((nX,nY))
    
       lx = np.zeros(nX)
-      lx[:nX//2+1] = 2.*np.pi/(sizeX + self.dX) * np.arange(nX//2+1)
-      lx[nX//2+1:] = 2.*np.pi/(sizeX + self.dX) * np.arange(-nX//2+1, 0, 1)
-      ly = 2.*np.pi/(sizeY + self.dY) * np.arange(nY//2+1)
+      lx[:nX//2+1] = 2.*np.pi/(sizeX - self.dX) * np.arange(nX//2+1)
+      lx[nX//2+1:] = 2.*np.pi/(sizeX - self.dX) * np.arange(-nX//2+1, 0, 1)
+      ly = 2.*np.pi/(sizeY - self.dY) * np.arange(nY//2+1)
       self.lx, self.ly = np.meshgrid(lx, ly, indexing='ij')
       
       self.l = np.sqrt(self.lx**2 + self.ly**2)
       self.dataFourier = np.zeros((nX,nY//2+1))
-           
+   
    def copy(self):
       newMap = FlatMap(nX=self.nX, nY=self.nY, sizeX=self.sizeX, sizeY=self.sizeY, name=self.name)
       newMap.data = self.data.copy()
@@ -443,7 +441,7 @@ class FlatMap(object):
       Cl, lEdges, binIndices = stats.binned_statistic(ell, power, statistic='mean', bins=lEdges)
       Cl = np.nan_to_num(Cl)
       # finite volume correction
-      Cl /= (self.sizeX+self.dX)*(self.sizeY+self.dY)
+      Cl /= (self.sizeX)*(self.sizeY)
       # 1sigma uncertainty on Cl
       if fsCl is None:
          sCl = Cl*np.sqrt(2)
@@ -673,7 +671,7 @@ class FlatMap(object):
       
       # generate Gaussian white noise in real space
       data = np.zeros_like(self.data)
-      data = np.random.normal(loc=0., scale=1./np.sqrt(self.dX*self.dY), size=len(self.x.flatten())) 
+      data = np.random.normal(loc=0., scale=1./np.sqrt(self.dX*self.dY), size=len(self.x.flatten()))
       data = data.reshape(np.shape(self.x))
    
       # Fourier transform
@@ -681,13 +679,13 @@ class FlatMap(object):
       if test:
          # check that the power spectrum is Cl = 1
          self.powerSpectrum(dataFourier, theory=[lambda l:1.], plot=True)
-      
+
       # multiply by desired power spectrum
-      f = lambda l: np.sqrt(fCl(l)) #S* ((self.sizeX + self.dX)*(self.sizeY + self.dY) / (self.sizeX * self.sizeY))**(-1/2)
+      f = lambda l: np.sqrt(fCl(l))
       clFourier = np.array(list(map(f, self.l.flatten())))
       clFourier = np.nan_to_num(clFourier)
       clFourier = clFourier.reshape(np.shape(self.l))
-      dataFourier *= clFourier 
+      dataFourier *= clFourier
       if test:
          # check 0 mode
          print("l=0 mode is:", dataFourier[0,0])
@@ -1330,9 +1328,9 @@ class FlatMap(object):
       x0 = self.x - dx
       y0 = self.y - dy
       # enforce periodic boundary conditions
-      fx = lambda x: x - (self.sizeX+self.dX)*( (x+0.5*self.dX)//(self.sizeX+self.dX) )
+      fx = lambda x: x - (self.sizeX)*( (x)//(self.sizeX) )
       x0 = fx(x0)
-      fy = lambda y: y - (self.sizeY+self.dY)*( (y+0.5*self.dY)//(self.sizeY+self.dY) )
+      fy = lambda y: y - (self.sizeY)*( (y)//(self.sizeY) )
       y0 = fy(y0)
 
       # interpolate the unlensed map
@@ -1346,6 +1344,7 @@ class FlatMap(object):
             lensed[iX, iY] = fInterp(x0[iX, iY], y0[iX, iY])
 
       return lensed
+
 
 
 #   # lenses the sky map by displacement and interpolation
@@ -2498,7 +2497,7 @@ class FlatMap(object):
       # normalized correction for QE kappa auto-spectrum correction map
       resultFourier *= normalizationFourier**2
 #!!!!!!!!! weird factor needed. I haven't figured out why
-      resultFourier /= (self.sizeX+self.dX)*(self.sizeY+self.dY)
+      resultFourier /= (self.sizeX-self.dX)*(self.sizeY-self.dY)
       # take square root, so that all you have to do is to take the power spectrum
       resultFourier = np.sqrt(np.real(resultFourier))
       # save to file if needed
@@ -4303,4 +4302,4 @@ class FlatMap(object):
       N = n0Kappa.flatten()[where]
       lnfln = interp1d(np.log(L), np.log(N), kind='linear', bounds_error=False, fill_value=np.inf)
       f = lambda l: np.exp(lnfln(np.log(l)))
-      return f 
+      return f
