@@ -26,9 +26,9 @@ class FlatMap(object):
       self.data = np.zeros((nX,nY))
    
       lx = np.zeros(nX)
-      lx[:nX//2+1] = 2.*np.pi/(sizeX - self.dX) * np.arange(nX//2+1)
-      lx[nX//2+1:] = 2.*np.pi/(sizeX - self.dX) * np.arange(-nX//2+1, 0, 1)
-      ly = 2.*np.pi/(sizeY - self.dY) * np.arange(nY//2+1)
+      lx[:nX//2+1] = 2.*np.pi/(sizeX) * np.arange(nX//2+1)
+      lx[nX//2+1:] = 2.*np.pi/(sizeX) * np.arange(-nX//2+1, 0, 1)
+      ly = 2.*np.pi/(sizeY) * np.arange(nY//2+1)
       self.lx, self.ly = np.meshgrid(lx, ly, indexing='ij')
       
       self.l = np.sqrt(self.lx**2 + self.ly**2)
@@ -418,7 +418,7 @@ class FlatMap(object):
    ###############################################################################
    # Measure power spectrum
 
-   def crossPowerSpectrum(self, dataFourier1, dataFourier2, theory=[], theory_l=[], fsCl=None, nBins=51, lRange=None, plot=False, name="test", save=False, notGaussian=False):
+   def crossPowerSpectrum(self, dataFourier1, dataFourier2, theory=[], theory_l=[], fsCl=None, nBins=51, lRange=None, plot=False, name="test", save=False):
 
       # define ell bins
       ell = self.l.flatten()
@@ -447,13 +447,6 @@ class FlatMap(object):
          sCl = Cl*np.sqrt(2)
       else:
          sCl = np.array(list(map(fsCl, lCen)))
-
-      # Test code for error bars on non-gaussian stat.
-      if(notGaussian):
-          sCl, _, _ = stats.binned_statistic(ell, power, statistic='std', bins=lEdges)
-          sCl = np.nan_to_num(Cl)
-          # finite volume correction
-#          sCl /= self.sizeX*self.sizeY
 
 
       # In case of a cross-correlation, Cl may be negative.
@@ -505,10 +498,10 @@ class FlatMap(object):
 
 
 
-   def powerSpectrum(self, dataFourier=None, theory=[], theory_l=[], fsCl=None, nBins=51, lRange=None, plot=False, name="test", save=False, notGaussian=False):
+   def powerSpectrum(self, dataFourier=None, theory=[], theory_l=[], fsCl=None, nBins=51, lRange=None, plot=False, name="test", save=False):
       if dataFourier is None:
          dataFourier = self.dataFourier.copy()
-      return self.crossPowerSpectrum(dataFourier1=dataFourier, dataFourier2=dataFourier, theory=theory, theory_l=theory_l, fsCl=fsCl, nBins=nBins, lRange=lRange, plot=plot, name=name, save=save, notGaussian=notGaussian)
+      return self.crossPowerSpectrum(dataFourier1=dataFourier, dataFourier2=dataFourier, theory=theory, theory_l=theory_l, fsCl=fsCl, nBins=nBins, lRange=lRange, plot=plot, name=name, save=save)
 
 
    def binTheoryPowerSpectrum(self, fCl, nBins=17, lRange=None):
@@ -2497,7 +2490,7 @@ class FlatMap(object):
       # normalized correction for QE kappa auto-spectrum correction map
       resultFourier *= normalizationFourier**2
 #!!!!!!!!! weird factor needed. I haven't figured out why
-      resultFourier /= (self.sizeX-self.dX)*(self.sizeY-self.dY)
+      resultFourier /= (self.sizeX)*(self.sizeY)
       # take square root, so that all you have to do is to take the power spectrum
       resultFourier = np.sqrt(np.real(resultFourier))
       # save to file if needed
