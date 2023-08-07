@@ -660,7 +660,7 @@ class FlatMap(object):
       return dataFourier
    '''
    
-   def genGRF(self, fCl, test=False):
+   def genGRF(self, fCl, clFourier = None, test=False):
       
       # generate Gaussian white noise in real space
       data = np.zeros_like(self.data)
@@ -674,10 +674,11 @@ class FlatMap(object):
          self.powerSpectrum(dataFourier, theory=[lambda l:1.], plot=True)
 
       # multiply by desired power spectrum
-      f = lambda l: np.sqrt(fCl(l))
-      clFourier = np.array(list(map(f, self.l.flatten())))
-      clFourier = np.nan_to_num(clFourier)
-      clFourier = clFourier.reshape(np.shape(self.l))
+      if(clFourier is None):
+          f = lambda l: np.sqrt(fCl(l))
+          clFourier = np.array(list(map(f, self.l.flatten())))
+          clFourier = np.nan_to_num(clFourier)
+          clFourier = clFourier.reshape(np.shape(self.l))
       dataFourier *= clFourier
       if test:
          # check 0 mode

@@ -1,5 +1,3 @@
-800
-# In[15]:
 import sys
 
 #######
@@ -124,7 +122,31 @@ clFourier = clFourier.reshape(np.shape(baseMap.l))
 data = {}
 frandomizePhase = lambda z: np.abs(z) * np.exp(1j*np.random.uniform(0., 2.*np.pi))
 
+
+
+f = lambda l: np.sqrt(ftot(l))
+clFourier = np.array(list(map(f, baseMap.l.flatten())))
+clFourier = np.nan_to_num(clFourier)
+clFourier = clFourier.reshape(np.shape(baseMap.l))
+
+
+def gen_clFourier(fcur):
+    f = lambda l: np.sqrt(fcur(l))
+    clFourier = np.array(list(map(f, baseMap.l.flatten())))
+    clFourier = np.nan_to_num(clFourier)
+    clFourier = clFourier.reshape(np.shape(baseMap.l))
+    return clFourier
+    
+print('precomputing Cls')
+clFourier_ftot = gen_clFourier(ftot)
+clFourier_funlensedTT = gen_clFourier(funlensedTT)
+clFourier_fKK = gen_clFourier(fKK)
+clFourier_fForeground = gen_clFourier(cmb.fForeground)
+clFourier_fdetectorNoise = gen_clFourier(cmb.fdetectorNoise)
+
+    
 for LENSED, run_n in tqdm(poss):
+
     
     np.random.seed(LENSED*6000000 + DATA_IDX*1483 + run_n )
         
@@ -145,7 +167,7 @@ for LENSED, run_n in tqdm(poss):
     totalCmbFourier, totalCmb = None, None
     
     if(not LENSED):
-        totalCmbFourier = baseMap.genGRF(ftot)
+        totalCmbFourier = baseMap.genGRF(ftot, clFourier=clFourier_ftot)
         c_Data['totalF'+post_fix] = totalCmbFourier
         
         
@@ -159,11 +181,11 @@ for LENSED, run_n in tqdm(poss):
         c_Data['totalF_randomized'+post_fix] = TRand
         
     elif(LENSED):
-        cmb0Fourier = baseMap.genGRF(funlensedTT, test=False)
+        cmb0Fourier = baseMap.genGRF(funlensedTT, clFourier=clFourier_funlensedTT, test=False)
         cmb0 = baseMap.inverseFourier(cmb0Fourier)
         c_Data['cmb0F'+post_fix] = cmb0Fourier
         
-        kCmbFourier = baseMap.genGRF(fKK, test=False)
+        kCmbFourier = baseMap.genGRF(fKK, clFourier=clFourier_fKK, test=False)
         kCmb = baseMap.inverseFourier(kCmbFourier)
         c_Data['kCmbF'+post_fix] = kCmbFourier
         
@@ -176,11 +198,11 @@ for LENSED, run_n in tqdm(poss):
         lensedCmbFourier = baseMap.fourier(lensedCmb)
         c_Data['lCmbF'+post_fix] = lensedCmbFourier
         
-        fgFourier = baseMap.genGRF(cmb.fForeground, test=False)
+        fgFourier = baseMap.genGRF(cmb.fForeground, clFourier=clFourier_fForeground, test=False)
         c_Data['fgF'+post_fix] = fgFourier
         lensedCmbFourier = lensedCmbFourier + fgFourier
 
-        noiseFourier = baseMap.genGRF(cmb.fdetectorNoise, test=False)
+        noiseFourier = baseMap.genGRF(cmb.fdetectorNoise, clFourier=clFourier_fdetectorNoise, test=False)
         c_Data['noiseF'+post_fix] = noiseFourier
         totalCmbFourier = lensedCmbFourier + noiseFourier
         
