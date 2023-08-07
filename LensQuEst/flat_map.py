@@ -1829,7 +1829,7 @@ class FlatMap(object):
 
 
 
-   def forecastN0Kappa(self, fC0, fCtot, fCfg=None, lMin=1., lMax=1.e5, test=False, cache=None, funky=False):
+   def forecastN0Kappa(self, fC0, fCtot, fCfg=None, lMin=1., lMax=1.e5, test=False, cache=None):
       """Interpolates the result for N_L^kappa = f(L),
       to be used for forecasts on lensing reconstruction
       """
@@ -1859,9 +1859,6 @@ class FlatMap(object):
       L = self.l.flatten()[where]
       N = n0Kappa.flatten()[where]
       lnfln = interp1d(np.log(L), np.log(N), kind='linear', bounds_error=False, fill_value=np.inf)
-      if(funky): #ds: weird correction of one pixel that needs to be understood, possibly to do with convolution that leads to smaller pixel 
-            f = lambda l : np.exp(lnfln(np.log(l))) * (self.sizeX * self.sizeY) / ((self.sizeX - self.dX) * (self.sizeY - self.dY))
-            return f
       f = lambda l: np.exp(lnfln(np.log(l)))
       return f
    
@@ -2493,7 +2490,7 @@ class FlatMap(object):
       # normalized correction for QE kappa auto-spectrum correction map
       resultFourier *= normalizationFourier**2
 #!!!!!!!!! weird factor needed. I haven't figured out why
-      resultFourier /= (self.sizeX - self.dX)*(self.sizeY - self.dY)
+      resultFourier /= (self.sizeX)*(self.sizeY)
       # take square root, so that all you have to do is to take the power spectrum
       resultFourier = np.sqrt(np.real(resultFourier))
       # save to file if needed
