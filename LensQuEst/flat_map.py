@@ -1,5 +1,5 @@
 from headers import *
-
+from functools import cache
 ###################################################################
 
 class FlatMap(object):
@@ -1394,6 +1394,28 @@ class FlatMap(object):
    ###############################################################################
    # Non-normalized quadratic estimator
 
+   @cache
+   def quadEstPhiNonNorm_f1(self, l, lMin, lMax, fCtot):
+      # inverse-var weighted map
+      # cut off the high ells from input map
+      if (l<lMin) or (l>lMax):
+         return 0.
+      result = 1./fCtot(l)
+      if not np.isfinite(result):
+         result = 0.
+      return result
+
+   @cache
+   def quadEstPhiNonNorm_f2(self, l, lMin, lMax, fC0, fCtot):
+      # Wiener-filter the map
+      # cut off the high ells from input map
+      if (l<lMin) or (l>lMax):
+         return 0.
+      result = fC0(l) / fCtot(l)
+      if not np.isfinite(result):
+         result = 0.
+      return result
+
    def quadEstPhiNonNorm(self, fC0, fCtot, lMin= 1., lMax=1.e5, dataFourier=None, dataFourier2=None, test=False):
       """non-normalized quadratic estimator
       fC0: ulensed power spectrum
@@ -1403,17 +1425,13 @@ class FlatMap(object):
          dataFourier = self.dataFourier.copy()
       if dataFourier2 is None:
          dataFourier2 = dataFourier.copy()
-      
-      # inverse-var weighted map
-      def f(l):
-         # cut off the high ells from input map
-         if (l<lMin) or (l>lMax):
-            return 0.
-         result = 1./fCtot(l)
-         if not np.isfinite(result):
-            result = 0.
-         return result
-      iVarDataFourier = self.filterFourierIsotropic(f, dataFourier=dataFourier, test=test)
+
+      #filiter fourier isotropic 
+      W = np.array([self.quadEstPhiNonNorm_f1(l, lMin, lMax, fCtot) for l in self.l.flatten()])
+      W = W.reshape(self.l.shape)
+      iVarDataFourier = dataFourier * W
+      iVarDataFourier = np.nan_to_num(iVarDataFourier)
+
       iVarData = self.inverseFourier(iVarDataFourier)
       if test:
          print("showing the inverse var. weighted map")
@@ -1421,16 +1439,13 @@ class FlatMap(object):
          print("checking the power spectrum of this map")
          self.powerSpectrum(theory=f, dataFourier=iVarDataFourier, plot=True)
 
-      # Wiener-filter the map
-      def f(l):
-         # cut off the high ells from input map
-         if (l<lMin) or (l>lMax):
-            return 0.
-         result = fC0(l) / fCtot(l)
-         if not np.isfinite(result):
-            result = 0.
-         return result
-      WFDataFourier = self.filterFourierIsotropic(f, dataFourier=dataFourier2, test=test)
+      #filiter fourier isotropic 
+      W = np.array([self.quadEstPhiNonNorm_f2(l, lMin, lMax, fC0, fCtot) for l in self.l.flatten()])
+      W = W.reshape(self.l.shape)
+      WFDataFourier = dataFourier2 * W
+      WFDataFourier = np.nan_to_num(WFDataFourier)
+
+
       if test:
          print("showing the WF map")
          WFData = self.inverseFourier(WFDataFourier)
@@ -1549,6 +1564,7 @@ class FlatMap(object):
 
 
 
+   @cache
    def computeQuadEstPhiNormalizationFFT(self, fC0, fCtot, lMin=1., lMax=1.e5, test=False, cache=None):
       """the normalization is N_l^phiphi,
       Works great, and super fast.
@@ -2345,6 +2361,41 @@ class FlatMap(object):
    # avoids the N0 bias, and the secondary foreground biases.
 
 
+   @cache
+   def computeQuadEstPhiInverseDataNormalizationFFT_f1(self, l, lMin, lMax, fCtot):
+      if (l < lMin) or (l > lMax):
+         return 0.
+      result = 1. / fCtot(l)**2
+      if not np.isfinite(result):
+         result = 0.
+      return result
+
+   @cache
+   def computeQuadEstPhiInverseDataNormalizationFFT_f2(self, l, lMin, lMax, fC0, fCtot):
+      # C map
+      if (l<lMin) or (l>lMax):
+         return 0.
+      result = fC0(l)**2/fCtot(l)**2
+      if not np.isfinite(result):
+         result = 0.
+      return result
+
+   @cache
+   def computeQuadEstPhiInverseDataNormalizationFFT_f3(self, l, lMin, lMax, fC0, fCtot):
+      # WF map
+      if (l<lMin) or (l>lMax):
+         return 0.
+      result = fC0(l)/fCtot(l)**2
+      # artificial factor of i such that f(-l) = f(l)*,
+      # such that f(x) is real
+      result *= 1.j
+      if not np.isfinite(result):
+         result = 0.
+      return result
+
+
+
+
    def computeQuadEstPhiInverseDataNormalizationFFT(self, fC0, fCtot, lMin=1., lMax=1.e5, dataFourier=None, test=False):
       """Analogous to the standard QE normalization 1/N_L,
       but from the data.
@@ -2354,29 +2405,13 @@ class FlatMap(object):
       if dataFourier is None:
          dataFourier = self.dataFourier.copy()
       
-      # inverse-var weighted map
-      def f(l):
-         if (l<lMin) or (l>lMax):
-            return 0.
-         result = 1./fCtot(l)**2
-         if not np.isfinite(result):
-            result = 0.
-         return result
-      iVarFourier = np.array(list(map(f, self.l.flatten())))
+      iVarFourier = np.array([self.computeQuadEstPhiInverseDataNormalizationFFT_f1(l, lMin, lMax, fCtot) for l in self.l.flatten()])
       iVarFourier = iVarFourier.reshape(self.l.shape)
       # multiply by data squared modulus
       iVarFourier *= np.abs(dataFourier)**2
       iVar = self.inverseFourier(dataFourier=iVarFourier)
 
-      # C map
-      def f(l):
-         if (l<lMin) or (l>lMax):
-            return 0.
-         result = fC0(l)**2/fCtot(l)**2
-         if not np.isfinite(result):
-            result = 0.
-         return result
-      CFourier = np.array(list(map(f, self.l.flatten())))
+      CFourier = np.array([self.computeQuadEstPhiInverseDataNormalizationFFT_f2(l, lMin, lMax, fC0, fCtot) for l in self.l.flatten()])
       CFourier = CFourier.reshape(self.l.shape)
       # multiply by data squared modulus
       CFourier *= np.abs(dataFourier)**2
@@ -2406,18 +2441,7 @@ class FlatMap(object):
          self.plotFourier(term1xFourier+term1yFourier+term1xyFourier)
       
 
-      # WF map
-      def f(l):
-         if (l<lMin) or (l>lMax):
-            return 0.
-         result = fC0(l)/fCtot(l)**2
-         # artificial factor of i such that f(-l) = f(l)*,
-         # such that f(x) is real
-         result *= 1.j
-         if not np.isfinite(result):
-            result = 0.
-         return result
-      WFFourier = np.array(list(map(f, self.l.flatten())))
+      WFFourier = np.array([self.computeQuadEstPhiInverseDataNormalizationFFT_f3(l, lMin, lMax, fC0, fCtot) for l in self.l.flatten()])
       WFFourier = WFFourier.reshape(self.l.shape)
       # multiply by data squared modulus
       WFFourier *= np.abs(dataFourier)**2

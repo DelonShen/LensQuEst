@@ -107,16 +107,12 @@ cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=Fals
 # power spectrum will look like
 forCtotal = lambda l: ftot(l) 
 
-# reinterpolate: gain factor 10 in speed
-L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
-F = np.array(list(map(forCtotal, L)))
-cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+# # reinterpolate: gain factor 10 in speed
+# L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
+# F = np.array(list(map(forCtotal, L)))
+# cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+cmb.fCtotal = ftot # no longer reinterpolating since it seems like it leads to errors?
 
-
-f = lambda l: np.sqrt(cmb.fCtotal(l))
-clFourier = np.array(list(map(f, baseMap.l.flatten())))
-clFourier = np.nan_to_num(clFourier)
-clFourier = clFourier.reshape(np.shape(baseMap.l))
 
 
 data = {}
@@ -124,10 +120,6 @@ frandomizePhase = lambda z: np.abs(z) * np.exp(1j*np.random.uniform(0., 2.*np.pi
 
 
 
-f = lambda l: np.sqrt(ftot(l))
-clFourier = np.array(list(map(f, baseMap.l.flatten())))
-clFourier = np.nan_to_num(clFourier)
-clFourier = clFourier.reshape(np.shape(baseMap.l))
 
 
 def gen_clFourier(fcur):
@@ -143,6 +135,10 @@ clFourier_funlensedTT = gen_clFourier(funlensedTT)
 clFourier_fKK = gen_clFourier(fKK)
 clFourier_fForeground = gen_clFourier(cmb.fForeground)
 clFourier_fdetectorNoise = gen_clFourier(cmb.fdetectorNoise)
+
+
+
+clFourier = clFourier_ftot
 
     
 for LENSED, run_n in tqdm(poss):
@@ -172,7 +168,7 @@ for LENSED, run_n in tqdm(poss):
         
         
         dataFourier = np.ones_like(totalCmbFourier)
-        dataFourier *= clFourier * np.sqrt((baseMap.sizeX)* (baseMap.sizeY))
+        dataFourier *= clFourier_ftot * np.sqrt((baseMap.sizeX)* (baseMap.sizeY))
 
         
         TRand = np.array(list(map(frandomizePhase, dataFourier.flatten())))

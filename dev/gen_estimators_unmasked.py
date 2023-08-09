@@ -128,10 +128,11 @@ cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=Fals
 # power spectrum will look like
 forCtotal = lambda l: ftot(l) 
 
-# reinterpolate: gain factor 10 in speed
-L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
-F = np.array(list(map(forCtotal, L)))
-cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+# # reinterpolate: gain factor 10 in speed
+# L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
+# F = np.array(list(map(forCtotal, L)))
+# cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+cmb.fCtotal = ftot # no longer reinterpolating since it seems like it leads to errors?
 
 
 # In[12]:
