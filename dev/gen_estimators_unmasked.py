@@ -43,7 +43,6 @@ pairs = [
 
 warnings.filterwarnings("ignore")
 #####
-
 oup_fname = '../data/input/universe_Planck15/camb/CAMB_outputs.pkl'
 print(oup_fname)
 f = open(oup_fname, 'rb') 
@@ -54,23 +53,27 @@ totCL=powers['total']
 unlensedCL=powers['unlensed_scalar']
 
 L = np.arange(unlensedCL.shape[0])
-
 unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
 F = unlensedTT
-funlensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+funlensedTT_log = interp1d(L, np.log(F), kind='linear', bounds_error=False, fill_value=0.)
+funlensedTT = lambda L:np.exp(funlensedTT_log(L))
+
 
 L = np.arange(cl.shape[0])
 PP = cl[:,0]
 rawPP = PP*2*np.pi/((L*(L+1))**2)
 rawKK = L**4/4 * rawPP
 
-fKK = interp1d(L, rawKK, kind='linear', bounds_error=False, fill_value=0.)
+fKK_log = interp1d(L, np.log(rawKK), kind='linear', bounds_error=False, fill_value=0.)
+fKK = lambda L:np.exp(fKK_log(L))
+
 
 L = np.arange(totCL.shape[0])
 
 lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
 F = lensedTT
-flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+flensedTT_log = interp1d(L, np.log(F), kind='linear', bounds_error=False, fill_value=0.)
+flensedTT = lambda L:np.exp(flensedTT_log(L))
 
 
 ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
@@ -80,18 +83,9 @@ L = np.arange(c_lens_response.shape[0])
 
 cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
 
-fTgradT = interp1d(L, cTgradT, kind='linear', bounds_error=False, fill_value=0.)
+fTgradT_log = interp1d(L, np.log(cTgradT), kind='linear', bounds_error=False, fill_value=0.)
+fTgradT = lambda L:np.exp(fTgradT_log(L))
 
-# In[3]:
-
-
-
-# In[4]:
-
-
-
-
-# In[5]:
 
 
 print("Map properties")
