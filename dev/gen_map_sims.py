@@ -53,7 +53,7 @@ baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
 lMin = 30.; lMax = 3.5e3
 
 
-from tqdm import trange,tqdm 
+from tqdm import trange,tqdm
 import pickle
 
 from itertools import product
@@ -63,7 +63,7 @@ poss = list(product([True, False], range(N_RUNS)))
 
 oup_fname = '../data/input/universe_Planck15/camb/CAMB_outputs.pkl'
 print(oup_fname)
-f = open(oup_fname, 'rb') 
+f = open(oup_fname, 'rb')
 powers,cl,c_lensed,c_lens_response = pickle.load(f)
 f.close()
 
@@ -135,7 +135,7 @@ def gen_clFourier(fcur):
     clFourier = np.nan_to_num(clFourier)
     clFourier = clFourier.reshape(np.shape(baseMap.l))
     return clFourier
-    
+
 print('precomputing Cls')
 clFourier_ftot = gen_clFourier(ftot)
 clFourier_funlensedTT = gen_clFourier(funlensedTT)
@@ -145,15 +145,10 @@ clFourier_fdetectorNoise = gen_clFourier(cmb.fdetectorNoise)
 
 
 
-clFourier = clFourier_ftot
-
-    
 for LENSED, run_n in tqdm(poss):
 
-    
     np.random.seed(LENSED*6000000 + DATA_IDX*1483 + run_n )
-        
-        
+
     post_fix = '_%d'%(LENSED)
 
     c_Data = {}
@@ -166,41 +161,41 @@ for LENSED, run_n in tqdm(poss):
     c_Data['noiseF'+post_fix] = None
     c_Data['totalF'+post_fix] = None
 
-    
+
     totalCmbFourier, totalCmb = None, None
-    
+
     if(not LENSED):
         totalCmbFourier = baseMap.genGRF(ftot, clFourier=clFourier_ftot)
         c_Data['totalF'+post_fix] = totalCmbFourier
-        
-        
+
+
         dataFourier = np.ones_like(totalCmbFourier)
         dataFourier *= clFourier_ftot * np.sqrt((baseMap.sizeX)* (baseMap.sizeY))
 
-        
+
         TRand = np.array(list(map(frandomizePhase, dataFourier.flatten())))
         TRand = TRand.reshape(dataFourier.shape)
-        
+
         c_Data['totalF_randomized'+post_fix] = TRand
-        
+
     elif(LENSED):
         cmb0Fourier = baseMap.genGRF(funlensedTT, clFourier=clFourier_funlensedTT, test=False)
         cmb0 = baseMap.inverseFourier(cmb0Fourier)
         c_Data['cmb0F'+post_fix] = cmb0Fourier
-        
+
         kCmbFourier = baseMap.genGRF(fKK, clFourier=clFourier_fKK, test=False)
         kCmb = baseMap.inverseFourier(kCmbFourier)
         c_Data['kCmbF'+post_fix] = kCmbFourier
-        
+
 #        for i in range(1,5):
 #            lensedCmb = baseMap.doLensingTaylor(unlensed=cmb0, kappaFourier=kCmbFourier, order=i)
 #            lensedCmbFourier = baseMap.fourier(lensedCmb)
 #            c_Data['lCmbF_o%d'%(i)+post_fix] = lensedCmbFourier
-            
+
         lensedCmb = baseMap.doLensing(cmb0, kappaFourier=kCmbFourier)
         lensedCmbFourier = baseMap.fourier(lensedCmb)
         c_Data['lCmbF'+post_fix] = lensedCmbFourier
-        
+
         fgFourier = baseMap.genGRF(cmb.fForeground, clFourier=clFourier_fForeground, test=False)
         c_Data['fgF'+post_fix] = fgFourier
         lensedCmbFourier = lensedCmbFourier + fgFourier
@@ -208,7 +203,7 @@ for LENSED, run_n in tqdm(poss):
         noiseFourier = baseMap.genGRF(cmb.fdetectorNoise, clFourier=clFourier_fdetectorNoise, test=False)
         c_Data['noiseF'+post_fix] = noiseFourier
         totalCmbFourier = lensedCmbFourier + noiseFourier
-        
+
         c_Data['totalF'+post_fix] = totalCmbFourier
 
     for key in c_Data:
@@ -218,7 +213,7 @@ for LENSED, run_n in tqdm(poss):
             data[key] = np.array([c_Data[key]])
         else:
             data[key] = np.vstack((np.array([c_Data[key]]), data[key]))  
-            
+
 
     f = open(DATA_FNAME, 'wb') 
     p = pickle.Pickler(f) 

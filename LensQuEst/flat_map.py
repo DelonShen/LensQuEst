@@ -211,13 +211,13 @@ class FlatMap(object):
       lxLeft = 2.*np.pi/self.sizeX * (np.arange(-self.nX/2+1, 1, 1) - 0.5)
       ly = 2.*np.pi/self.sizeY * (np.arange(self.nY//2+1+1) - 0.5)
       lx, ly = np.meshgrid(lxLeft, ly, indexing='ij')
-      cp1=ax.pcolormesh(lx, ly, dataFourier[self.nX/2+1:,:], linewidth=0, rasterized=True)
+      cp1=ax.pcolormesh(lx, ly, dataFourier[self.nX//2+1:,:], linewidth=0, rasterized=True)
       #
       # right part of plot
       lxRight = 2.*np.pi/self.sizeX * (np.arange(self.nX/2+1+1) - 0.5)
       ly = 2.*np.pi/self.sizeY * (np.arange(self.nY//2+1+1) - 0.5)
       lx, ly = np.meshgrid(lxRight, ly, indexing='ij')
-      cp2=ax.pcolormesh(lx, ly, dataFourier[:self.nX/2+1,:], linewidth=0, rasterized=True)
+      cp2=ax.pcolormesh(lx, ly, dataFourier[:self.nX//2+1,:], linewidth=0, rasterized=True)
       #
       # choose color map: jet, summer, winter, Reds, gist_gray, YlOrRd, bwr, seismic
       cp1.set_cmap(cmap); cp2.set_cmap(cmap)
@@ -582,11 +582,9 @@ class FlatMap(object):
       self.data = np.cos(ell*self.x) + np.cos(ell*self.y)
       # show it
       self.plot()
-      
       # fourier transform it
       self.dataFourier = self.fourier()
       #self.plotFourier()
-   
       self.plotFourier()
 
 
@@ -604,8 +602,21 @@ class FlatMap(object):
       # inverse Fourier transform it
       expectedData = self.inverseFourier()
 
+      # compare along one axis
+      plt.plot(self.data[0,:], 'k')
+      plt.plot(expectedData[0,:], 'r')
+      plt.show()
+
+      # compare along other axis
+      plt.plot(self.data[:,0], 'k')
+      plt.plot(expectedData[:,0], 'r')
+      plt.show()
+
+
+
       # compare along each axis
       plt.plot(self.y[0,:], self.data[0,:]/expectedData[0,:]-1., 'g')
+      plt.show()
       plt.plot(self.x[:,0], self.data[:,0]/expectedData[:,0]-1., 'b--')
       plt.show()
 
@@ -1667,7 +1678,7 @@ class FlatMap(object):
             self.plotFourier(term2xFourier+term2yFourier+term2xyFourier)
 
          # add all terms
-         resultFourier = term1xFourier + term1yFourier + term1xyFourier
+         resultFourier  = term1xFourier + term1yFourier + term1xyFourier
          resultFourier += term2xFourier + term2yFourier + term2xyFourier
 
          # cut off the high ells from phi normalization map
