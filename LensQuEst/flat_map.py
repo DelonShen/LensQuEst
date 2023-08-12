@@ -196,6 +196,9 @@ class FlatMap(object):
    def plotFourier(self, dataFourier=None, save=False, name=None, cmap='viridis'):
       if dataFourier is None:
          dataFourier = self.dataFourier.copy()
+      plt.axvline(500,alpha=0.3)
+      plt.axhline(500, alpha=0.3)
+
       dataFourier = np.real(dataFourier)
       sigma = np.std(dataFourier.flatten())
       vmin = np.min(dataFourier.flatten())
@@ -395,7 +398,8 @@ class FlatMap(object):
       if data is None:
          data = self.data.copy()
       # use numpy's fft
-      result = np.fft.rfftn(data)
+#      result = np.fft.rfftn(data)
+      result = np.fft.rfft2(data)
 #      # use pyfftw's fft. Make sure the real-space data has type np.float128
 #      result = pyfftw.interfaces.numpy_fft.rfftn((np.float128)(data))
       result *= self.dX * self.dY
@@ -409,7 +413,7 @@ class FlatMap(object):
       if dataFourier is None:
          dataFourier = self.dataFourier.copy()
       # use numpy's fft
-      result = np.fft.irfftn(dataFourier)
+      result = np.fft.irfft2(dataFourier)
 #      # use pyfftw's fft. Make sure the Fourier data has type np.complex128
 #      result = pyfftw.interfaces.numpy_fft.irfftn((np.complex128)(dataFourier))
       result /= self.dX * self.dY
@@ -455,11 +459,8 @@ class FlatMap(object):
       sCl /= np.sqrt(Nmodes)
       sCl[np.where(np.isfinite(sCl)==False)] = 0.
 
-      
-      
       if plot:
          factor = 1. # lCen**2
-         
          fig=plt.figure(0)
          ax=fig.add_subplot(111)
          #
@@ -493,7 +494,6 @@ class FlatMap(object):
             fig.clf()
          else:
             plt.show()
-      
       return lCen, Cl, sCl
 
 
@@ -541,13 +541,27 @@ class FlatMap(object):
       result /= 2.*np.pi*sigma1d**2
       return result
 
+   def testInverseFourierGaussian(self):
+      """
+      tests that the iFT of a Gaussian is a Gaussian
+      """
+      sigma1d = self.sizeX / 10.
+
+      self.dataFourier = 1/(2*np.pi) * np.exp(-sigma1d**2/2 * (self.lx**2 + self.ly**2) )
+      self.dataFourier /= 4
+      self.plotFourier()
+
+      self.data = self.inverseFourier()
+      self.plot()
+
    def testFourierGaussian(self):
       """tests that the FT of a Gaussian is a Gaussian,
       with correct normalization and variance
       """
       # generate a quarter of a Gaussian
       sigma1d = self.sizeX / 10.
-      self.data = self.genGaussian(sigma1d=sigma1d)
+#      self.data = self.genGaussian(sigma1d=sigma1d)
+      self.data = 1/(2*sigma1d**2*np.pi) * np.exp(-1/(2 * sigma1d**2) * ((self.x)**2 + (self.y)**2))
       # show it
       self.plot()
 
@@ -556,21 +570,53 @@ class FlatMap(object):
       self.plotFourier()
 
       # computed expected Gaussian
-      expectedFourier = self.genGaussianFourier(sigma1d=1./sigma1d)
-      expectedFourier *= 2.*np.pi*(1./sigma1d)**2
-      expectedFourier /= 4.   # because only one quadrant in real space
+      expectedFourier = 1/(2*np.pi) * np.exp(-sigma1d**2/2 * (self.lx**2 + self.ly**2) )
+      expectedFourier /= 4
 
       #self.plotFourier(data=self.dataFourier/expectedFourier-1.)
 
       # compare along one axis
       plt.plot(self.dataFourier[0,:], 'k')
       plt.plot(expectedFourier[0,:], 'r')
+      plt.yscale('log')
+      plt.xscale('log')
       plt.show()
 
       # compare along other axis
       plt.plot(self.dataFourier[:,0], 'k')
       plt.plot(expectedFourier[:,0], 'r')
+      plt.yscale('log')
+      plt.xscale('log')
+
       plt.show()
+
+
+      # compare along each axis
+      plt.scatter(range(len(self.dataFourier[0,:])), np.abs(self.dataFourier[0,:]/expectedFourier[0,:])-1.)
+      plt.ylim(-1e3, 1e3)
+      plt.show()
+
+      plt.scatter(range(len(self.dataFourier[:,0])), np.abs(self.dataFourier[:,0]/expectedFourier[:,0])-1.)
+      plt.ylim(-1e3, 1e3)
+
+      plt.show()
+
+
+
+
+   def testFourierConst(self):
+      """tests that the FT of const
+      """
+      # generate a quarter of a Gaussian
+      ell = 100.
+      self.data = np.ones_like(self.x)
+      # show it
+      self.plot()
+      # fourier transform it
+      self.dataFourier = self.fourier()
+      print(self.dataFourier)
+      #self.plotFourier()
+      self.plotFourier()
 
 
    def testFourierCos(self):
@@ -578,12 +624,13 @@ class FlatMap(object):
       peaks at the right k
       """
       # generate a quarter of a Gaussian
-      ell = 100.
+      ell = 500.
       self.data = np.cos(ell*self.x) + np.cos(ell*self.y)
       # show it
       self.plot()
       # fourier transform it
       self.dataFourier = self.fourier()
+      print(self.dataFourier)
       #self.plotFourier()
       self.plotFourier()
 
