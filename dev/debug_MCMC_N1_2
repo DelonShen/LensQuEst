@@ -1,0 +1,34 @@
+c_data = None
+ck = 'N1'
+def compute_data(i, j):
+    TTp = TTps[i]
+    TpT = TpTs[i]
+    TkTkp = TkTkps[j]
+    TkpTk = TkpTks[j]
+    curr_data = []
+
+    for s, a, b in [[1, TkTkp, TkTkp], [1, TkTkp, TkpTk], [-1, TTp, TTp], [-1, TTp, TpT]]:
+        t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+        curr_data.append([t0, s * t1, t2])
+
+    c_ps_data = {}
+    c_ps_data[ck] = [0, 0, 0]
+    c_ps_data[ck][0], c_ps_data[ck][1], c_ps_data[ck][2] = tmp_combine_Cl(curr_data)
+    
+    return c_ps_data[ck]
+
+pool = multiprocessing.Pool()
+
+results = []
+for i in trange(len(TTps)):
+    for j in range(len(TkTkps)):
+        results.append(pool.apply_async(compute_data, (i, j)))
+
+pool.close()
+pool.join()
+
+for result in tqdm(results):
+    if c_data is None:
+        c_data = np.array([result.get()])
+    else:
+        c_data = np.vstack((c_data, np.array([result.get()])))

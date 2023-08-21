@@ -561,7 +561,7 @@ class FlatMap(object):
       # generate a quarter of a Gaussian
       sigma1d = self.sizeX / 10.
 #      self.data = self.genGaussian(sigma1d=sigma1d)
-      self.data = 1/(2*sigma1d**2*np.pi) * np.exp(-1/(2 * sigma1d**2) * ((self.x)**2 + (self.y)**2))
+      self.data = 1/(2*sigma1d**2*np.pi) * np.exp(-1/(2 * sigma1d**2) * ((self.x - self.sizeX/2)**2 + (self.y - self.sizeY/2)**2))
       # show it
       self.plot()
 
@@ -570,21 +570,21 @@ class FlatMap(object):
       self.plotFourier()
 
       # computed expected Gaussian
-      expectedFourier = 1/(2*np.pi) * np.exp(-sigma1d**2/2 * (self.lx**2 + self.ly**2) )
+      expectedFourier = 1/(2*np.pi) * np.exp(-sigma1d**2/2 * (self.lx**2 + self.ly**2) ) 
       expectedFourier /= 4
 
       #self.plotFourier(data=self.dataFourier/expectedFourier-1.)
 
       # compare along one axis
-      plt.plot(self.dataFourier[0,:], 'k')
-      plt.plot(expectedFourier[0,:], 'r')
+      plt.plot(np.abs(self.dataFourier[0,:]), 'k')
+      plt.plot(np.abs(expectedFourier[0,:]), 'r')
       plt.yscale('log')
       plt.xscale('log')
       plt.show()
 
       # compare along other axis
-      plt.plot(self.dataFourier[:,0], 'k')
-      plt.plot(expectedFourier[:,0], 'r')
+      plt.plot(np.abs(self.dataFourier[:,0]), 'k')
+      plt.plot(np.abs(expectedFourier[:,0]), 'r')
       plt.yscale('log')
       plt.xscale('log')
 
