@@ -78,11 +78,20 @@ flensedTE = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 
 
 
+#TgradT
+L = np.arange(c_lens_response.shape[0])
+
+cTgradT = c_lens_response.T[0]
+
+fTgradT_log = interp1d(L, np.log(cTgradT), kind='linear', bounds_error=False, fill_value=0.)
+fTgradT = lambda L:np.exp(fTgradT_log(L))
+
+
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 800
-nY =800
+nX = 1200
+nY = 1200
 
 # map dimensions in degrees
 sizeX = 20.
