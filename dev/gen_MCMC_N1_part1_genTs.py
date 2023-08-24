@@ -1,6 +1,7 @@
 import pickle
+import sys
 import warnings
-
+DATA_IDX = eval(sys.argv[1])
 import os, sys
 WORKING_DIR = os.path.dirname(os.path.abspath(''))
 sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
@@ -112,7 +113,6 @@ baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
 lMin = 30.; lMax = 3.5e3
 
 # ell bins for power spectra
-nBins = 51  # number of bins
 lRange = (1., 2.*lMax)  # range for power spectra
 
 
@@ -193,7 +193,9 @@ clFourier_fForeground = gen_clFourier(cmb.fForeground)
 clFourier_fdetectorNoise = gen_clFourier(cmb.fdetectorNoise)
 
 
-for s_idx in trange(317):
+for s_idx in trange(100):
+    np.random.seed(DATA_IDX*9742322 + s_idx )
+
     #Qu+23 E10
     mapsF = [baseMap.genGRF(funlensedTT, clFourier=clFourier_funlensedTT, test=False),
              baseMap.genGRF(funlensedTT, clFourier=clFourier_funlensedTT, test=False),
@@ -286,184 +288,7 @@ for s_idx in trange(317):
 # In[4]:
 
 
-print("Gets a theoretical prediction for the noise")
-fNqCmb_fft = baseMap.forecastN0Kappa(funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
-Ntheory = lambda l: fNqCmb_fft(l) 
-
 np.array(TkTkps).shape
 
-with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Ts.pkl'%(nBins), "wb") as f:
+with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d.pkl'%(DATA_IDX), "wb") as f:
     pickle.dump((TkTkps, TkpTks, TTps, TpTs), f)
-
-
-# In[7]:
-
-
-def tmp_combine_Cl(Cls_tot):
-    n_runs = np.shape(Cls_tot)[0]
-    lCen = Cls_tot[0][0]
-    Cls = np.sum(np.transpose(Cls_tot, axes=[1,2,0])[1], axis=1)
-    sCls = np.sum(np.transpose(Cls_tot, axes=[1,2,0])[2], axis=1)
-    return lCen, Cls, sCls
-
-
-# In[8]:
-
-
-nBins = 51
-
-
-# In[9]:
-
-
-import multiprocessing
-c_data = None
-ck = 'N1'
-def compute_data(i, j):
-    TTp = TTps[i]
-    TpT = TpTs[i]
-    TkTkp = TkTkps[j]
-    TkpTk = TkpTks[j]
-    curr_data = []
-
-    for s, a, b in [[1, TkTkp, TkTkp], [1, TkTkp, TkpTk], [-1, TTp, TTp], [-1, TTp, TpT]]:
-        t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
-        curr_data.append([t0, s * t1, t2])
-
-    c_ps_data = {}
-    c_ps_data[ck] = [0, 0, 0]
-    c_ps_data[ck][0], c_ps_data[ck][1], c_ps_data[ck][2] = tmp_combine_Cl(curr_data)
-    
-    return c_ps_data[ck]
-
-pool = multiprocessing.Pool()
-
-results = []
-for i in trange(len(TTps)):
-    for j in range(len(TkTkps)):
-        results.append(pool.apply_async(compute_data, (i, j)))
-
-pool.close()
-pool.join()
-
-for result in tqdm(results):
-    if c_data is None:
-        c_data = np.array([result.get()])
-    else:
-        c_data = np.vstack((c_data, np.array([result.get()])))
-
-
-with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Tcombos.pkl'%(nBins), "wb") as f:
-    pickle.dump(c_data, f)
-
-
-
-# In[10]:
-
-
-print(c_data.shape)
-
-
-# In[11]:
-
-
-def combine_Cl(Cls_tot):
-    n_runs = np.shape(Cls_tot)[0]
-    print(n_runs, np.shape(Cls_tot))
-    lCen = Cls_tot[0][0]
-    Cls = np.sum(np.transpose(Cls_tot, axes=[1,2,0])[1], axis=1)/n_runs
-#     sCls = np.sqrt(np.sum(np.square(np.transpose(Cls_tot, axes=[1,2,0])[2]), axis=1))/n_runs
-    sCls = np.std(np.transpose(Cls_tot, axes=[1,2,0])[1], axis=1)/np.sqrt(n_runs)
-    return lCen, Cls, sCls
-
-
-# In[12]:
-
-
-N1_mcmc = combine_Cl(c_data)
-
-
-# In[13]:
-
-
-with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats.pkl'%(nBins), "wb") as f:
-    pickle.dump(N1_mcmc, f)
-
-
-# In[14]:
-
-
-fig,ax = plt.subplots(nrows=1, figsize=(10,8))
-
-ell = baseMap.l.flatten()
-theory=[fKK, Ntheory]
-theory_l=[r'$\big<\kappa\kappa\big>$', r'$N_{\rm theory}$']
-theory_s=['black', 'lightgrey']
-factor = lambda x : 1
-for f,l,sty in zip(theory, theory_l, theory_s):
-    L = np.logspace(np.log10(1.), np.log10(np.max(ell)), 201, 10.)
-    ClExpected = np.array(list(map(f, L)))
-    ax.plot(L, factor(L)*ClExpected, sty, label=l)
-    
-    
-n1 = np.loadtxt('n1_data/N1_All_analytical.dat').T    
-indices = ['TT', 'EE', 'EB', 'TE', 'TB', 'BB']
-bins = n1[0]
-n1_mat = np.reshape(n1[1:], (len(indices), len(indices), len(bins)))
-for i in range(len(indices)):
-    if(indices[i] != 'TT'):
-        continue        
-    n1_pp = (bins*(bins+1))**2/(2*np.pi)*(n1_mat[i][i][:])
-    KK = fKK(bins)
-
-    phiphi =  -2. * KK / bins**2
-    phiphi *=  -2./ bins**2
-    phiphi *= (bins*(bins+1))**2/(2*np.pi) #convention from CAMB 
-
-    pp_n1 = phiphi+n1_pp
-
-    KK_n1 = pp_n1 * 2*np.pi / (bins*(bins+1))**2 #back to our convention
-    KK_n1 *= - bins**2 / 2
-    KK_n1 *= - bins**2 / 2
-    plt.plot(bins, KK_n1, 'k--', label=r'$\big<\kappa\kappa\big>+N^{(1)}$')
-
-    
-lCen, Cl, sCl = N1_mcmc
-Ipos = np.where(Cl>0)
-
-Ineg = np.where(Cl<0)
-
-
-
-t0, t1 = baseMap.binTheoryPowerSpectrum(fKK, nBins=nBins)
-t2 = np.zeros_like(t1)
-
-
-ax.errorbar(lCen, (Cl+t1), yerr=sCl, alpha=.75, 
-            fmt='-', capsize=3, capthick=1, label=r'$\left<\kappa\kappa\right>+N^{(1)}_{\rm MCMC}$')
-# ax.errorbar(lCen[Ineg], (Cl[Ipos]+t1[Ineg]), yerr=sCl[Ineg], alpha=.75, 
-#             fmt='--', capsize=3, capthick=1)#, label=r'$\left<\kappa\kappa\right>+N^{(1)}_{\rm MCMC}$')
-
-ax.set_title('Unmasked')
-
-ax.legend(frameon=False)
-ax.set_xscale('log')
-ax.set_xlabel(r'$\ell$')
-ax.set_yscale('log')
-ax.set_xlim(lMin,2*lMax)
-ax.set_ylim(1.1e-10,.9e-3)
-
-
-
-plt.savefig('figures/n1_MC.pdf')
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
