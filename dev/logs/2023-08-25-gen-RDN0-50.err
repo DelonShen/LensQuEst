@@ -1,0 +1,25 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+  0%|          | 0/5 [00:00<?, ?it/s] 20%|██        | 1/5 [00:01<00:05,  1.34s/it] 40%|████      | 2/5 [00:02<00:04,  1.40s/it] 60%|██████    | 3/5 [00:04<00:03,  1.66s/it] 80%|████████  | 4/5 [00:06<00:01,  1.81s/it]100%|██████████| 5/5 [00:08<00:00,  1.94s/it]100%|██████████| 5/5 [00:08<00:00,  1.79s/it]
+  0%|          | 0/6 [00:00<?, ?it/s] 17%|█▋        | 1/6 [00:02<00:11,  2.28s/it] 33%|███▎      | 2/6 [00:04<00:08,  2.24s/it] 50%|█████     | 3/6 [00:07<00:07,  2.62s/it] 67%|██████▋   | 4/6 [00:10<00:05,  2.68s/it] 83%|████████▎ | 5/6 [00:13<00:02,  2.73s/it]100%|██████████| 6/6 [00:16<00:00,  2.86s/it]100%|██████████| 6/6 [00:16<00:00,  2.71s/it]
+Traceback (most recent call last):
+  File "/home/users/delon/LensQuEst/dev/gen_RDN0.py", line 174, in <module>
+    print('Data %d is in %s index %d'%(d_idx, d_IN_DATA_FNAME, inner_idx))
+NameError: name 'inner_idx' is not defined

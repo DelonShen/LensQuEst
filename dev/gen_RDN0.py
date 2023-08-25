@@ -17,7 +17,6 @@ import seaborn as sns
 from scipy.stats import spearmanr
 import numpy as np
 #######
-IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(i) for i in range(1,51)]
 
 
 pairs = [
@@ -128,55 +127,62 @@ cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=Fals
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
 # power spectrum will look like
-forCtotal = lambda l: ftot(l) 
-
-# reinterpolate: gain factor 10 in speed
-L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
-F = np.array(list(map(forCtotal, L)))
-cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+cmb.fCtotal = ftot
 
 
 in_data = {}
 
-for fname in tqdm(IN_DATA_FNAMES):
+
+s1_IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(i) for i in range(1,6)]
+s2_IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(i) for i in range(46,51)]
+
+
+for fname in tqdm(s1_IN_DATA_FNAMES):
     f = open(fname, 'rb') 
     c_in_data = pickle.load(f) 
     f.close()
     for key in c_in_data:
+        if('totalF_0' not in key):
+            continue
+        if(key not in in_data.keys()):
+            in_data[key] = np.array(c_in_data[key])
+        else:
+            in_data[key] = np.vstack( (in_data[key],np.array(c_in_data[key])) )
+
+for fname in tqdm(s2_IN_DATA_FNAMES):
+    f = open(fname, 'rb') 
+    c_in_data = pickle.load(f) 
+    f.close()
+    for key in c_in_data:
+        if('totalF_0' not in key):
+            continue
         if(key not in in_data.keys()):
             in_data[key] = np.array(c_in_data[key])
         else:
             in_data[key] = np.vstack( (in_data[key],np.array(c_in_data[key])) )
 
 
-for key in in_data:
-    print(key, np.shape(in_data[key]))
+def get_file_and_index(sim_index, num_files=50, sims_per_file=10):
+    file_index = sim_index // sims_per_file + 1
+    inner_index = sim_index % sims_per_file
+    return file_index, inner_index
+
 
 d_idx = eval(sys.argv[1])
-d = in_data['totalF_1'][d_idx]
+file_index, inner_index = get_file_and_index(d_idx)
+d_IN_DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(file_index)
+print('Data %d is in %s index %d'%(d_idx, d_IN_DATA_FNAME, inner_index))
 
-    
-# d_idx = eval(sys.argv[1])
+d = None
+with open(d_IN_DATA_FNAME, 'rb') as f:
+    c_in_data = pickle.load(f)
+    d = c_in_data['totalF_1'][inner_index]
 
-# IN_DATA_IDX = d_idx//10
-# fname = IN_DATA_FNAMES[IN_DATA_IDX]
-
-# f = open(fname, 'rb') 
-# c_in_data = pickle.load(f) 
-# f.close()
-# for key in c_in_data:
-#     if(key not in in_data.keys()):
-#         in_data[key] = np.array(c_in_data[key])
-#     else:
-#         in_data[key] = np.vstack( (in_data[key],np.array(c_in_data[key])) )
-
-
-# d = in_data['totalF_1'][d_idx%10]
 
 for key in in_data:
     print(key, np.shape(in_data[key]))
 
-    
+
 pairs = [
     [0,0], #N0
     [0,1], #kappa
@@ -202,7 +208,6 @@ ps_data = {}
 
 #RDN0
 
-    
 RDN0_data = {}
 
 
@@ -213,55 +218,29 @@ s2s1s= []
 
 
 tmp_idx = 0
-for s_idx in range(50):
+for s_idx in trange(50):
     print('CURR', s_idx)
-    for s2_idx in trange(50):
-        if(s_idx != 49 or s2_idx != 49):
-            tmp_idx += 1 
-            continue
+    for s2_idx in range(50):
         s1 = in_data['totalF_0'][s_idx]
         s2 = in_data['totalF_0'][s2_idx+len(in_data['totalF_0'])//2]
 
-        ds1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
-                                             lMin=lMin, lMax=lMax, 
+        ds1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal,
+                                             lMin=lMin, lMax=lMax,
                                              dataFourier=d,
                                              dataFourier2=s1)
-        s1d = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
-                                             lMin=lMin, lMax=lMax, 
+        s1d = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal,
+                                             lMin=lMin, lMax=lMax,
                                              dataFourier=s1,
                                              dataFourier2=d)
-        s1s2 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
-                                             lMin=lMin, lMax=lMax, 
+        s1s2 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal,
+                                             lMin=lMin, lMax=lMax,
                                              dataFourier=s1,
                                              dataFourier2=s2)
-        s2s1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal, 
-                                             lMin=lMin, lMax=lMax, 
+        s2s1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal,
+                                             lMin=lMin, lMax=lMax,
                                              dataFourier=s2,
                                              dataFourier2=s1)
 
-#         if(len(ds1s)==0):
-#             ds1s = np.array([ds1])
-#         else:
-#             ds1s = np.vstack((ds1s, np.array([ds1])))
-
-#         if(len(s1ds)==0):
-#             s1ds = np.array([s1d])
-#         else:
-#             s1ds = np.vstack((s1ds, np.array([s1d])))
-
-#         if(len(s1s2s)==0):
-#             s1s2s = np.array([s1s2])
-#         else:
-#             s1s2s = np.vstack((s1s2s, np.array([s1s2])))
-
-#         if(len(s2s1s)==0):
-#             s2s1s = np.array([s2s1])
-#         else:
-#             s2s1s = np.vstack((s2s1s, np.array([s2s1])))
-            
-            
-            
-            
         RDN0_data = {
             'ds1' : ds1,
             's1d' : s1d,
@@ -276,25 +255,8 @@ for s_idx in range(50):
         pickle.dump(RDN0_data, f)
         f.close()
         tmp_idx += 1
-        
+
         del ds1
         del s1d
         del s1s2
         del s2s1
-
-
-# RDN0_data = {
-#     'ds1s' : ds1s,
-#     's1ds' : s1ds,
-#     's1s2s': s1s2s,
-#     's2s1s': s2s1s
-# }
-
-
-# oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d.pkl'%(d_idx)
-# print(oup_fname)
-# f = open(oup_fname, 'wb') 
-# pickle.dump(RDN0_data, f)
-# f.close()
-
-
