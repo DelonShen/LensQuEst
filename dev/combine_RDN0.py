@@ -68,8 +68,8 @@ fTgradT = interp1d(L, cTgradT, kind='linear', bounds_error=False, fill_value=0.)
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 800
-nY =800
+nX = 1200
+nY = 1200
 
 # map dimensions in degrees
 sizeX = 20.
@@ -92,12 +92,12 @@ cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=Fals
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
 # power spectrum will look like
-forCtotal = lambda l: ftot(l) 
-
-# reinterpolate: gain factor 10 in speed
-L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
-F = np.array(list(map(forCtotal, L)))
-cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+#forCtotal = lambda l: ftot(l) 
+#
+## reinterpolate: gain factor 10 in speed
+#L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
+#F = np.array(list(map(forCtotal, L)))
+cmb.fCtotal = ftot
 
 print("CMB lensing power spectrum")
 u = UnivPlanck15()
@@ -105,10 +105,10 @@ halofit = Halofit(u, save=False)
 w_cmblens = WeightLensSingle(u, z_source=1100., name="cmblens")
 p2d_cmblens = P2dAuto(u, halofit, w_cmblens, save=False)
 
-print("Gets a theoretical prediction for the noise")
-fNqCmb_fft = baseMap.forecastN0Kappa(funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
-Ntheory = lambda l: fNqCmb_fft(l) 
-
+#print("Gets a theoretical prediction for the noise")
+#fNqCmb_fft = baseMap.forecastN0Kappa(funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
+#Ntheory = lambda l: fNqCmb_fft(l) 
+#
 in_data = {}
 
 # for fname in tqdm(IN_DATA_FNAMES):
@@ -203,7 +203,8 @@ pool = mp.Pool()
 tot = 2500
 import numpy as np
 tmp = np.reshape(list(range(tot)), (50,50))
-toProcess = tmp[:25,:25].flatten() #throw away half the sims
+toProcess = list(range(tot))
+#toProcess = tmp[:25,:25].flatten() #throw away half the sims
 nToProcess = len(toProcess)
 results = list(tqdm(pool.imap(process_data,  toProcess), total=nToProcess))
 
@@ -217,12 +218,11 @@ for result in results:
     assert(all(tot[0] == result[0]))
     tot[1] += result[1]
     tot[2] += np.square(result[2])
-    
-    
+
 tot[1] = tot[1] / (nToProcess)
 tot[2] = np.sqrt(tot[2])/ (nToProcess)
 
-savefname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d_quartered.pkl'%(d_idx, nBins)
+savefname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d.pkl'%(d_idx, nBins)
 with open(savefname, "wb") as f:
     print(savefname)
     pickle.dump(tot, f)

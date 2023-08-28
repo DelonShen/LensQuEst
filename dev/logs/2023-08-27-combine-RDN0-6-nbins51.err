@@ -1,0 +1,348 @@
+  0%|                                                                                            | 0/2500 [00:00<?, ?it/s]  0%|                                                                                    | 1/2500 [00:01<44:26,  1.07s/it]  1%|█                                                                                  | 33/2500 [00:01<01:26, 28.53it/s]  2%|█▎                                                                                 | 38/2500 [00:01<01:47, 22.94it/s]  2%|█▊                                                                                 | 53/2500 [00:01<01:07, 36.27it/s]  3%|██▏                                                                                | 65/2500 [00:02<01:31, 26.72it/s]  3%|██▎                                                                                | 71/2500 [00:03<02:02, 19.87it/s]  3%|██▌                                                                                | 76/2500 [00:03<01:53, 21.44it/s]  4%|███▎                                                                              | 100/2500 [00:03<00:57, 41.43it/s]  5%|███▊                                                                              | 117/2500 [00:04<01:07, 35.32it/s]  5%|████                                                                              | 124/2500 [00:04<01:08, 34.56it/s]  5%|████▎                                                                             | 132/2500 [00:04<01:01, 38.79it/s]  6%|████▌                                                                             | 138/2500 [00:04<00:58, 40.18it/s]  6%|████▉                                                                             | 152/2500 [00:04<00:52, 44.51it/s]  6%|█████▏                                                                            | 158/2500 [00:05<01:18, 29.79it/s]  7%|█████▌                                                                            | 169/2500 [00:05<01:04, 36.07it/s]  7%|█████▊                                                                            | 176/2500 [00:05<01:02, 37.13it/s]  7%|██████                                                                            | 186/2500 [00:05<00:53, 43.47it/s]  8%|██████▎                                                                           | 192/2500 [00:06<01:09, 33.35it/s]  8%|██████▍                                                                           | 197/2500 [00:06<01:11, 32.42it/s]  8%|██████▊                                                                           | 206/2500 [00:06<01:03, 36.05it/s]  9%|███████▎                                                                          | 222/2500 [00:06<00:42, 53.33it/s]  9%|███████▌                                                                          | 231/2500 [00:07<01:20, 28.36it/s]  9%|███████▋                                                                          | 236/2500 [00:07<01:30, 24.95it/s] 11%|████████▋                                                                         | 264/2500 [00:07<00:47, 47.31it/s] 11%|████████▉                                                                         | 271/2500 [00:10<02:46, 13.38it/s] 12%|█████████▌                                                                        | 292/2500 [00:10<01:43, 21.36it/s] 12%|█████████▊                                                                        | 299/2500 [00:10<01:33, 23.66it/s] 13%|██████████▍                                                                       | 317/2500 [00:10<01:08, 31.92it/s] 13%|██████████▋                                                                       | 324/2500 [00:11<01:15, 28.89it/s] 13%|██████████▉                                                                       | 332/2500 [00:11<01:13, 29.44it/s] 14%|███████████▍                                                                      | 350/2500 [00:11<00:54, 39.68it/s] 14%|███████████▊                                                                      | 359/2500 [00:11<00:48, 44.33it/s] 15%|████████████                                                                      | 366/2500 [00:12<00:54, 39.22it/s] 15%|████████████▏                                                                     | 372/2500 [00:12<00:53, 39.79it/s] 15%|████████████▍                                                                     | 379/2500 [00:12<00:49, 42.75it/s] 15%|████████████▋                                                                     | 385/2500 [00:13<01:30, 23.44it/s] 16%|████████████▉                                                                     | 394/2500 [00:13<01:07, 31.02it/s] 16%|█████████████▍                                                                    | 408/2500 [00:13<00:49, 42.67it/s] 17%|█████████████▌                                                                    | 415/2500 [00:13<00:44, 46.46it/s] 17%|█████████████▊                                                                    | 423/2500 [00:13<01:01, 33.98it/s] 17%|██████████████                                                                    | 429/2500 [00:14<01:27, 23.78it/s] 18%|██████████████▌                                                                   | 444/2500 [00:14<00:54, 37.84it/s] 18%|███████████████                                                                   | 459/2500 [00:14<00:51, 39.49it/s] 19%|███████████████▎                                                                  | 467/2500 [00:14<00:51, 39.84it/s] 19%|███████████████▋                                                                  | 477/2500 [00:15<00:46, 43.44it/s] 20%|████████████████▏                                                                 | 494/2500 [00:15<00:36, 55.49it/s] 20%|████████████████▍                                                                 | 501/2500 [00:15<00:50, 39.69it/s] 20%|████████████████▋                                                                 | 507/2500 [00:16<01:21, 24.38it/s] 21%|████████████████▊                                                                 | 514/2500 [00:16<01:04, 30.61it/s]
+Process ForkPoolWorker-31:
+Process ForkPoolWorker-6:
+Process ForkPoolWorker-28:
+Process ForkPoolWorker-2:
+Process ForkPoolWorker-10:
+Process ForkPoolWorker-17:
+Process ForkPoolWorker-21:
+Process ForkPoolWorker-13:
+Process ForkPoolWorker-14:
+Traceback (most recent call last):
+Process ForkPoolWorker-1:
+Process ForkPoolWorker-18:
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 853, in next
+Process ForkPoolWorker-23:
+Process ForkPoolWorker-19:
+Process ForkPoolWorker-16:
+Process ForkPoolWorker-8:
+Process ForkPoolWorker-25:
+Process ForkPoolWorker-3:
+    item = self._items.popleft()
+IndexError: pop from an empty deque
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 209, in <module>
+    results = list(tqdm(pool.imap(process_data,  toProcess), total=nToProcess))
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/site-packages/tqdm/std.py", line 1178, in __iter__
+    for obj in iterable:
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 858, in next
+    self._cond.wait(timeout)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/threading.py", line 312, in wait
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 428, in crossPowerSpectrum
+    ell = self.l.flatten()
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 443, in crossPowerSpectrum
+    power = (dataFourier1 * np.conj(dataFourier2)).flatten()
+KeyboardInterrupt
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 443, in crossPowerSpectrum
+    power = (dataFourier1 * np.conj(dataFourier2)).flatten()
+KeyboardInterrupt
+Process ForkPoolWorker-5:
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 181, in process_data
+    RDN0_data = pickle.load(f)
+KeyboardInterrupt
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 445, in crossPowerSpectrum
+    Cl, lEdges, binIndices = stats.binned_statistic(ell, power, statistic='mean', bins=lEdges)
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 445, in crossPowerSpectrum
+    Cl, lEdges, binIndices = stats.binned_statistic(ell, power, statistic='mean', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 601, in binned_statistic_dd
+    flatsum = _bincount(binnumbers, values[vv])
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 372, in _bincount
+    z = np.bincount(x, weights)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 601, in binned_statistic_dd
+    flatsum = _bincount(binnumbers, values[vv])
+  File "<__array_function__ internals>", line 200, in bincount
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 372, in _bincount
+    z = np.bincount(x, weights)
+  File "<__array_function__ internals>", line 200, in bincount
+KeyboardInterrupt
+KeyboardInterrupt
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 445, in crossPowerSpectrum
+    Cl, lEdges, binIndices = stats.binned_statistic(ell, power, statistic='mean', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 601, in binned_statistic_dd
+    flatsum = _bincount(binnumbers, values[vv])
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 372, in _bincount
+    z = np.bincount(x, weights)
+  File "<__array_function__ internals>", line 200, in bincount
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 435, in crossPowerSpectrum
+    lCen, lEdges, binIndices = stats.binned_statistic(ell, ell, statistic='mean', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 598, in binned_statistic_dd
+    flatcount = _bincount(binnumbers, None)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 372, in _bincount
+    z = np.bincount(x, weights)
+  File "<__array_function__ internals>", line 200, in bincount
+KeyboardInterrupt
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 445, in crossPowerSpectrum
+    Cl, lEdges, binIndices = stats.binned_statistic(ell, power, statistic='mean', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 598, in binned_statistic_dd
+    flatcount = _bincount(binnumbers, None)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 372, in _bincount
+    z = np.bincount(x, weights)
+  File "<__array_function__ internals>", line 200, in bincount
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+KeyboardInterrupt
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 445, in crossPowerSpectrum
+    Cl, lEdges, binIndices = stats.binned_statistic(ell, power, statistic='mean', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 601, in binned_statistic_dd
+    flatsum = _bincount(binnumbers, values[vv])
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 372, in _bincount
+    z = np.bincount(x, weights)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "<__array_function__ internals>", line 200, in bincount
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 440, in crossPowerSpectrum
+    Nmodes, lEdges, binIndices = stats.binned_statistic(ell, np.zeros_like(ell), statistic='count', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 584, in binned_statistic_dd
+    binnumbers = _bin_numbers(sample, nbin, edges, dedges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 793, in _bin_numbers
+    binnumbers = np.ravel_multi_index(sampBin, nbin)
+KeyboardInterrupt
+  File "<__array_function__ internals>", line 200, in ravel_multi_index
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 440, in crossPowerSpectrum
+    Nmodes, lEdges, binIndices = stats.binned_statistic(ell, np.zeros_like(ell), statistic='count', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 584, in binned_statistic_dd
+    binnumbers = _bin_numbers(sample, nbin, edges, dedges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 793, in _bin_numbers
+    binnumbers = np.ravel_multi_index(sampBin, nbin)
+  File "<__array_function__ internals>", line 200, in ravel_multi_index
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 445, in crossPowerSpectrum
+    Cl, lEdges, binIndices = stats.binned_statistic(ell, power, statistic='mean', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 584, in binned_statistic_dd
+    binnumbers = _bin_numbers(sample, nbin, edges, dedges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 786, in _bin_numbers
+    on_edge = np.where((sample[:, i] >= edges[i][-1]) &
+KeyboardInterrupt
+    waiter.acquire()
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 445, in crossPowerSpectrum
+    Cl, lEdges, binIndices = stats.binned_statistic(ell, power, statistic='mean', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 583, in binned_statistic_dd
+    nbin, edges, dedges = _bin_edges(sample, bins, range)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 725, in _bin_edges
+    smin = np.atleast_1d(np.array(sample.min(axis=0), float))
+  File "/home/users/delon/.local/lib/python3.9/site-packages/numpy/core/_methods.py", line 45, in _amin
+    return umr_minimum(a, axis, None, out, keepdims, initial, where)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 446, in crossPowerSpectrum
+    Cl = np.nan_to_num(Cl)
+  File "<__array_function__ internals>", line 200, in nan_to_num
+  File "/home/users/delon/.local/lib/python3.9/site-packages/numpy/lib/type_check.py", line 516, in nan_to_num
+    idx_posinf = isposinf(d)
+  File "<__array_function__ internals>", line 180, in isposinf
+  File "/home/users/delon/.local/lib/python3.9/site-packages/numpy/lib/ufunclike.py", line 22, in func
+    @functools.wraps(f)
+KeyboardInterrupt
+Process ForkPoolWorker-22:
+Traceback (most recent call last):
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 556, in binned_statistic_dd
+    Dlen, Ndim = sample.shape
+AttributeError: 'list' object has no attribute 'shape'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 435, in crossPowerSpectrum
+    lCen, lEdges, binIndices = stats.binned_statistic(ell, ell, statistic='mean', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 559, in binned_statistic_dd
+    sample = np.atleast_2d(sample).T
+  File "<__array_function__ internals>", line 200, in atleast_2d
+  File "/home/users/delon/.local/lib/python3.9/site-packages/numpy/core/shape_base.py", line 121, in atleast_2d
+    ary = asanyarray(ary)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 181, in process_data
+    RDN0_data = pickle.load(f)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 191, in process_data
+    t0, t1, t2 = baseMap.crossPowerSpectrum(dataFourier1=a, dataFourier2=b, nBins=nBins)
+  File "/home/users/delon/LensQuEst/LensQuEst/flat_map.py", line 435, in crossPowerSpectrum
+    lCen, lEdges, binIndices = stats.binned_statistic(ell, ell, statistic='mean', bins=lEdges)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 184, in binned_statistic
+    medians, edges, binnumbers = binned_statistic_dd(
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 583, in binned_statistic_dd
+    nbin, edges, dedges = _bin_edges(sample, bins, range)
+  File "/home/users/delon/.local/lib/python3.9/site-packages/scipy/stats/_binned_statistic.py", line 759, in _bin_edges
+    dedges[i] = np.diff(edges[i])
+  File "<__array_function__ internals>", line 200, in diff
+  File "/home/users/delon/.local/lib/python3.9/site-packages/numpy/lib/function_base.py", line 1448, in diff
+    a = op(a[slice1], a[slice2])
+KeyboardInterrupt
