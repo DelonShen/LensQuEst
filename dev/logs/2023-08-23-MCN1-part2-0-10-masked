@@ -1,0 +1,8 @@
+masked
+outputting to /oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins51-morestats-Tcombos_0_10-masked.pkl
+../data/input/universe_Planck15/camb/CAMB_outputs.pkl
+Map properties
+CMB experiment properties
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts0-masked.pkl
+/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts10-masked.pkl
+  0%|                                                                                             | 0/100 [00:00<?, ?it/s] 14%|███████████▊                                                                        | 14/100 [00:00<00:02, 41.79it/s] 86%|███████████████████████████████████████████████████████████████████████▍           | 86/100 [00:00<00:00, 140.89it/s]100%|██████████████████████████████████████████████████████████████████████████████████| 100/100 [00:00<00:00, 144.54it/s]

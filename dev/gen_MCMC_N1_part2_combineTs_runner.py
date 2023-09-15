@@ -1,6 +1,7 @@
 import subprocess
 from tqdm import trange
-for i in trange(20):
+for i in range(20):
+    print(i)
     for j in trange(20):
         if(i < 10 and j < 10):
             continue

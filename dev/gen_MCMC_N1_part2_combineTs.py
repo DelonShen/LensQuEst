@@ -6,6 +6,15 @@ DATA_IDX_1 = eval(sys.argv[1])
 DATA_IDX_2 = eval(sys.argv[2])
 
 
+nBins = 51  # number of bins
+
+masked = False
+if(len(sys.argv) > 3 and sys.argv[3] == 'masked'):
+    print(sys.argv[3])
+    masked=True
+
+
+
 
 import os, sys
 WORKING_DIR = os.path.dirname(os.path.abspath(''))
@@ -23,7 +32,20 @@ import seaborn as sns
 from scipy.stats import spearmanr
 import numpy as np
 #######
-IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(i) for i in range(1,51)]
+
+
+
+fname_1 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d.pkl'%(DATA_IDX_1)
+fname_2 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d.pkl'%(DATA_IDX_2)
+if(masked):
+    fname_1 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-masked.pkl'%(DATA_IDX_1)
+    fname_2 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-masked.pkl'%(DATA_IDX_2)
+
+combined_oup_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Tcombos_%d_%d.pkl'%(nBins, DATA_IDX_1, DATA_IDX_2)
+if(masked):
+    combined_oup_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Tcombos_%d_%d-masked.pkl'%(nBins, DATA_IDX_1, DATA_IDX_2)
+
+print('outputting to', combined_oup_fname)
 
 
 pairs = [
@@ -118,7 +140,6 @@ baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
 lMin = 30.; lMax = 3.5e3
 
 # ell bins for power spectra
-nBins = 51  # number of bins
 lRange = (1., 2.*lMax)  # range for power spectra
 
 
@@ -182,10 +203,15 @@ TpTs = []
 
 
 
-with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d.pkl'%(DATA_IDX_1), "rb") as f:
+
+
+
+print(fname_1)
+print(fname_2)
+with open(fname_1, "rb") as f:
     TkTkps, TkpTks, _, _ = pickle.load(f)
 
-with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d.pkl'%(DATA_IDX_2), "rb") as f:
+with open(fname_2, "rb") as f:
     _, _, TTps, TpTs = pickle.load(f)
 
 
@@ -202,7 +228,6 @@ def tmp_combine_Cl(Cls_tot):
 # In[8]:
 
 
-nBins = 51
 
 
 # In[9]:
@@ -246,5 +271,5 @@ for result in tqdm(results):
 
 print(c_data.shape)
 
-with open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Tcombos_%d_%d.pkl'%(nBins, DATA_IDX_1, DATA_IDX_2), "wb") as f:
+with open(combined_oup_fname, "wb") as f:
     pickle.dump(c_data, f)

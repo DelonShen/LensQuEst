@@ -17,10 +17,10 @@ from scipy.stats import spearmanr
 import numpy as np
 
 #######
-IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
-mask_file = 'mask_simple800x800.png'
-psfile = 'point_sources_800x800.png'
-psapod = 2
+IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(i) for i in range(1,51)]
+mask_file = 'mask_simple1200x1200.png'
+psfile = 'point_sources_1200x1200.png'
+psapod = 3
 
 
 template_name = mask_file.split('/')[-1].split('.')[0]
@@ -120,8 +120,8 @@ from scipy.stats import spearmanr
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 800
-nY =800
+nX = 1200
+nY = 1200
 
 # map dimensions in degrees
 sizeX = 20.
@@ -134,7 +134,6 @@ baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
 lMin = 30.; lMax = 3.5e3
 
 # ell bins for power spectra
-nBins = 21  # number of bins
 lRange = (1., 2.*lMax)  # range for power spectra
 
 
@@ -150,12 +149,12 @@ cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=Fals
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
 # power spectrum will look like
-forCtotal = lambda l: ftot(l) 
-
-# reinterpolate: gain factor 10 in speed
-L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
-F = np.array(list(map(forCtotal, L)))
-cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+#forCtotal = lambda l: ftot(l) 
+#
+## reinterpolate: gain factor 10 in speed
+#L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
+#F = np.array(list(map(forCtotal, L)))
+cmb.fCtotal = ftot
 
 
 # In[9]:
@@ -179,7 +178,7 @@ apodized_mask = 1 - apodized_mask
 for a in apodized_mask:
     for b in a:
         assert(b<=1 and b>=0)
-        
+
 plt.imshow(apodized_mask)
 plt.savefig('figures/apodized_masked_%dx%d.pdf'%(nX, nY),bbox_inches='tight')
 
@@ -211,6 +210,7 @@ data_names = {
     4: 'lCmbF_o4_1',
     -1: 'lCmbF_1',
     -2: 'totalF_0',
+    -3: 'totalF_randomized_0',
 }
 
 
@@ -242,7 +242,6 @@ N_data = min(len(in_data[keys[0]]), len(in_data[keys[1]]))
 c_data = []
 c_data_sqrtN = []
 c_data_kR  = []
-    
 for data_idx in trange(N_data):
     dataF0 = in_data[keys[0]][data_idx]
     if(pair[0]-1 >= 0):  #isolate term
@@ -250,11 +249,9 @@ for data_idx in trange(N_data):
     dataF1 = in_data[keys[1]][data_idx]
     if(pair[1]-1>=0):    #isolate term
         dataF1 = dataF1 - in_data[data_names[pair[1]-1]][data_idx]
-    
-    if(pair[0]!=-2):
+    if(pair[0]!=-2 and pair[0] != -3):
         dataF0 = dataF0 + fgFourier[data_idx] + noiseFourier[data_idx]
         dataF1 = dataF1 + fgFourier[data_idx] + noiseFourier[data_idx]
-        
     dataF0 = baseMap.fourier(baseMap.inverseFourier(dataF0)*apodized_mask)
     dataF1 = baseMap.fourier(baseMap.inverseFourier(dataF1)*apodized_mask)
 
@@ -280,13 +277,12 @@ for data_idx in trange(N_data):
         c_data = np.array([QE])
     else:
         c_data = np.vstack((c_data, np.array([QE])))
-        
-        
+
     assert(len(c_data)==data_idx+1)
 
 
 data[pair_key+'_m'] = c_data
 data[pair_key+'_m'+'_sqrtN'] = c_data_sqrtN
-f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_FILE%d_pair_%d_%d_MASKED.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
+f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/estimators_FILE%d_pair_%d_%d_MASKED.pkl'%(file_idx, pair[0], pair[1]), 'wb')
 pickle.dump(data, f)
 f.close()

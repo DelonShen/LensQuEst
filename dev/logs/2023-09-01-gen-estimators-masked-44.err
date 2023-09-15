@@ -1,0 +1,46 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:61: RuntimeWarning: invalid value encountered in divide
+  unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:67: RuntimeWarning: invalid value encountered in divide
+  rawPP = PP*2*np.pi/((L*(L+1))**2)
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:74: RuntimeWarning: invalid value encountered in divide
+  lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:84: RuntimeWarning: invalid value encountered in divide
+  cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+  0%|                                                                                              | 0/10 [00:00<?, ?it/s] 10%|████████▌                                                                             | 1/10 [00:58<08:43, 58.13s/it] 20%|█████████████████▏                                                                    | 2/10 [01:01<03:25, 25.70s/it] 30%|█████████████████████████▊                                                            | 3/10 [01:04<01:47, 15.37s/it] 40%|██████████████████████████████████▍                                                   | 4/10 [01:07<01:03, 10.56s/it] 50%|███████████████████████████████████████████                                           | 5/10 [01:10<00:39,  7.90s/it] 60%|███████████████████████████████████████████████████▌                                  | 6/10 [01:13<00:25,  6.30s/it] 70%|████████████████████████████████████████████████████████████▏                         | 7/10 [01:16<00:15,  5.26s/it] 80%|████████████████████████████████████████████████████████████████████▊                 | 8/10 [01:20<00:09,  4.62s/it] 90%|█████████████████████████████████████████████████████████████████████████████▍        | 9/10 [01:23<00:04,  4.14s/it]100%|█████████████████████████████████████████████████████████████████████████████████████| 10/10 [01:26<00:00,  3.87s/it]100%|█████████████████████████████████████████████████████████████████████████████████████| 10/10 [01:26<00:00,  8.65s/it]
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:61: RuntimeWarning: invalid value encountered in divide
+  unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:67: RuntimeWarning: invalid value encountered in divide
+  rawPP = PP*2*np.pi/((L*(L+1))**2)
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:74: RuntimeWarning: invalid value encountered in divide
+  lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:84: RuntimeWarning: invalid value encountered in divide
+  cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+  0%|                                                                                              | 0/10 [00:00<?, ?it/s] 10%|████████▌                                                                             | 1/10 [00:58<08:47, 58.62s/it] 20%|█████████████████▏                                                                    | 2/10 [01:01<03:26, 25.83s/it] 30%|█████████████████████████▊                                                            | 3/10 [01:04<01:47, 15.43s/it] 40%|██████████████████████████████████▍                                                   | 4/10 [01:07<01:03, 10.54s/it] 50%|███████████████████████████████████████████                                           | 5/10 [01:10<00:39,  7.85s/it] 60%|███████████████████████████████████████████████████▌                                  | 6/10 [01:13<00:24,  6.21s/it] 70%|████████████████████████████████████████████████████████████▏                         | 7/10 [01:16<00:15,  5.19s/it] 80%|████████████████████████████████████████████████████████████████████▊                 | 8/10 [01:19<00:09,  4.51s/it] 90%|█████████████████████████████████████████████████████████████████████████████▍        | 9/10 [01:22<00:04,  4.07s/it]100%|█████████████████████████████████████████████████████████████████████████████████████| 10/10 [01:26<00:00,  3.78s/it]100%|█████████████████████████████████████████████████████████████████████████████████████| 10/10 [01:26<00:00,  8.61s/it]
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:61: RuntimeWarning: invalid value encountered in divide
+  unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:67: RuntimeWarning: invalid value encountered in divide
+  rawPP = PP*2*np.pi/((L*(L+1))**2)
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:74: RuntimeWarning: invalid value encountered in divide
+  lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+/home/users/delon/LensQuEst/dev/gen_estimators_masked.py:84: RuntimeWarning: invalid value encountered in divide
+  cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+  0%|                                                                                              | 0/10 [00:00<?, ?it/s] 10%|████████▌                                                                             | 1/10 [00:57<08:35, 57.26s/it] 20%|█████████████████▏                                                                    | 2/10 [01:00<03:22, 25.27s/it] 30%|█████████████████████████▊                                                            | 3/10 [01:03<01:45, 15.12s/it] 40%|██████████████████████████████████▍                                                   | 4/10 [01:06<01:01, 10.33s/it] 50%|███████████████████████████████████████████                                           | 5/10 [01:09<00:38,  7.75s/it] 60%|███████████████████████████████████████████████████▌                                  | 6/10 [01:12<00:24,  6.19s/it] 70%|████████████████████████████████████████████████████████████▏                         | 7/10 [01:15<00:15,  5.21s/it] 80%|████████████████████████████████████████████████████████████████████▊                 | 8/10 [01:18<00:09,  4.55s/it] 90%|█████████████████████████████████████████████████████████████████████████████▍        | 9/10 [01:21<00:04,  4.10s/it]100%|█████████████████████████████████████████████████████████████████████████████████████| 10/10 [01:25<00:00,  3.85s/it]100%|█████████████████████████████████████████████████████████████████████████████████████| 10/10 [01:25<00:00,  8.52s/it]
