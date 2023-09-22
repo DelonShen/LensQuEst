@@ -17,7 +17,14 @@ import seaborn as sns
 from scipy.stats import spearmanr
 import numpy as np
 #######
-
+MASKING=False
+if(len(sys.argv)>2):
+    if(sys.argv[2] == 'masking'):
+        MASKING = True
+        print('masked')
+mask_file = 'mask_simple1200x1200.png'
+psfile = 'point_sources_1200x1200.png'
+psapod = 3
 
 pairs = [
 #   [0,0], #N0
@@ -131,6 +138,30 @@ cmb.fCtotal = ftot
 
 
 in_data = {}
+# In[9]:
+
+#https://stackoverflow.com/questions/12201577/how-can-i-convert-an-rgb-image-into-grayscale-in-python
+def rgb2gray(rgb):
+    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
+from scipy.ndimage import gaussian_filter 
+from scipy.fft import fft2
+
+mask = rgb2gray(plt.imread(mask_file))
+apodized_mask = gaussian_filter(mask, 3)
+point_sources = rgb2gray(plt.imread(psfile))
+point_sources = gaussian_filter(point_sources, psapod) 
+apodized_mask += point_sources
+nPos = np.where(apodized_mask>1)
+apodized_mask[nPos] = 1
+mask = 1-mask
+apodized_mask = 1 - apodized_mask
+
+for a in apodized_mask:
+    for b in a:
+        assert(b<=1 and b>=0)
+
+plt.imshow(apodized_mask)
+plt.savefig('figures/apodized_masked_%dx%d.pdf'%(nX, nY),bbox_inches='tight')
 
 
 s1_IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(i) for i in range(1,6)]
@@ -218,12 +249,23 @@ s2s1s= []
 
 
 tmp_idx = 0
+
+if(MASKING):
+    print('masking data')
+    d = baseMap.fourier(baseMap.inverseFourier(d) * apodized_mask)
+    
 for s_idx in trange(50):
+    s1 = in_data['totalF_0'][s_idx]
+    if(MASKING):
+        s1 = baseMap.fourier(baseMap.inverseFourier(s1) * apodized_mask)
+
     print('CURR', s_idx)
     for s2_idx in range(50):
-        s1 = in_data['totalF_0'][s_idx]
         s2 = in_data['totalF_0'][s2_idx+len(in_data['totalF_0'])//2]
 
+        if(MASKING):
+            s2 = baseMap.fourier(baseMap.inverseFourier(s2) * apodized_mask)
+           
         ds1 = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal,
                                              lMin=lMin, lMax=lMax,
                                              dataFourier=d,
@@ -250,6 +292,9 @@ for s_idx in trange(50):
 
 
         oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d.pkl'%(d_idx,tmp_idx)
+        if(MASKING):
+            oup_fname = '/scratch/groups/risahw/delon/LensQuEst/RDN0-in_data-%d-%d.pkl'%(d_idx,tmp_idx)
+
         print(oup_fname)
         f = open(oup_fname, 'wb') 
         pickle.dump(RDN0_data, f)
