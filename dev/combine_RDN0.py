@@ -10,11 +10,15 @@ if(len(sys.argv) >= 3):
     nBins = eval(sys.argv[2])
 
 MASKING = False
+ANISO = False
 if(len(sys.argv) >= 4):
     if(sys.argv[3] == 'mask'):
         MASKING=True
         print('Masking')
-        
+    if(sys.argv[3] == 'aniso'):
+        ANISO=True
+        print('ANISO')
+
 import os, sys
 WORKING_DIR = os.path.dirname(os.path.abspath(''))
 sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
@@ -62,6 +66,11 @@ flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 
 
 ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+if(ANISO):
+    with open('f_aniso_ftot.pkl', 'rb') as f:
+        ftot = pickle.load(f)
+
+    print('loaded estimated ftot')
 
 
 L = np.arange(c_lens_response.shape[0])
@@ -186,6 +195,9 @@ def process_data(tmp_idx):
     oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d.pkl' % (d_idx, tmp_idx)
     if(MASKING):
         oup_fname = '/scratch/groups/risahw/delon/LensQuEst/RDN0-in_data-%d-%d.pkl'%(d_idx,tmp_idx)
+    if(ANISO):
+        oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d-aniso.pkl' % (d_idx, tmp_idx)
+
     f = open(oup_fname, 'rb')
     RDN0_data = pickle.load(f)
     f.close()
@@ -234,6 +246,9 @@ tot[2] = np.sqrt(tot[2])/ (nToProcess)
 savefname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d.pkl'%(d_idx, nBins)
 if(MASKING):
     savefname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d-masked.pkl'%(d_idx, nBins)
+if(ANISO):
+    savefname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d-aniso.pkl'%(d_idx, nBins)
+
 
 with open(savefname, "wb") as f:
     print(savefname)
