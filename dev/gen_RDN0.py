@@ -18,10 +18,15 @@ from scipy.stats import spearmanr
 import numpy as np
 #######
 MASKING=False
+ANISO=False
 if(len(sys.argv)>2):
     if(sys.argv[2] == 'masking'):
         MASKING = True
         print('masked')
+    if(sys.argv[2] == 'aniso'):
+        ANISO = True
+        print('anisotropic noise')
+
 mask_file = 'mask_simple1200x1200.png'
 psfile = 'point_sources_1200x1200.png'
 psapod = 3
@@ -81,6 +86,11 @@ flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 
 
 ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+if(ANISO):
+    with open('f_aniso_ftot.pkl', 'rb') as f:
+        ftot = pickle.load(f)
+
+    print('loaded estimated ftot')
 
 
 L = np.arange(c_lens_response.shape[0])
@@ -96,7 +106,9 @@ fTgradT = interp1d(L, cTgradT, kind='linear', bounds_error=False, fill_value=0.)
 # In[4]:
 
 
-
+errmap = None
+with open('anisotropic_noise_map.pkl', 'rb') as f:
+    errmap = pickle.load(f)
 
 # In[5]:
 
@@ -192,6 +204,14 @@ for fname in tqdm(s2_IN_DATA_FNAMES):
         else:
             in_data[key] = np.vstack( (in_data[key],np.array(c_in_data[key])) )
 
+            
+if(ANISO):
+    in_data = {}
+    print('loading sims for anisotropinc noise')
+    DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_for_aniso_rdn0.pkl'
+    with open(DATA_FNAME, 'rb') as f:
+        in_data = pickle.load(f)
+
 
 def get_file_and_index(sim_index, num_files=50, sims_per_file=10):
     file_index = sim_index // sims_per_file + 1
@@ -208,7 +228,16 @@ d = None
 with open(d_IN_DATA_FNAME, 'rb') as f:
     c_in_data = pickle.load(f)
     d = c_in_data['totalF_1'][inner_index]
+    if(ANISO):
+        d = c_in_data['lCmbF_1'][inner_index]
+        #first we'll renormalize error map so that when we apply the error map, 
+        #at best, anisotropic_noise = isotropic noise
+        print('applying anisotropic detector noise')
+        aniso_noise = baseMap.inverseFourier(c_in_data['noiseF_1'][inner_index]) / np.min(errmap)
+        aniso_noise = aniso_noise * errmap # apply errmap
+        aniso_noise_fourier = baseMap.fourier(aniso_noise)
 
+        d = d + c_in_data['fgF_1'][inner_index] + aniso_noise_fourier
 
 for key in in_data:
     print(key, np.shape(in_data[key]))
@@ -294,6 +323,8 @@ for s_idx in trange(50):
         oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d.pkl'%(d_idx,tmp_idx)
         if(MASKING):
             oup_fname = '/scratch/groups/risahw/delon/LensQuEst/RDN0-in_data-%d-%d.pkl'%(d_idx,tmp_idx)
+        if(ANISO):
+            oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d-aniso.pkl'%(d_idx,tmp_idx)
 
         print(oup_fname)
         f = open(oup_fname, 'wb') 

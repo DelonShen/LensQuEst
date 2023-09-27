@@ -1,41 +1,9 @@
-#######
-IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_800x800_20x20_%d.pkl'%(i) for i in range(1,51)]
-
-
-pairs = [
-#   [0,0], #N0
-#   [0,1], #kappa
-#   [1,0], #kappa
-#   [0,2], #N1
-#   [1,1], #N1
-#   [2,0], #N1
-#    [0,3], #should vanish
-#    [1,2], #should vanish
-#    [2,1], #should vanish
-#    [3,0], #should vanish
-#    [0,4], #N2 
-#    [1,3], #N2
-#    [2,2], #N2
-#    [3,1], #N2
-#    [4,0], #N2
-   [-1, -1], #QE
-   [-2, -2], #unlensed
-]
-
+import pickle
 import warnings
-warnings.filterwarnings("ignore")
-#####
-
-
-# In[3]:
-
 
 import os, sys
 WORKING_DIR = os.path.dirname(os.path.abspath(''))
 sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
-
-# In[4]:
-
 
 from universe import *
 from halo_fit import *
@@ -46,16 +14,71 @@ from pn_2d import *
 import pickle
 import seaborn as sns
 from scipy.stats import spearmanr
+import numpy as np
+#######
+IN_DATA_FNAMES = ['/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_%d.pkl'%(i) for i in range(1,51)]
 
 
-# In[5]:
+
+warnings.filterwarnings("ignore")
+#####
+oup_fname = '../data/input/universe_Planck15/camb/CAMB_outputs.pkl'
+print(oup_fname)
+f = open(oup_fname, 'rb') 
+powers,cl,c_lensed,c_lens_response = pickle.load(f)
+f.close()
+
+totCL=powers['total']
+unlensedCL=powers['unlensed_scalar']
+
+L = np.arange(unlensedCL.shape[0])
+unlensedTT = unlensedCL[:,0]/(L*(L+1))*2*np.pi
+F = unlensedTT
+funlensedTT_log = interp1d(L, np.log(F), kind='linear', bounds_error=False, fill_value=0.)
+funlensedTT = lambda L:np.exp(funlensedTT_log(L))
+
+
+L = np.arange(cl.shape[0])
+PP = cl[:,0]
+rawPP = PP*2*np.pi/((L*(L+1))**2)
+rawKK = L**4/4 * rawPP
+
+fKK_log = interp1d(L, np.log(rawKK), kind='linear', bounds_error=False, fill_value=0.)
+fKK = lambda L:np.exp(fKK_log(L))
+
+
+L = np.arange(totCL.shape[0])
+
+lensedTT = totCL[:,0]/(L*(L+1))*2*np.pi
+F = lensedTT
+flensedTT_log = interp1d(L, np.log(F), kind='linear', bounds_error=False, fill_value=0.)
+flensedTT = lambda L:np.exp(flensedTT_log(L))
+
+
+ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+
+
+with open('f_aniso_ftot.pkl', 'rb') as f:
+    ftot = pickle.load(f)
+    
+print('loaded estimated ftot')
+
+
+
+L = np.arange(c_lens_response.shape[0])
+
+cTgradT = c_lens_response.T[0]/(L*(L+1))*2*np.pi
+
+fTgradT_log = interp1d(L, np.log(cTgradT), kind='linear', bounds_error=False, fill_value=0.)
+fTgradT = lambda L:np.exp(fTgradT_log(L))
+
 
 
 print("Map properties")
 
 # number of pixels for the flat map
-nX = 800
-nY =800
+nX = 1200
+nY = 1200
 
 # map dimensions in degrees
 sizeX = 20.
@@ -68,7 +91,6 @@ baseMap = FlatMap(nX=nX, nY=nY, sizeX=sizeX*np.pi/180., sizeY=sizeY*np.pi/180.)
 lMin = 30.; lMax = 3.5e3
 
 # ell bins for power spectra
-nBins = 21  # number of bins
 lRange = (1., 2.*lMax)  # range for power spectra
 
 
@@ -84,57 +106,13 @@ cmb = StageIVCMB(beam=1.4, noise=7., lMin=lMin, lMaxT=lMax, lMaxP=lMax, atm=Fals
 # Total power spectrum, for the lens reconstruction
 # basiscally gets what we theoretically expect the
 # power spectrum will look like
-forCtotal = lambda l: cmb.ftotal(l) 
+forCtotal = lambda l: ftot(l) 
 
-# reinterpolate: gain factor 10 in speed
-L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
-F = np.array(list(map(forCtotal, L)))
-cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
-
-
-# In[7]:
-
-
-print("CMB lensing power spectrum")
-u = UnivPlanck15()
-halofit = Halofit(u, save=False)
-w_cmblens = WeightLensSingle(u, z_source=1100., name="cmblens")
-p2d_cmblens = P2dAuto(u, halofit, w_cmblens, save=False)
-
-
-# In[8]:
-
-
-print("Gets a theoretical prediction for the noise")
-fNqCmb_fft = baseMap.forecastN0Kappa(cmb.funlensedTT, cmb.fCtotal, lMin=lMin, lMax=lMax, test=False)
-Ntheory = lambda l: fNqCmb_fft(l) 
-
-
-# In[9]:
-
-
-#https://stackoverflow.com/questions/12201577/how-can-i-convert-an-rgb-image-into-grayscale-in-python
-# def rgb2gray(rgb):
-#     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
-
-# from scipy.ndimage import gaussian_filter 
-# from scipy.fft import fft2
-
-# mask = rgb2gray(plt.imread('mask_simple%dx%d.png'%(nX, nY)))
-# apodized_mask = gaussian_filter(mask, 3)
-# point_sources = rgb2gray(plt.imread('point_sources_bigger.png'))
-# point_sources = gaussian_filter(point_sources, 1.5) 
-# apodized_mask += point_sources
-# nPos = np.where(apodized_mask>1)
-# apodized_mask[nPos] = 1
-# mask = 1-mask
-# apodized_mask = 1 - apodized_mask
-
-# for a in apodized_mask:
-#     for b in a:
-#         assert(b<=1 and b>=0)
-# plt.imshow(apodized_mask)
-
+# # reinterpolate: gain factor 10 in speed
+# L = np.logspace(np.log10(lMin/2.), np.log10(2.*lMax), 1001, 10.)
+# F = np.array(list(map(forCtotal, L)))
+# cmb.fCtotal = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
+cmb.fCtotal = ftot # no longer reinterpolating since it seems like it leads to errors?
 
 
 # In[12]:
@@ -154,6 +132,10 @@ for key in c_in_data:
 for key in in_data:
     print(key, np.shape(in_data[key]))
 
+# In[30]:
+
+
+
 data_names = {
     0: 'cmb0F_1',
     1: 'lCmbF_o1_1',
@@ -162,30 +144,34 @@ data_names = {
     4: 'lCmbF_o4_1',
     -1: 'lCmbF_1',
     -2: 'totalF_0',
+    -3: 'totalF_randomized_0',
 }
 
+
+
+
+
+
+# In[ ]:
+
+
 from tqdm import trange, tqdm
+
+
+
+# In[43]:
+
 
 fgFourier = in_data['fgF_1']
 noiseFourier = in_data['noiseF_1']
 
-np.cos(np.pi*800/2050)
+errmap = None
+with open('anisotropic_noise_map.pkl', 'rb') as f:
+    errmap = pickle.load(f)
 
-f = lambda x: np.cos(np.pi*x/2050) #lowest noise 1/3 of most noise
-xtmp = np.linspace(0,800)
-plt.plot(xtmp, f(xtmp))
-
-def apply_cos(fourierData):
-    realData = baseMap.inverseFourier(fourierData)
-    f = lambda x: 1+.3*np.sin(np.pi*x/400)
-    frow = np.array(list(map(f, range(len(realData[0])))))
-    realData = realData * frow
-    return baseMap.fourier(realData)
 
 pair = [eval(sys.argv[1]), eval(sys.argv[2])]
 print(pair)
-
-
 
 data = {}
 
@@ -195,37 +181,37 @@ print(pair, keys)
 N_data = min(len(in_data[keys[0]]), len(in_data[keys[1]]))
 
 
-s_idx = 0
 c_data = []
 c_data_sqrtN = []
 c_data_kR  = []
 
-if(pair_key in data):
-    s_idx = len(data[pair_key])
-    c_data = data[pair_key]
-
-for data_idx in trange(s_idx, N_data):
+for data_idx in trange(N_data):
     dataF0 = in_data[keys[0]][data_idx]
-    if(pair[0]-1 >= 0):  #isolate term
-        dataF0 = dataF0 - in_data[data_names[pair[0]-1]][data_idx]
     dataF1 = in_data[keys[1]][data_idx]
-    if(pair[1]-1>=0):    #isolate term
-        dataF1 = dataF1 - in_data[data_names[pair[1]-1]][data_idx]
-    
-    if(pair[0]!=-2): #only noise no foregrounds
-        dataF0 = dataF0 + apply_cos(noiseFourier[data_idx])
-        dataF1 = dataF1 + apply_cos(noiseFourier[data_idx])
-        
-    QE = baseMap.computeQuadEstKappaNormLensedWeights(cmb.funlensedTT, cmb.flensedTT, cmb.fCtotal, 
-                                         lMin=lMin, lMax=lMax, 
+
+
+
+    #first we'll renormalize error map so that when we apply the error map, 
+    #at best, anisotropic_noise = isotropic noise
+    print('applying anisotropic detector noise')
+    aniso_noise = baseMap.inverseFourier(noiseFourier[data_idx]) / np.min(errmap)
+    aniso_noise = aniso_noise * errmap # apply errmap
+    aniso_noise_fourier = baseMap.fourier(aniso_noise)
+
+    if(pair[0]!=-2 and pair[0] != -3):
+        dataF0 = dataF0 + fgFourier[data_idx] + aniso_noise_fourier
+        dataF1 = dataF1 + fgFourier[data_idx] + aniso_noise_fourier
+
+    QE = baseMap.computeQuadEstKappaNorm(fTgradT, cmb.fCtotal,
+                                         lMin=lMin, lMax=lMax,
                                          dataFourier=dataF0,
                                          dataFourier2=dataF1)
     sqrtNhat = []
     kR = []
     if(pair[0]==pair[1]):
-        sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(cmb.funlensedTT,
-                                                                cmb.fCtotal, 
-                                                                lMin=lMin, lMax=lMax, 
+        sqrtNhat = baseMap.computeQuadEstKappaAutoCorrectionMap(fTgradT,
+                                                                cmb.fCtotal,
+                                                                lMin=lMin, lMax=lMax,
                                                                 dataFourier=dataF0)
 
         if(len(c_data_sqrtN)==0):
@@ -238,12 +224,11 @@ for data_idx in trange(s_idx, N_data):
         c_data = np.array([QE])
     else:
         c_data = np.vstack((c_data, np.array([QE])))
-        
-        
-    assert(len(c_data)==data_idx+1)
 
+    assert(len(c_data)==data_idx+1)
 data[pair_key] = c_data
 data[pair_key+'_sqrtN'] = c_data_sqrtN
-f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/QE_and_Nhat_from_map_sims_800x800_20x20_Clensed_weight_anisotropic_noise_FILE%d_pair_%d_%d.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
+f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/estimators_FILE%d_pair_%d_%d_aniso_noise.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
 pickle.dump(data, f)
 f.close()
+

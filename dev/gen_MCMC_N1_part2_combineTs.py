@@ -9,9 +9,14 @@ DATA_IDX_2 = eval(sys.argv[2])
 nBins = 51  # number of bins
 
 masked = False
-if(len(sys.argv) > 3 and sys.argv[3] == 'masked'):
+aniso  = False
+if(len(sys.argv) > 3):
     print(sys.argv[3])
-    masked=True
+    if(sys.argv[3] == 'masked'):
+        masked=True
+    if(sys.argv[3] == 'aniso'):
+        aniso =True
+
 
 
 
@@ -40,11 +45,16 @@ fname_2 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d
 if(masked):
     fname_1 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-masked.pkl'%(DATA_IDX_1)
     fname_2 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-masked.pkl'%(DATA_IDX_2)
+if(aniso):
+    fname_1 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-anisotropic-noise.pkl'%(DATA_IDX_1)
+    fname_2 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-anisotropic-noise.pkl'%(DATA_IDX_2)
 
 combined_oup_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Tcombos_%d_%d.pkl'%(nBins, DATA_IDX_1, DATA_IDX_2)
 if(masked):
     combined_oup_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Tcombos_%d_%d-masked.pkl'%(nBins, DATA_IDX_1, DATA_IDX_2)
 
+if(aniso):
+    combined_oup_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Tcombos_%d_%d-aniso.pkl'%(nBins, DATA_IDX_1, DATA_IDX_2)
 print('outputting to', combined_oup_fname)
 
 
@@ -103,6 +113,11 @@ flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 
 
 ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
+if(aniso):
+    with open('f_aniso_ftot.pkl', 'rb') as f:
+        ftot = pickle.load(f)
+    print('loaded estimated ftot')
+
 
 
 L = np.arange(c_lens_response.shape[0])

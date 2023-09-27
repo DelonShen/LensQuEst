@@ -1,0 +1,202 @@
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/condabin/conda
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/conda
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/conda-env
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/activate
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/bin/deactivate
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/profile.d/conda.sh
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/fish/conf.d/conda.fish
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/shell/condabin/Conda.psm1
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/shell/condabin/conda-hook.ps1
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/lib/python3.10/site-packages/xontrib/conda.xsh
+no change     /oak/stanford/orgs/kipac/users/delon/miniconda3/etc/profile.d/conda.csh
+no change     /home/users/delon/.bashrc
+No action taken.
+anisotropic noise
+../data/input/universe_Planck15/camb/CAMB_outputs.pkl
+loaded estimated ftot
+Map properties
+CMB experiment properties
+loading sims for anisotropinc noise
+Data 228 is in /oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_23.pkl index 8
+applying anisotropic detector noise
+totalF_0 (100, 1200, 601)
+CURR 0
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-0-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-1-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-2-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-3-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-4-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-5-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-6-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-7-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-8-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-9-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-10-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-11-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-12-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-13-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-14-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-15-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-16-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-17-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-18-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-19-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-20-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-21-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-22-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-23-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-24-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-25-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-26-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-27-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-28-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-29-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-30-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-31-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-32-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-33-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-34-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-35-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-36-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-37-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-38-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-39-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-40-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-41-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-42-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-43-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-44-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-45-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-46-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-47-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-48-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-49-aniso.pkl
+CURR 1
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-50-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-51-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-52-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-53-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-54-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-55-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-56-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-57-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-58-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-59-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-60-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-61-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-62-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-63-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-64-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-65-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-66-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-67-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-68-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-69-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-70-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-71-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-72-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-73-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-74-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-75-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-76-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-77-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-78-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-79-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-80-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-81-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-82-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-83-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-84-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-85-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-86-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-87-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-88-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-89-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-90-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-91-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-92-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-93-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-94-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-95-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-96-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-97-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-98-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-99-aniso.pkl
+CURR 2
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-100-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-101-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-102-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-103-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-104-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-105-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-106-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-107-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-108-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-109-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-110-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-111-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-112-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-113-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-114-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-115-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-116-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-117-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-118-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-119-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-120-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-121-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-122-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-123-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-124-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-125-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-126-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-127-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-128-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-129-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-130-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-131-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-132-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-133-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-134-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-135-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-136-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-137-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-138-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-139-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-140-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-141-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-142-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-143-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-144-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-145-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-146-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-147-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-148-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-149-aniso.pkl
+CURR 3
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-150-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-151-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-152-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-153-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-154-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-155-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-156-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-157-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-158-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-159-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-160-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-161-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-162-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-163-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-164-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-165-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-166-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-167-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-168-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-169-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-170-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-171-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-172-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-173-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-174-aniso.pkl
+/scratch/users/delon/LensQuEst/RDN0-in_data-228-175-aniso.pkl

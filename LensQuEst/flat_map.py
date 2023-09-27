@@ -504,6 +504,7 @@ class FlatMap(object):
       return self.crossPowerSpectrum(dataFourier1=dataFourier, dataFourier2=dataFourier, theory=theory, theory_l=theory_l, fsCl=fsCl, nBins=nBins, lRange=lRange, plot=plot, name=name, save=save)
 
 
+   @cache
    def binTheoryPowerSpectrum(self, fCl, nBins=17, lRange=None):
       """Bin a theory power spectrum to allow to compare it with the measured power spectrum of a map.
       """

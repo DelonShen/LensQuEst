@@ -6,6 +6,7 @@ Forecast the noise on CMB lensing estimators (standard, shear-only, magnificatio
 Evaluate these estimators on flat sky maps.
 
 To get setup with required packages
+# TODO, probably don't use conda environment and go back to just fftw?
 ```
 conda env create -f environment.yml
 conda activate nblensing
