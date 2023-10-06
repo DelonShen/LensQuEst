@@ -1,0 +1,21 @@
+  0%|                                                                                            | 0/2500 [00:00<?, ?it/s]  0%|                                                                                            | 0/2500 [00:00<?, ?it/s]
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 201, in process_data
+    f = open(oup_fname, 'rb')
+FileNotFoundError: [Errno 2] No such file or directory: '/scratch/users/delon/LensQuEst/RDN0-in_data-500-0-aniso.pkl'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/users/delon/LensQuEst/dev/combine_RDN0.py", line 230, in <module>
+    results = list(tqdm(pool.imap(process_data,  toProcess), total=nToProcess))
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/site-packages/tqdm/std.py", line 1178, in __iter__
+    for obj in iterable:
+  File "/oak/stanford/orgs/kipac/users/delon/miniconda3/envs/nblensing/lib/python3.9/multiprocessing/pool.py", line 870, in next
+    raise value
+FileNotFoundError: [Errno 2] No such file or directory: '/scratch/users/delon/LensQuEst/RDN0-in_data-500-0-aniso.pkl'
