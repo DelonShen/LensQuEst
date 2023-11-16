@@ -19,6 +19,8 @@ import numpy as np
 #######
 MASKING=False
 ANISO=False
+
+WORST_CASE = True
 if(len(sys.argv)>2):
     if(sys.argv[2] == 'masking'):
         MASKING = True
@@ -89,6 +91,9 @@ ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
 if(ANISO):
     with open('f_aniso_ftot.pkl', 'rb') as f:
         ftot = pickle.load(f)
+    if(WORST_CASE):
+        with open('f_aniso_ftot_worst_case.pkl', 'rb') as f:
+            ftot = pickle.load(f)
 
     print('loaded estimated ftot')
 
@@ -109,7 +114,9 @@ fTgradT = interp1d(L, cTgradT, kind='linear', bounds_error=False, fill_value=0.)
 errmap = None
 with open('anisotropic_noise_map.pkl', 'rb') as f:
     errmap = pickle.load(f)
-
+if(WORST_CASE):
+    with open('anisotropic_noise_map_worst_case.pkl', 'rb') as f:
+        errmap = pickle.load(f)
 # In[5]:
 
 
@@ -209,6 +216,9 @@ if(ANISO):
     in_data = {}
     print('loading sims for anisotropinc noise')
     DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_for_aniso_rdn0.pkl'
+    if(WORST_CASE):
+        DATA_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/map_sims_for_aniso_rdn0_worst_case.pkl'
+
     with open(DATA_FNAME, 'rb') as f:
         in_data = pickle.load(f)
 
@@ -325,6 +335,9 @@ for s_idx in trange(50):
             oup_fname = '/scratch/groups/risahw/delon/LensQuEst/RDN0-in_data-%d-%d.pkl'%(d_idx,tmp_idx)
         if(ANISO):
             oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d-aniso.pkl'%(d_idx,tmp_idx)
+            if(WORST_CASE):
+                oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d-aniso_worst_case.pkl'%(d_idx,tmp_idx)
+
 
         print(oup_fname)
         f = open(oup_fname, 'wb') 

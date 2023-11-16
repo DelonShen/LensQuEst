@@ -1,8 +1,15 @@
 import pickle
 import sys
 import warnings
+
+WORST_CASE = True
+
+
 DATA_IDX = eval(sys.argv[1])
 OUP_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-anisotropic-noise.pkl'%(DATA_IDX)
+if(WORST_CASE):
+    OUP_FNAME = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-anisotropic-noise_worst_case.pkl'%(DATA_IDX)
+
 print(OUP_FNAME)
 import os, sys
 WORKING_DIR = os.path.dirname(os.path.abspath(''))
@@ -80,6 +87,11 @@ flensedTT = interp1d(L, F, kind='linear', bounds_error=False, fill_value=0.)
 ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
 with open('f_aniso_ftot.pkl', 'rb') as f:
     ftot = pickle.load(f)
+    
+if(WORST_CASE):
+    with open('f_aniso_ftot_worst_case.pkl', 'rb') as f:
+        ftot = pickle.load(f)
+
 print('loaded estimated ftot')
 
 
@@ -204,6 +216,9 @@ clFourier_fdetectorNoise = gen_clFourier(cmb.fdetectorNoise)
 errmap = None
 with open('anisotropic_noise_map.pkl', 'rb') as f:
     errmap = pickle.load(f)
+if(WORST_CASE):
+    with open('anisotropic_noise_map_worst_case.pkl', 'rb') as f:
+        errmap = pickle.load(f)
 
 for s_idx in trange(100):
     np.random.seed(DATA_IDX*9742322 + s_idx )

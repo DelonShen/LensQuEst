@@ -10,6 +10,7 @@ nBins = 51  # number of bins
 
 masked = False
 aniso  = False
+WORST_CASE = True
 if(len(sys.argv) > 3):
     print(sys.argv[3])
     if(sys.argv[3] == 'masked'):
@@ -48,6 +49,11 @@ if(masked):
 if(aniso):
     fname_1 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-anisotropic-noise.pkl'%(DATA_IDX_1)
     fname_2 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-anisotropic-noise.pkl'%(DATA_IDX_2)
+    if(WORST_CASE):
+        fname_1 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-anisotropic-noise_worst_case.pkl'%(DATA_IDX_1)
+        fname_2 = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-morestats-Ts%d-anisotropic-noise_worst_case.pkl'%(DATA_IDX_2)
+
+
 
 combined_oup_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Tcombos_%d_%d.pkl'%(nBins, DATA_IDX_1, DATA_IDX_2)
 if(masked):
@@ -55,6 +61,9 @@ if(masked):
 
 if(aniso):
     combined_oup_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Tcombos_%d_%d-aniso.pkl'%(nBins, DATA_IDX_1, DATA_IDX_2)
+    if(WORST_CASE):
+        combined_oup_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/N1-mcmc-nBins%d-morestats-Tcombos_%d_%d-aniso_worst_case.pkl'%(nBins, DATA_IDX_1, DATA_IDX_2)
+        
 print('outputting to', combined_oup_fname)
 
 
@@ -116,6 +125,9 @@ ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
 if(aniso):
     with open('f_aniso_ftot.pkl', 'rb') as f:
         ftot = pickle.load(f)
+    if(WORST_CASE):
+        with open('f_aniso_ftot_worst_case.pkl', 'rb') as f:
+            ftot = pickle.load(f)
     print('loaded estimated ftot')
 
 

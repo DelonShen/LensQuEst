@@ -1,6 +1,9 @@
 import pickle
 import warnings
 
+
+
+WORST_CASE=  True
 import os, sys
 WORKING_DIR = os.path.dirname(os.path.abspath(''))
 sys.path.insert(1, os.path.join(WORKING_DIR,'LensQuEst'))
@@ -60,6 +63,10 @@ ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
 
 with open('f_aniso_ftot.pkl', 'rb') as f:
     ftot = pickle.load(f)
+
+if(WORST_CASE):
+    with open('f_aniso_ftot_worst_case.pkl', 'rb') as f:
+        ftot = pickle.load(f)
     
 print('loaded estimated ftot')
 
@@ -168,7 +175,9 @@ noiseFourier = in_data['noiseF_1']
 errmap = None
 with open('anisotropic_noise_map.pkl', 'rb') as f:
     errmap = pickle.load(f)
-
+if(WORST_CASE):
+    with open('anisotropic_noise_map_worst_case.pkl', 'rb') as f:
+        errmap = pickle.load(f)
 
 pair = [eval(sys.argv[1]), eval(sys.argv[2])]
 print(pair)
@@ -228,7 +237,11 @@ for data_idx in trange(N_data):
     assert(len(c_data)==data_idx+1)
 data[pair_key] = c_data
 data[pair_key+'_sqrtN'] = c_data_sqrtN
-f = open('/oak/stanford/orgs/kipac/users/delon/LensQuEst/estimators_FILE%d_pair_%d_%d_aniso_noise.pkl'%(file_idx, pair[0], pair[1]), 'wb') 
+oup_aniso_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/estimators_FILE%d_pair_%d_%d_aniso_noise.pkl'%(file_idx, pair[0], pair[1])
+if(WORST_CASE):
+    oup_aniso_fname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/estimators_FILE%d_pair_%d_%d_aniso_noise_worst_case.pkl'%(file_idx, pair[0], pair[1])
+print(oup_aniso_fname)
+f = open(oup_aniso_fname, 'wb') 
 pickle.dump(data, f)
 f.close()
 

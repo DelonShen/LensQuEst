@@ -11,6 +11,7 @@ if(len(sys.argv) >= 3):
 
 MASKING = False
 ANISO = False
+WORST_CASE = True
 if(len(sys.argv) >= 4):
     if(sys.argv[3] == 'mask'):
         MASKING=True
@@ -69,7 +70,9 @@ ftot = lambda l : flensedTT(l) + cmb.fForeground(l) + cmb.fdetectorNoise(l)
 if(ANISO):
     with open('f_aniso_ftot.pkl', 'rb') as f:
         ftot = pickle.load(f)
-
+    if(WORST_CASE):
+        with open('f_aniso_ftot_worst_case.pkl', 'rb') as f:
+            ftot = pickle.load(f)
     print('loaded estimated ftot')
 
 
@@ -197,6 +200,9 @@ def process_data(tmp_idx):
         oup_fname = '/scratch/groups/risahw/delon/LensQuEst/RDN0-in_data-%d-%d.pkl'%(d_idx,tmp_idx)
     if(ANISO):
         oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d-aniso.pkl' % (d_idx, tmp_idx)
+        if(WORST_CASE):
+            oup_fname = '/scratch/users/delon/LensQuEst/RDN0-in_data-%d-%d-aniso_worst_case.pkl' % (d_idx, tmp_idx)
+            
 
     f = open(oup_fname, 'rb')
     RDN0_data = pickle.load(f)
@@ -248,8 +254,8 @@ if(MASKING):
     savefname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d-masked.pkl'%(d_idx, nBins)
 if(ANISO):
     savefname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d-aniso.pkl'%(d_idx, nBins)
-
-
+    if(WORST_CASE):
+        savefname = '/oak/stanford/orgs/kipac/users/delon/LensQuEst/RDN0-combined-%d-nBins%d-aniso_worst_case.pkl'%(d_idx, nBins)
 with open(savefname, "wb") as f:
     print(savefname)
     pickle.dump(tot, f)
