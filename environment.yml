@@ -12,8 +12,5 @@ dependencies:
     - matplotlib
     - numpy
     - seaborn
-    - astropy
-    - healpy
-    - pixell
 
 

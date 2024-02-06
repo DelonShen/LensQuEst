@@ -2573,7 +2573,6 @@ class FlatMap(object):
       normalizationFourier = self.computeQuadEstPhiNormalizationFFT(fC0, fCtot, lMin=lMin, lMax=lMax, test=test, cache=cache)
       # normalized correction for QE kappa auto-spectrum correction map
       resultFourier *= normalizationFourier**2
-#!!!!!!!!! weird factor needed. I haven't figured out why
       resultFourier /= (self.sizeX)*(self.sizeY)
       # take square root, so that all you have to do is to take the power spectrum
       resultFourier = np.sqrt(np.real(resultFourier))
